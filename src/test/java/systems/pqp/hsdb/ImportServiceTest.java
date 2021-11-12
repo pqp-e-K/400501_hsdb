@@ -1,11 +1,16 @@
 package systems.pqp.hsdb;
 
+import de.ard.sad.normdb.similarity.model.generic.GenericObject;
+import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.List;
 
 public class ImportServiceTest {
 
     @Test
-    public void getHoerspieleTest(){
-        ImportService.getHoerspiele(42914712);
+    public void getRadioPlaysTest() throws ImportException {
+        List<GenericObject> result = ImportService.getRadioPlays();
+        Assert.assertTrue(result.size() > 0);
     }
 }

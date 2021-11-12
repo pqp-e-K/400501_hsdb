@@ -26,7 +26,9 @@ public class ImportService {
     private static final int HOERSPIEL_ID = 42914712;
     private static final String API_URL = "https://api.ardaudiothek.de/editorialcategories";
 
-    static void getHoerspiele(int hoerspielId){
+    private ImportService(){}
+
+    static List<GenericObject> getRadioPlays() throws ImportException {
         try {
             URL url = new URL(API_URL + "/" + HOERSPIEL_ID);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -42,22 +44,25 @@ public class ImportService {
 
                 List<GenericObject> resultList = new ArrayList<>();
                 ((ArrayList<LinkedTreeMap>)((LinkedTreeMap)result.get("_embedded")).get("mt:programSets")).forEach(
-                        (entry) -> {
-                            resultList.add(genericObjectFromJson(entry, UUID.randomUUID().toString()));
-                        }
+                        entry -> resultList.add(genericObjectFromJson(entry, UUID.randomUUID().toString()))
                 );
 
                 LOG.info("Num Program-Sets: {}", resultList.size());
 
+                return resultList;
+
             } else {
-                LOG.error("Response-Code: {}",connection.getResponseCode());
+                throw new ImportException("Response-Code: " + connection.getResponseCode());
             }
 
-        } catch (IOException ioException){
+
+
+        } catch (IOException | ImportException ioException){
             LOG.error(ioException.getMessage());
             if( LOG.isDebugEnabled() ){
                 LOG.debug(ioException.getMessage(), ioException);
             }
+            throw new ImportException(ioException.getMessage());
         }
     }
 
