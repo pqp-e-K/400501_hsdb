@@ -1,6 +1,5 @@
 package systems.pqp.hsdb;
 
-
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import de.ard.sad.normdb.similarity.model.generic.GenericModel;
@@ -23,14 +22,18 @@ public class ImportService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ImportService.class.getName());
 
-    private static final int HOERSPIEL_ID = 42914712;
+    private static final int RADIO_PLAY_ID = 42914712;
     private static final String API_URL = "https://api.ardaudiothek.de/editorialcategories";
 
     private ImportService(){}
 
     static List<GenericObject> getRadioPlays() throws ImportException {
+        return getRadioPlays(RADIO_PLAY_ID, API_URL);
+    }
+
+    static List<GenericObject> getRadioPlays(int radioPlayId, String apiUrl) throws ImportException {
         try {
-            URL url = new URL(API_URL + "/" + HOERSPIEL_ID);
+            URL url = new URL(apiUrl + "/" + radioPlayId);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             if( connection.getResponseCode() == 200 ) {
@@ -54,8 +57,6 @@ public class ImportService {
             } else {
                 throw new ImportException("Response-Code: " + connection.getResponseCode());
             }
-
-
 
         } catch (IOException | ImportException ioException){
             LOG.error(ioException.getMessage());
