@@ -11,6 +11,6 @@ public class ImportServiceTest {
     @Test
     public void getRadioPlaysTest() throws ImportException {
         List<GenericObject> result = ImportService.getRadioPlays();
-        Assert.assertTrue(result.size() > 0);
+        Assert.assertTrue("Ergebnismenge ist > 0",result.size() > 0);
     }
 }
