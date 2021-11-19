@@ -16,17 +16,17 @@ import java.util.Map;
 import java.util.UUID;
 
 
-public class ImportService {
+public class ApiImportService {
     /**
      *
      */
 
-    private static final Logger LOG = LoggerFactory.getLogger(ImportService.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(ApiImportService.class.getName());
 
     private static final int RADIO_PLAY_ID = 42914712;
     private static final String API_URL = "https://api.ardaudiothek.de/editorialcategories";
 
-    private ImportService(){}
+    private ApiImportService(){}
 
     /**
      *
