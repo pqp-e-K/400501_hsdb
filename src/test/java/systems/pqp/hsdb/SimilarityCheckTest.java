@@ -26,7 +26,7 @@ public class SimilarityCheckTest {
         GenericObject dbObject = databaseObjects.get(0);
 
         // GenericObject aus Api (mocked aus Datei)
-        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("jules-verne-95022544.json"));
+        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/jules-verne-95022544.json"));
 
         GenericSimilarity gs = new GenericSimilarity();
         gs.calcSimilarity(apiObject, dbObject);
@@ -42,14 +42,16 @@ public class SimilarityCheckTest {
                 );
         Assert.assertEquals(5, databaseObjects.size());
 
-        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("christa-wolf-94736562.json"));
+        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/christa-wolf-94736562.json"));
 
         GenericSimilarity gs = new GenericSimilarity();
-        databaseObjects.forEach(
-                databaseObject -> {
-                    System.out.println(gs.calcSimilarity(databaseObject, apiObject));
-                }
-        );
+
+        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(0), apiObject), 0.0);
+        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(1), apiObject), 0.0);
+        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(2), apiObject), 0.0);
+        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(3), apiObject), 0.0);
+        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(4), apiObject), 0.0);
+
     }
 
     @Test
@@ -61,7 +63,26 @@ public class SimilarityCheckTest {
                 );
         Assert.assertEquals(4, databaseObjects.size());
 
-        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("dostojewski-94663538.json"));
+        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/dostojewski-94663538.json"));
+
+        GenericSimilarity gs = new GenericSimilarity();
+        databaseObjects.forEach(
+                databaseObject -> {
+                    System.out.println(gs.calcSimilarity(databaseObject, apiObject));
+                }
+        );
+    }
+
+    @Test
+    public void testSimilarity4() throws IOException {
+        // Sodom und Gomorrha
+        List<GenericObject> databaseObjects =
+                new DatabaseImportService().getRadioPlays(
+                        "WHERE VOLLINFO like \"%Sodom und Gomorrha%\""
+                );
+        Assert.assertEquals(9, databaseObjects.size());
+
+        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/sodom-und-gomorrha-94512976.json"));
 
         GenericSimilarity gs = new GenericSimilarity();
         databaseObjects.forEach(

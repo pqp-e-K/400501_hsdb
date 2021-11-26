@@ -1,0 +1,143 @@
+{
+  "_links": {
+    "self": {
+      "href": "./items/94512976",
+      "name": "item"
+    },
+    "mt:bestQualityPlaybackUrl": {
+      "href": "https://rbbmediapmdp-a.akamaihd.net/content/59/95/599522bc-0cab-49a1-bcd3-5fed42d0b5b8/42c14f0a-1e27-41c1-9046-34683e620cea_2261cacf-c38f-41c3-bf20-b9e48df0379e.mp3"
+    },
+    "mt:downloadUrl": {
+      "href": "https://rbbmediapmdp-a.akamaihd.net/content/60/57/60572c33-14a3-4bac-a5fc-cd0ba33e4788/42c14f0a-1e27-41c1-9046-34683e620cea_c2ee0db7-b076-4568-9122-96512965bb81.mp3"
+    },
+    "mt:image": {
+      "href": "https://img.ardmediathek.de/standard/00/94/51/29/80/-1774185891/{ratio}/{width}?mandant\u003dard",
+      "name": "Podcast | Marcel Proust: Auf der Suche nach der verlorenen Zeit: Sodom und Gomorrha © rbb/suhrkamp",
+      "title": "rbb/suhrkamp",
+      "templated": true
+    },
+    "mt:mediaCollection": {
+      "href": "./media/94512976"
+    },
+    "mt:playCounting": {
+      "href": "./items/94512976/count/increment"
+    },
+    "mt:sharing": {
+      "href": "https://audiothek.ardmediathek.de/items/94512976"
+    },
+    "mt:squareImage": {
+      "href": "https://img.ardmediathek.de/standard/00/94/51/29/82/-1774185891/{ratio}/{width}?mandant\u003dard",
+      "name": "Podcast | Marcel Proust: Auf der Suche nach der verlorenen Zeit: Sodom und Gomorrha © rbb/suhrkamp",
+      "title": "rbb/suhrkamp",
+      "templated": true
+    }
+  },
+  "duration": 1671.0,
+  "id": "94512976",
+  "publicationStartDateAndTime": "2021-11-03T00:00:00.000+0100",
+  "synopsis": "Monsieur Brichot liebt es, die Namen der Dörfer rund um Balbec einer etymologischen Betrachtung zu unterziehen. So stellt sich zum Beispiel die Frage: Was bedeutet der Dorfname \"Bricquebœuf\"?\n\nMehr: http://www.rbbkultur.de/proust\n\nAudio on Demand verfügbar bis 03.12.2021",
+  "title": "Band IV: Sodom und Gomorrha (53/56)",
+  "tracking": {
+    "title": "ARD Audiothek/{page.tracking.chapter1}/Lesung | Marcel Proust/Band IV: Sodom und Gomorrha (53/56)/94512976/20211103_0000",
+    "chapter1": "{page.tracking.chapter1}",
+    "play": {
+      "title": "ARD Audiothek/{page.tracking.chapter1}/Lesung | Marcel Proust/Band IV: Sodom und Gomorrha (53/56)/94512976/20211103_0000",
+      "chapter1": "{page.tracking.chapter1}",
+      "chapter2": "Lesung | Marcel Proust",
+      "sticky": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Sticky Player/Lesung | Marcel Proust/Band IV: Sodom und Gomorrha (53/56)/94512976/20211103_0000",
+        "chapter1": "Sticky Player"
+      },
+      "autopilot": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Autopilot/Lesung | Marcel Proust/Band IV: Sodom und Gomorrha (53/56)/94512976/20211103_0000",
+        "chapter1": "Autopilot"
+      },
+      "mediaType": "audio",
+      "lra": "RBB",
+      "channel": "rbbKultur",
+      "show": "Lesung | Marcel Proust",
+      "contentType": "2",
+      "source": "rbbKultur",
+      "mediaDistributionType": "1",
+      "contentId": "94512976",
+      "publicationDate": "20211103",
+      "clipLength": "1671",
+      "clipTitle": "Band IV: Sodom und Gomorrha (53/56)"
+    }
+  },
+  "_embedded": {
+    "mt:programSet": {
+      "_links": {
+        "self": {
+          "href": "./programsets/9839150{?order,offset,limit}",
+          "name": "programSet",
+          "templated": true
+        },
+        "mt:image": {
+          "href": "https://img.ardmediathek.de/standard/00/84/36/76/62/-1774185891/{ratio}/{width}?mandant\u003dard",
+          "templated": true
+        },
+        "mt:sharing": {
+          "href": "https://audiothek.ardmediathek.de/programsets/9839150"
+        },
+        "mt:squareImage": {
+          "href": "https://img.ardmediathek.de/standard/00/84/36/76/62/-1774185891/{ratio}/{width}?mandant\u003dard",
+          "templated": true
+        },
+        "mt:synd_rss": {
+          "href": "https://audiothek.ardmediathek.de/programsets/9839150/synd_rss"
+        }
+      },
+      "id": "9839150",
+      "numberOfElements": 24.0,
+      "synopsis": "Die großen Werke der Weltliteratur, in Fortsetzungen gelesen von bekannten Schauspielern. 2021 begeben wir uns auf die Suche nach der verlorenen Zeit ... Der gleichnamige Roman von Marcel Proust ist ein echtes Mammutwerk. Es ist der längste und bedeutendste Roman der französischen Literatur: ein Zyklus aus sieben Bänden und mehreren tausend Seiten. Es ist der Lebensbericht eines Erzählers, dessen größter Wunsch es von Kindheit an ist, Schriftsteller zu werden. Die insgesamt 329 Folgen werden gelesen von dem österreichischen Schauspieler Peter Matić. Jede Folge können Sie 30 Tage lang nachhören oder downloaden. Ab 04. Januar 2021",
+      "title": "Lesung | Marcel Proust",
+      "_embedded": {
+        "mt:publicationService": {
+          "_links": {
+            "self": {
+              "href": "./publicationservices/5540",
+              "name": "publicationService"
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/80/66/555337067/{ratio}/{width}?mandant\u003dard",
+              "templated": true
+            },
+            "mt:onlinePortal": {
+              "href": "https://www.rbbkultur.de"
+            }
+          },
+          "brandingColor": "#e31818",
+          "genre": "Kultur",
+          "id": "5540",
+          "numberOfElements": 41.0,
+          "organizationName": "RBB",
+          "title": "rbbKultur"
+        },
+        "mt:editorialCategories": {
+          "_links": {
+            "self": {
+              "href": "./editorialcategories/42914712{?offset,limit}",
+              "name": "editorialCategory",
+              "templated": true
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            },
+            "mt:squareImage": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            }
+          },
+          "id": "42914712",
+          "title": "Hörspiel \u0026 Lesung "
+        }
+      }
+    }
+  }
+}
