@@ -65,26 +65,29 @@ public class ApiImportService {
                 gson.toJson(result, writer);
                 writer.flush();
 
-                List<GenericObject> resultList = new ArrayList<>();
-                ((ArrayList<LinkedTreeMap>)((LinkedTreeMap)result.get("_embedded")).get("mt:items")).forEach(
-                        entry -> resultList.add(genericObjectFromJson(entry))
-                );
-
-                LOG.info("Num Program-Sets: {}", resultList.size());
-
-                return resultList;
+                return genericObjectsFromJson(result);
 
             } else {
                 throw new ImportException("Response-Code: " + connection.getResponseCode());
             }
 
-        } catch (IOException | ImportException ioException){
-            LOG.error(ioException.getMessage());
+        } catch (IOException ioException){
             if( LOG.isDebugEnabled() ){
                 LOG.debug(ioException.getMessage(), ioException);
             }
-            throw new ImportException(ioException.getMessage());
+            throw new ImportException("Import failed!", ioException);
         }
+    }
+
+    static List<GenericObject> genericObjectsFromJson(Map apiResponse){
+        List<GenericObject> resultList = new ArrayList<>();
+        ((ArrayList<LinkedTreeMap>)((LinkedTreeMap)apiResponse.get("_embedded")).get("mt:items")).forEach(
+                entry -> resultList.add(genericObjectFromJson(entry))
+        );
+
+        LOG.info("Num Program-Sets: {}", resultList.size());
+
+        return resultList;
     }
 
     /**
