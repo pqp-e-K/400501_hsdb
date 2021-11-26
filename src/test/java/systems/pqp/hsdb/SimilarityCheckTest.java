@@ -123,6 +123,7 @@ public class SimilarityCheckTest {
 
         GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/sodom-und-gomorrha-94512976.json"));
 
+        // Tipp: Mit command+option+shift + Mauszeiger kann man Blockauswahlen
         GenericSimilarity gs = new GenericSimilarity();
         Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(0), apiObject), 0.0f);
         Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(1), apiObject), 0.0f);
