@@ -16,3 +16,8 @@ oder
 ``` 
 mariadb --host 127.0.0.1 -P <port> --user <user> -p
 ```
+
+Nützliche SQL-Statements:
+`````roomsql
+SELECT DUKEY,SUBSTRING(REPLACE(VOLLINFO,CHAR(10),''),50,200) FROM hs_du LIMIT 100;
+`````
