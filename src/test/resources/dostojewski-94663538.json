@@ -1,0 +1,144 @@
+{
+  "_links": {
+    "self": {
+      "href": "./items/94663538",
+      "name": "item"
+    },
+    "mt:bestQualityPlaybackUrl": {
+      "href": "https://hrardmediathek-a.akamaihd.net/audio/audiothek/hr2_hoerspiel/211105101119_Dostojewski_Doppelgaenger__07v17_.mp3"
+    },
+    "mt:image": {
+      "href": "https://img.ardmediathek.de/standard/00/94/66/35/42/-1774185891/{ratio}/{width}?mandant\u003dard",
+      "name": "Fjodor Dostojewski: Der Doppelgänger",
+      "title": "hr",
+      "templated": true
+    },
+    "mt:mediaCollection": {
+      "href": "./media/94663538"
+    },
+    "mt:playCounting": {
+      "href": "./items/94663538/count/increment"
+    },
+    "mt:sharing": {
+      "href": "https://audiothek.ardmediathek.de/items/94663538"
+    },
+    "mt:squareImage": {
+      "href": "https://img.ardmediathek.de/standard/00/94/66/35/44/-1774185891/{ratio}/{width}?mandant\u003dard",
+      "name": "Fjodor Dostojewski: Der Doppelgänger",
+      "title": "hr",
+      "templated": true
+    }
+  },
+  "duration": 1347.0,
+  "id": "94663538",
+  "publicationStartDateAndTime": "2021-11-05T09:15:00.000+0100",
+  "synopsis": "Nach seinem entsetzlichen Abgang aus dem Hause des Staatsrats Berendéjeff, begegnet Goljädkin mitten in der Nacht zum ersten Mal seinem Doppelgänger. Dieser verfolgt ihn, kommt ihm entgegen, überholt ihn und drängt sich sogar vor ihm in seine eigene Wohnung. Am folgenden Morgen hofft unser Held, er habe alles nur geträumt - bis er den Doppelgänger im Büro wiedertrifft.\nAudio verfügbar bis 05.12.",
+  "title": "Fjodor Dostojewski: Der Doppelgänger (7v/17) / Gelesen von Horst Niendorf",
+  "tracking": {
+    "title": "ARD Audiothek/{page.tracking.chapter1}/Fjodor Dostojewski: Der Doppelgänger/Fjodor Dostojewski: Der Doppelgänger (7v/17) / Gelesen .../94663538/20211105_0915",
+    "chapter1": "{page.tracking.chapter1}",
+    "play": {
+      "title": "ARD Audiothek/{page.tracking.chapter1}/Fjodor Dostojewski: Der Doppelgänger/Fjodor Dostojewski: Der Doppelgänger (7v/17) / Gelesen .../94663538/20211105_0915",
+      "chapter1": "{page.tracking.chapter1}",
+      "chapter2": "Fjodor Dostojewski: Der Doppelgänger",
+      "sticky": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Sticky Player/Fjodor Dostojewski: Der Doppelgänger/Fjodor Dostojewski: Der Doppelgänger (7v/17) / Gelesen von Horst Niendorf/94663538/20211105_0915",
+        "chapter1": "Sticky Player"
+      },
+      "autopilot": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Autopilot/Fjodor Dostojewski: Der Doppelgänger/Fjodor Dostojewski: Der Doppelgänger (7v/17) / Gelesen von Horst Niendorf/94663538/20211105_0915",
+        "chapter1": "Autopilot"
+      },
+      "mediaType": "audio",
+      "lra": "HR",
+      "channel": "hr2-kultur",
+      "show": "Fjodor Dostojewski: Der Doppelgänger",
+      "contentType": "2",
+      "source": "hr",
+      "mediaDistributionType": "1",
+      "contentId": "94663538",
+      "publicationDate": "20211105",
+      "clipLength": "1347",
+      "clipTitle": "Fjodor Dostojewski: Der Doppelgänger (7v/17) / Gelesen von Horst Niendorf"
+    }
+  },
+  "_embedded": {
+    "mt:programSet": {
+      "_links": {
+        "self": {
+          "href": "./programsets/94663126{?order,offset,limit}",
+          "name": "programSet",
+          "templated": true
+        },
+        "mt:image": {
+          "href": "https://img.ardmediathek.de/standard/00/94/66/31/32/-1774185891/{ratio}/{width}?mandant\u003dard",
+          "name": "hr",
+          "title": "hr",
+          "templated": true
+        },
+        "mt:sharing": {
+          "href": "https://audiothek.ardmediathek.de/programsets/94663126"
+        },
+        "mt:squareImage": {
+          "href": "https://img.ardmediathek.de/standard/00/94/66/31/32/-1774185891/{ratio}/{width}?mandant\u003dard",
+          "name": "hr",
+          "title": "hr",
+          "templated": true
+        },
+        "mt:synd_rss": {
+          "href": "https://audiothek.ardmediathek.de/programsets/94663126/synd_rss"
+        }
+      },
+      "id": "94663126",
+      "numberOfElements": 17.0,
+      "synopsis": "Zunächst wirkt der Titularrat Goljädkin nur wie ein etwas verschusselter und pedantischer höherer Beamter im Sankt Petersburg des 19. Jahrhunderts. Doch nach und nach wird klar, dass er in eine psychische Störung abrutscht: eine Persönlichkeitsspaltung. Eine Klassikerlesung zum 200. Geburtstag von Fjodor Michailowitsch Dostojewski.",
+      "title": "Fjodor Dostojewski: Der Doppelgänger",
+      "_embedded": {
+        "mt:publicationService": {
+          "_links": {
+            "self": {
+              "href": "./publicationservices/1540",
+              "name": "publicationService"
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/79/32/2121327408/{ratio}/{width}?mandant\u003dard",
+              "templated": true
+            },
+            "mt:onlinePortal": {
+              "href": "http://www.hr2.de/index.html"
+            }
+          },
+          "brandingColor": "#f25c19",
+          "genre": "Kultur",
+          "id": "1540",
+          "numberOfElements": 21.0,
+          "organizationName": "HR",
+          "title": "hr2-kultur"
+        },
+        "mt:editorialCategories": {
+          "_links": {
+            "self": {
+              "href": "./editorialcategories/42914712{?offset,limit}",
+              "name": "editorialCategory",
+              "templated": true
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            },
+            "mt:squareImage": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            }
+          },
+          "id": "42914712",
+          "title": "Hörspiel \u0026 Lesung "
+        }
+      }
+    }
+  }
+}

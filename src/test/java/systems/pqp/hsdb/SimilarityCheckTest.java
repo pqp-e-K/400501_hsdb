@@ -50,7 +50,25 @@ public class SimilarityCheckTest {
                     System.out.println(gs.calcSimilarity(databaseObject, apiObject));
                 }
         );
+    }
 
+    @Test
+    public void testSimilarity3() throws IOException {
+        // Fjodor Dostojewski: Der Doppelgänger
+        List<GenericObject> databaseObjects =
+                new DatabaseImportService().getRadioPlays(
+                        "where VOLLINFO like \"%Dostojewski%\" and VOLLINFO like \"%Der Doppelgänger%\""
+                );
+        Assert.assertEquals(4, databaseObjects.size());
+
+        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("dostojewski-94663538.json"));
+
+        GenericSimilarity gs = new GenericSimilarity();
+        databaseObjects.forEach(
+                databaseObject -> {
+                    System.out.println(gs.calcSimilarity(databaseObject, apiObject));
+                }
+        );
     }
 
     Map loadJsonFromFile(String fileName) throws IOException {

@@ -22,9 +22,11 @@ public class ApiImportService {
      */
 
     private static final Logger LOG = LoggerFactory.getLogger(ApiImportService.class.getName());
+    private static final Config CONFIG = Config.Config();
 
-    private static final int RADIO_PLAY_ID = 42914712;
-    private static final String API_URL = "https://api.ardaudiothek.de/editorialcategories";
+    private static final int RADIO_PLAY_ID = Integer.parseInt(CONFIG.getProperty("api.category.id"));
+    private static final String API_URL = CONFIG.getProperty("api.url");
+    private static final String LIMIT = CONFIG.getProperty("api.limit","100000");
 
     public ApiImportService(){}
 
@@ -46,7 +48,7 @@ public class ApiImportService {
      */
     List<GenericObject> getRadioPlays(int radioPlayId, String apiUrl) throws ImportException {
         try {
-            URL url = new URL(apiUrl + "/" + radioPlayId + "?offset=0&limit=1000000");
+            URL url = new URL(apiUrl + "/" + radioPlayId + "?offset=0&limit="+LIMIT);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             if( connection.getResponseCode() == 200 ) {

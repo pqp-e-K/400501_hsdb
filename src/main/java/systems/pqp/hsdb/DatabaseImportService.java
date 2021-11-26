@@ -23,14 +23,15 @@ import java.util.stream.Stream;
 
 public class DatabaseImportService {
 
-    private static final String USER = "root";
-    private static final String PASS = "root";
-    private static final String URL  = "localhost:3306";
-    private static final String DB   = "hsdb";
-    private static final String TAB  = "hs_du";
-    private static final XmlMapper XML_MAPPER = new XmlMapper();
-
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseImportService.class.getName());
+    private static final Config CONFIG = Config.Config();
+
+    private static final String USER = CONFIG.getProperty("hsdb.user");
+    private static final String PASS = CONFIG.getProperty("hsdb.pass");
+    private static final String URL  = CONFIG.getProperty("hsdb.url");
+    private static final String DB   = CONFIG.getProperty("hsdb.db");
+    private static final String TAB  = CONFIG.getProperty("hsdb.table");
+    private static final XmlMapper XML_MAPPER = new XmlMapper();
 
     public DatabaseImportService() {}
 
