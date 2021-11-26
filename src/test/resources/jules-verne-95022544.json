@@ -1,0 +1,147 @@
+{
+  "_links": {
+    "self": {
+      "href": "./items/95022544",
+      "name": "item"
+    },
+    "mt:bestQualityPlaybackUrl": {
+      "href": "https://oddownloadmdr-a.akamaihd.net/mp4audiomobil/3/digas-34470279-aeb8-4283-8162-4628a0ff3911-0a15de5e5053_34.mp3"
+    },
+    "mt:downloadUrl": {
+      "href": "https://odattachmentmdr-a.akamaihd.net/mp4audiomobil/3/digas-34470279-aeb8-4283-8162-4628a0ff3911-0a15de5e5053_34.mp3"
+    },
+    "mt:image": {
+      "href": "https://img.ardmediathek.de/standard/00/95/02/25/56/-1774185891/{ratio}/{width}?mandant\u003dard",
+      "name": "Illustration: Rakete und Mond",
+      "title": "IMAGO / KHARBINE-TAPABOR",
+      "templated": true
+    },
+    "mt:mediaCollection": {
+      "href": "./media/95022544"
+    },
+    "mt:playCounting": {
+      "href": "./items/95022544/count/increment"
+    },
+    "mt:sharing": {
+      "href": "https://audiothek.ardmediathek.de/items/95022544"
+    },
+    "mt:squareImage": {
+      "href": "https://img.ardmediathek.de/standard/00/95/02/25/62/-1774185891/{ratio}/{width}?mandant\u003dard",
+      "name": "Illustration: Rakete und Mond",
+      "title": "IMAGO / KHARBINE-TAPABOR",
+      "templated": true
+    }
+  },
+  "duration": 997.0,
+  "id": "95022544",
+  "publicationStartDateAndTime": "2021-12-05T22:50:00.000+0100",
+  "synopsis": "Der Rückstoß der Explosion richtet große Zerstörung an. In den kommenden Nächten ist der Himmel bewölkt. Dann endlich sichten die Astronomen das Projektil. Ob die drei Abenteurer tatsächlich auf dem Mond gelandet sind?",
+  "title": "Jules Verne: Reise von der Erde zum Mond (14/14)",
+  "tracking": {
+    "title": "ARD Audiothek/{page.tracking.chapter1}/Jules Verne: Reise von der Erde zum Mond | Gelesen von .../Jules Verne: Reise von der Erde zum Mond (14/14)/95022544/20211205_2250",
+    "chapter1": "{page.tracking.chapter1}",
+    "play": {
+      "title": "ARD Audiothek/{page.tracking.chapter1}/Jules Verne: Reise von der Erde zum Mond | Gelesen von Walter Niklaus/Jules Verne: Reise von der Erde zum Mond (14/14)/95022544/20211205_2250",
+      "chapter1": "{page.tracking.chapter1}",
+      "chapter2": "Jules Verne: Reise von der Erde zum Mond | Gelesen von Walter Niklaus",
+      "sticky": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Sticky Player/Jules Verne: Reise von der Erde zum Mond | Gelesen von Walter Niklaus/Jules Verne: Reise von der Erde zum Mond (14/14)/95022544/20211205_2250",
+        "chapter1": "Sticky Player"
+      },
+      "autopilot": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Autopilot/Jules Verne: Reise von der Erde zum Mond | Gelesen von Walter Niklaus/Jules Verne: Reise von der Erde zum Mond (14/14)/95022544/20211205_2250",
+        "chapter1": "Autopilot"
+      },
+      "mediaType": "audio",
+      "lra": "MDR",
+      "channel": "MDR KULTUR",
+      "show": "Jules Verne: Reise von der Erde zum Mond | Gelesen von Walter Niklaus",
+      "contentType": "2",
+      "source": "MITTELDEUTSCHER RUNDFUNK",
+      "mediaDistributionType": "1",
+      "contentId": "95022544",
+      "publicationDate": "20211205",
+      "clipLength": "997",
+      "clipTitle": "Jules Verne: Reise von der Erde zum Mond (14/14)"
+    }
+  },
+  "_embedded": {
+    "mt:programSet": {
+      "_links": {
+        "self": {
+          "href": "./programsets/95015658{?order,offset,limit}",
+          "name": "programSet",
+          "templated": true
+        },
+        "mt:image": {
+          "href": "https://img.ardmediathek.de/standard/00/95/01/56/64/-1774185891/{ratio}/{width}?mandant\u003dard",
+          "name": "Illustration: Rakete und Mond",
+          "title": "IMAGO / KHARBINE-TAPABOR",
+          "templated": true
+        },
+        "mt:sharing": {
+          "href": "https://audiothek.ardmediathek.de/programsets/95015658"
+        },
+        "mt:squareImage": {
+          "href": "https://img.ardmediathek.de/standard/00/95/01/56/64/-1774185891/{ratio}/{width}?mandant\u003dard",
+          "name": "Illustration: Rakete und Mond",
+          "title": "IMAGO / KHARBINE-TAPABOR",
+          "templated": true
+        },
+        "mt:synd_rss": {
+          "href": "https://audiothek.ardmediathek.de/programsets/95015658/synd_rss"
+        }
+      },
+      "id": "95015658",
+      "numberOfElements": 14.0,
+      "synopsis": "Mr. Barbicane, Präsident des Gun-Club zu Baltimore, hat eine kühne Idee: Er will eine riesige Kanone bauen und ein Geschoss zum Mond schicken. Die ganze Nation ist begeistert. Wird das ehrgeizige Vorhaben gelingen?",
+      "title": "Jules Verne: Reise von der Erde zum Mond | Gelesen von Walter Niklaus",
+      "_embedded": {
+        "mt:publicationService": {
+          "_links": {
+            "self": {
+              "href": "./publicationservices/5398",
+              "name": "publicationService"
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/79/62/2121327408/{ratio}/{width}?mandant\u003dard",
+              "templated": true
+            },
+            "mt:onlinePortal": {
+              "href": "http://www.mdr.de/kultur/radio/index.html"
+            }
+          },
+          "brandingColor": "#ef970e",
+          "genre": "Kultur",
+          "id": "5398",
+          "numberOfElements": 41.0,
+          "organizationName": "MDR",
+          "title": "MDR KULTUR"
+        },
+        "mt:editorialCategories": {
+          "_links": {
+            "self": {
+              "href": "./editorialcategories/42914712{?offset,limit}",
+              "name": "editorialCategory",
+              "templated": true
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            },
+            "mt:squareImage": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            }
+          },
+          "id": "42914712",
+          "title": "Hörspiel \u0026 Lesung "
+        }
+      }
+    }
+  }
+}

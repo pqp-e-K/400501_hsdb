@@ -5,9 +5,6 @@ import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.List;
 
 public class DatabaseImportServiceTest {
@@ -55,7 +52,7 @@ public class DatabaseImportServiceTest {
         DatabaseImportService databaseImportService = new DatabaseImportService();
         DatabaseImportService.VollinfoBean bean = databaseImportService.beanFromXmlString(xml);
 
-        GenericObject radioPlay = databaseImportService.genericObjectFromBean(id, uniqueId, bean);
+        GenericObject radioPlay = databaseImportService.genericObjectFromBean(id, bean);
         Assert.assertNotNull(radioPlay);
         System.out.println(radioPlay);
     }

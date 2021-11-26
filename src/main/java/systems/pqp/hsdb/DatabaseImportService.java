@@ -8,12 +8,13 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import de.ard.sad.normdb.similarity.model.generic.GenericModel;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,6 +30,8 @@ public class DatabaseImportService {
     private static final String TAB  = "hs_du";
     private static final XmlMapper XML_MAPPER = new XmlMapper();
 
+    private static final Logger LOG = LoggerFactory.getLogger(DatabaseImportService.class.getName());
+
     public DatabaseImportService() {}
 
     /**
@@ -41,8 +44,12 @@ public class DatabaseImportService {
     }
 
     public List<GenericObject> getRadioPlays(){
+        return getRadioPlays("");
+    }
+
+    public List<GenericObject> getRadioPlays(String query){
         List<GenericObject> result = new ArrayList<>();
-        String sql = "SELECT DUKEY, VOLLINFO FROM "+DB+"."+TAB+";";
+        String sql = "SELECT DUKEY, VOLLINFO FROM "+DB+"."+TAB+" "+query+";";
         try(Connection connection = createConnection()) {
             try(Statement stmt = connection.createStatement()){
                 ResultSet resultSet = stmt.executeQuery(sql);
@@ -52,16 +59,15 @@ public class DatabaseImportService {
 
                     GenericObject radioPlay = genericObjectFromBean(
                             id,
-                            UUID.randomUUID().toString(),
                             beanFromXmlString(xml)
                     );
                     result.add(radioPlay);
                 }
             } catch (SQLException | JsonProcessingException throwables){
-                throwables.printStackTrace();
+                LOG.error(throwables.getMessage(), throwables);
             }
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            LOG.error(throwables.getMessage(), throwables);
         }
 
         return result;
@@ -70,27 +76,28 @@ public class DatabaseImportService {
     /***
      *
      * @param id
-     * @param uniqueId
      * @param bean
      * @return
      */
-    GenericObject genericObjectFromBean(String id, String uniqueId, VollinfoBean bean){
+    GenericObject genericObjectFromBean(String id, VollinfoBean bean){
         GenericModel genericModel = new GenericModel(RadioPlayType.class);
-        GenericObject radioPlay = new GenericObject(genericModel,uniqueId);
+        GenericObject radioPlay = new GenericObject(genericModel,id);
 
         try {
-            radioPlay.addDescriptionProperty(RadioPlayType.ID, id);
             radioPlay.addDescriptionProperty(RadioPlayType.TITLE, bean.getTitle());
+            radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
             radioPlay.addDescriptionProperty(RadioPlayType.DURATION, String.valueOf(bean.getDurationInSeconds()));
             radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, bean.getPublicationDt());
+            radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
             radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, bean.getDescription());
             radioPlay.addDescriptionProperty(RadioPlayType.LONG_TITLE, bean.getLongTitle());
-            radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, bean.getProductionCompany());
+            radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, null == bean.getProductionCompany() ? "" : bean.getProductionCompany());
             radioPlay.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, bean.getInvolvedNames());
             radioPlay.addDescriptionProperty(RadioPlayType.PERSON_ROLE, bean.getActorRoles());
+
         } catch (IllegalArgumentException exception){
-            exception.printStackTrace();
-            System.err.println(bean);
+            LOG.error(exception.getMessage(), exception);
+            LOG.info(bean.toString());
         }
 
         return radioPlay;
@@ -123,6 +130,8 @@ public class DatabaseImportService {
         private String title = "";
         @JsonProperty("LITV")
         private String longTitle = "";
+        @JsonProperty("BIO")
+        private String bio = "";
         @JsonProperty("INH")
         private String description = "";
         @JsonProperty("SPR")
@@ -174,6 +183,14 @@ public class DatabaseImportService {
 
         public void setLongTitle(String longTitle) {
             this.longTitle = longTitle;
+        }
+
+        public String getBio() {
+            return bio;
+        }
+
+        public void setBio(String bio) {
+            this.bio = bio;
         }
 
         public String getDescription() {

@@ -6,11 +6,11 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class ImportServiceTest {
+public class ApiImportServiceTest {
 
     @Test
     public void getRadioPlaysTest() throws ImportException {
-        List<GenericObject> result = ApiImportService.getRadioPlays();
+        List<GenericObject> result = new ApiImportService().getRadioPlays();
         Assert.assertTrue("Ergebnismenge ist > 0",result.size() > 0);
         System.out.println(result);
     }

@@ -1,0 +1,144 @@
+{
+  "_links": {
+    "self": {
+      "href": "./items/94736562",
+      "name": "item"
+    },
+    "mt:bestQualityPlaybackUrl": {
+      "href": "https://srstorage01-a.akamaihd.net/Audio/SR2/SR2_FF/1636447801_fofo_christa_wolf_6_kassandra_20211117_M.mp3"
+    },
+    "mt:image": {
+      "href": "https://img.ardmediathek.de/standard/00/94/73/65/66/-1774185891/{ratio}/{width}?mandant\u003dard",
+      "name": "Buchcover (Suhrkamp Verlag)",
+      "title": "Quelle: SR.de",
+      "templated": true
+    },
+    "mt:mediaCollection": {
+      "href": "./media/94736562"
+    },
+    "mt:playCounting": {
+      "href": "./items/94736562/count/increment"
+    },
+    "mt:sharing": {
+      "href": "https://audiothek.ardmediathek.de/items/94736562"
+    },
+    "mt:squareImage": {
+      "href": "https://img.ardmediathek.de/standard/00/94/73/65/66/-1774185891/{ratio}/{width}?mandant\u003dard",
+      "name": "Buchcover (Suhrkamp Verlag)",
+      "title": "Quelle: SR.de",
+      "templated": true
+    }
+  },
+  "duration": 1664.0,
+  "id": "94736562",
+  "publicationStartDateAndTime": "2021-11-10T14:15:00.000+0100",
+  "synopsis": "Die Darstellung einer weiblichen Figur aus der griechischen Mythologie, die uns in Christa Wolfs Erzählung \"Kassandra\" als Zeitgenossin begegnet, ist längst zum Klassiker geworden. In dieser Aufnahme aus dem Jahr 1992, einer SR-Produktion, liest Wolf ihren Text selbst.",
+  "title": "Christa Wolf: Kassandra (6/15)",
+  "tracking": {
+    "title": "ARD Audiothek/{page.tracking.chapter1}/Fortsetzung folgt/Christa Wolf: Kassandra (6/15)/94736562/20211110_1415",
+    "chapter1": "{page.tracking.chapter1}",
+    "play": {
+      "title": "ARD Audiothek/{page.tracking.chapter1}/Fortsetzung folgt/Christa Wolf: Kassandra (6/15)/94736562/20211110_1415",
+      "chapter1": "{page.tracking.chapter1}",
+      "chapter2": "Fortsetzung folgt",
+      "sticky": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Sticky Player/Fortsetzung folgt/Christa Wolf: Kassandra (6/15)/94736562/20211110_1415",
+        "chapter1": "Sticky Player"
+      },
+      "autopilot": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Autopilot/Fortsetzung folgt/Christa Wolf: Kassandra (6/15)/94736562/20211110_1415",
+        "chapter1": "Autopilot"
+      },
+      "mediaType": "audio",
+      "lra": "SR",
+      "channel": "SR 2 KulturRadio",
+      "show": "Fortsetzung folgt",
+      "contentType": "2",
+      "source": "SR",
+      "mediaDistributionType": "1",
+      "contentId": "94736562",
+      "publicationDate": "20211110",
+      "clipLength": "1664",
+      "clipTitle": "Christa Wolf: Kassandra (6/15)"
+    }
+  },
+  "_embedded": {
+    "mt:programSet": {
+      "_links": {
+        "self": {
+          "href": "./programsets/66981370{?order,offset,limit}",
+          "name": "programSet",
+          "templated": true
+        },
+        "mt:image": {
+          "href": "https://img.ardmediathek.de/standard/00/93/11/57/98/2121327408/{ratio}/{width}?mandant\u003dard",
+          "name": "Bild zur Sendung SR 2 Fortsetzung folgt",
+          "title": "Saarländischer Rundfunk",
+          "templated": true
+        },
+        "mt:sharing": {
+          "href": "https://audiothek.ardmediathek.de/programsets/66981370"
+        },
+        "mt:squareImage": {
+          "href": "https://img.ardmediathek.de/standard/00/93/11/57/98/2121327408/{ratio}/{width}?mandant\u003dard",
+          "name": "Bild zur Sendung SR 2 Fortsetzung folgt",
+          "title": "Saarländischer Rundfunk",
+          "templated": true
+        },
+        "mt:synd_rss": {
+          "href": "https://audiothek.ardmediathek.de/programsets/66981370/synd_rss"
+        }
+      },
+      "id": "66981370",
+      "numberOfElements": 47.0,
+      "synopsis": "SR 2 KulturRadio bietet von Montag bis Freitag viel Raum für Literatur: In der Sendung \"Fortsetzung folgt...\" lesen namhafte Sprecher oder die Autoren selbst aus historischen oder zeitgenössischen Prosawerken.",
+      "title": "Fortsetzung folgt",
+      "_embedded": {
+        "mt:publicationService": {
+          "_links": {
+            "self": {
+              "href": "./publicationservices/5520",
+              "name": "publicationService"
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/92/22/80/555337067/{ratio}/{width}?mandant\u003dard",
+              "templated": true
+            },
+            "mt:onlinePortal": {
+              "href": "http://www.sr.de/sr/sr2/index.html"
+            }
+          },
+          "brandingColor": "#d99e00",
+          "genre": "Kultur",
+          "id": "5520",
+          "numberOfElements": 10.0,
+          "organizationName": "SR",
+          "title": "SR 2 KulturRadio"
+        },
+        "mt:editorialCategories": {
+          "_links": {
+            "self": {
+              "href": "./editorialcategories/42914712{?offset,limit}",
+              "name": "editorialCategory",
+              "templated": true
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            },
+            "mt:squareImage": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            }
+          },
+          "id": "42914712",
+          "title": "Hörspiel \u0026 Lesung "
+        }
+      }
+    }
+  }
+}
