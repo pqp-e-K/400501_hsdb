@@ -9,7 +9,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.List;
 import java.util.Map;
 
 public class SimilarityCheckTest {
@@ -141,9 +140,34 @@ public class SimilarityCheckTest {
         Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("4949492"), apiObject) < 0.8f);     //Teil 3
 
         //Teil 4 fehlt in HSDB
-
     }
 
+    // -- Neue Tests mit Beispielen aus Mail -- //
+
+    /**
+     * Once a Beauty
+     * https://hoerspiele.dra.de/vollinfo.php?dukey=4987635&vi=1&SID
+     * https://www.ardaudiothek.de/episode/hoerspiel/once-a-beauty-rechter-terror-hinter-buergerlicher-fassade/wdr-3/86736440
+     * @throws IOException
+     */
+    @Test
+    public void testSimilarity5() throws IOException {
+        Map<String,GenericObject> databaseObjects =
+                new DatabaseImportService().getRadioPlays(
+                        "WHERE DUKEY = 4987635"
+                );
+        System.out.println(databaseObjects);
+
+        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/once-a-beauty-86736440.json"));
+    }
+
+
+    /**
+     * Helfer-Methode zum Laden eines JSON-File
+     * @param fileName Pfad als String
+     * @return Map
+     * @throws IOException wenn File not found
+     */
     Map loadJsonFromFile(String fileName) throws IOException {
         Gson gson = new Gson();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();

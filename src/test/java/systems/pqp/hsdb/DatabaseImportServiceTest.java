@@ -29,6 +29,20 @@ public class DatabaseImportServiceTest {
             "         <KOLL>Hörspiele nach 1945</KOLL></VOLLINFO>";
 
     @Test
+    public void getDurationInSeconds() {
+        /*
+         * Test für VollInfoBean-Methode getDurationInSeconds()
+         */
+        DatabaseImportService.VollinfoBean bean = new DatabaseImportService.VollinfoBean();
+        bean.setDuration("10"); // 10 minutes
+        Assert.assertEquals("Only Minutes in Seconds", 600F, bean.getDurationInSeconds(),0F);
+        bean.setDuration("5'40"); // 5 minutes 40 seconds -> 340s
+        Assert.assertEquals("Minutes + Seconds", 340F, bean.getDurationInSeconds(),0F);
+        bean.setDuration("Ca. 45"); // ca 45 minutes
+        Assert.assertEquals("Weird duration", 2700F, bean.getDurationInSeconds(),0F);
+    }
+
+    @Test
     public void beanFromXmlString() throws JsonProcessingException {
         DatabaseImportService databaseImportService = new DatabaseImportService();
         DatabaseImportService.VollinfoBean bean = databaseImportService.beanFromXmlString(xml);

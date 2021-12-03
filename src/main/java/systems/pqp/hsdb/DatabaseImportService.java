@@ -247,12 +247,11 @@ public class DatabaseImportService {
 
             String[] parts = cleanDuration.split("'"); // 42'18
 
-
             float seconds = 0F;
             if( parts.length > 0 ){
-                seconds += Float.parseFloat(parts[1]);
+                seconds += Float.parseFloat(parts[0]) * 60;
                 if( parts.length > 1 ){ // 5'21 -> seconds = 5 * 60 + 21
-                    seconds += Float.parseFloat(parts[0]) * 60;
+                    seconds += Float.parseFloat(parts[1]);
                 }
             }
             return seconds;
