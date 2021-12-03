@@ -127,6 +127,7 @@ public class ApiImportService {
         String duration = String.valueOf(embeddedObject.get("duration"));
         String publicationDt = String.valueOf(embeddedObject.get("publicationStartDateAndTime"));
 
+        Map tracking = (LinkedTreeMap)embeddedObject.get("tracking");
         Map embedded = (LinkedTreeMap)embeddedObject.get("_embedded");
         Map programSet = (LinkedTreeMap)embedded.get("mt:programSet");
         Map programSetLinks = (LinkedTreeMap)programSet.get("_links");
@@ -138,9 +139,12 @@ public class ApiImportService {
 
         String linkAudiothek = (String)(((LinkedTreeMap)programSetLinks.get("mt:sharing")).get("href"));
 
-        String publisher = "";
+        List<String> publisher = new ArrayList<>();
         if(null != ((LinkedTreeMap)programSet.get("_embedded")).get("mt:publicationService")) {
-            publisher = (String) ((LinkedTreeMap) ((LinkedTreeMap) programSet.get("_embedded")).get("mt:publicationService")).get("title");
+            publisher.add((String) ((LinkedTreeMap) ((LinkedTreeMap) programSet.get("_embedded")).get("mt:publicationService")).get("title"));
+        }
+        if(((LinkedTreeMap)tracking.get("play")).containsKey("source")){
+            publisher.add((String) ((LinkedTreeMap)tracking.get("play")).get("source"));
         }
 
         GenericModel genericModel = new GenericModel(RadioPlayType.class);

@@ -25,6 +25,9 @@ public class BroadcastingCompanySimilarity implements GenricObjectType.SimAlgori
 
         bcList.add(List.of("MDR","Mitteldeutscher Rundfunk","MDR KULTUR"));
 
+        bcList.add(List.of("BR","Bayerischer Rundfunk"));
+
+
 
 
 

@@ -151,7 +151,7 @@ public class SimilarityCheckTest {
      * @throws IOException
      */
     @Test
-    public void testSimilarity5() throws IOException {
+    public void guteDatenlage() throws IOException {
         Map<String,GenericObject> databaseObjects =
                 new DatabaseImportService().getRadioPlays(
                         "WHERE DUKEY = 4987635"
@@ -171,7 +171,7 @@ public class SimilarityCheckTest {
      * @throws IOException
      */
     @Test
-    public void testSimilarity6() throws IOException {
+    public void schlechteDatenlage() throws IOException {
         Map<String,GenericObject> databaseObjects =
                 new DatabaseImportService().getRadioPlays(
                         "WHERE DUKEY = 4913587"
@@ -190,7 +190,7 @@ public class SimilarityCheckTest {
      * @throws IOException
      */
     @Test
-    public void testSimilarity7() throws IOException {
+    public void verschachtelterTitel() throws IOException {
         Map<String,GenericObject> databaseObjects =
                 new DatabaseImportService().getRadioPlays(
                         "WHERE DUKEY = 1429898"
@@ -199,24 +199,6 @@ public class SimilarityCheckTest {
         GenericSimilarity gs = new GenericSimilarity();
         assertSimilarity("Hörspiel (Mehrteiler) in ARD-Audiothek Metadaten + Pressetext vorhanden, Titel unsauber",
                 gs.calcSimilarity(databaseObjects.get("1429898"), apiObject), 0.8f, true);
-    }
-
-    /**
-     * Hörspieltitel gleich, aber nicht identischer Datensatz:
-     * https://hoerspiele.dra.de/vollinfo.php?dukey=1443307&vi=1&SID
-     * https://www.ardaudiothek.de/episode/ndr-hoerspiel-box/johann-wolfgang-von-goethe-die-wahlverwandtschaften-1-2-oder-roman/ndr-kultur/86800910
-     * @throws IOException
-     */
-    @Test
-    public void testSimilarity8() throws IOException {
-        Map<String,GenericObject> databaseObjects =
-                new DatabaseImportService().getRadioPlays(
-                        "WHERE DUKEY = 1443307"
-                );
-        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/wahlverwandtschaften-86800910.json"));
-        GenericSimilarity gs = new GenericSimilarity();
-        assertSimilarity("Hörspieltitel gleich, aber nicht identischer Datensatz",
-                gs.calcSimilarity(databaseObjects.get("1443307"), apiObject), 0.8f, false);
     }
 
     /**
@@ -231,7 +213,7 @@ public class SimilarityCheckTest {
      * @throws IOException
      */
     @Test
-    public void testSimilarity9() throws IOException {
+    public void unterschiedlicheTeilung() throws IOException {
         Map<String,GenericObject> databaseObjects =
                 new DatabaseImportService().getRadioPlays(
                         "WHERE DUKEY = 4988145"
@@ -249,7 +231,7 @@ public class SimilarityCheckTest {
      * https://www.ardaudiothek.de/episode/hoerspiel-studio/r_crusoe-tm-oder-dystopie-einer-kuenstlich-intelligente-welt/swr2/90266522
      */
     @Test
-    public void testSimilarity10() throws IOException {
+    public void unterschiedlicheUntertitel() throws IOException {
         Map<String,GenericObject> databaseObjects =
                 new DatabaseImportService().getRadioPlays(
                         "WHERE DUKEY = 4987715"
@@ -269,7 +251,7 @@ public class SimilarityCheckTest {
      *
      */
     @Test
-    public void testSimilarity11() throws IOException {
+    public void tatortFolgen() throws IOException {
         Map<String,GenericObject> databaseObjects =
                 new DatabaseImportService().getRadioPlays(
                         "WHERE DUKEY = 4981555"
@@ -281,14 +263,33 @@ public class SimilarityCheckTest {
     }
 
     /**
+     * Hörspieltitel gleich, aber nicht identischer Datensatz:
+     * https://hoerspiele.dra.de/vollinfo.php?dukey=1443307&vi=1&SID
+     * https://www.ardaudiothek.de/episode/ndr-hoerspiel-box/johann-wolfgang-von-goethe-die-wahlverwandtschaften-1-2-oder-roman/ndr-kultur/86800910
+     * @throws IOException
+     */
+    @Test
+    public void gleichAberNichtIdentisch() throws IOException {
+        Map<String,GenericObject> databaseObjects =
+                new DatabaseImportService().getRadioPlays(
+                        "WHERE DUKEY = 1443307"
+                );
+        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/wahlverwandtschaften-86800910.json"));
+        GenericSimilarity gs = new GenericSimilarity();
+        assertSimilarity("Hörspieltitel gleich, aber nicht identischer Datensatz",
+                gs.calcSimilarity(databaseObjects.get("1443307"), apiObject), 0.8f, false);
+    }
+
+    /**
      * Mehrteiler, in HSPDB zwei Fassungen (6 und 8 Teile), in ARD-Audiothek nur gekürzte Fassung (6 Teile) vorhanden
      * a)	https://hoerspiele.dra.de/vollinfo.php?dukey=1423911&vi=14&SID
-     * b)	https://hoerspiele.dra.de/vollinfo.php?dukey=4993131&vi=6&SID TODO nicht in hsdb-dump!
+     * b)	https://hoerspiele.dra.de/vollinfo.php?dukey=4993131&vi=6&SID
+     * TODO 4993131 nicht in DUMP! Daher nur Test von 1423911 (8 Episoden) mit 92281450 (6 Episoden und neuer)
      *
      * https://www.ardaudiothek.de/episode/hoerspiel-pool/terra-incognita-1-6-oder-science-fiction-oeko-thriller/bayern-2/92281450
      */
     @Test
-    public void testSimilarity12() throws IOException {
+    public void falscheFassung() throws IOException {
         Map<String,GenericObject> databaseObjects =
                 new DatabaseImportService().getRadioPlays(
                         "WHERE DUKEY = 1423911"
@@ -296,7 +297,7 @@ public class SimilarityCheckTest {
         GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/terra-incognita-92281450.json"));
         GenericSimilarity gs = new GenericSimilarity();
         assertSimilarity("Mehrteiler, in HSPDB zwei Fassungen (6 und 8 Teile), in ARD-Audiothek nur gekürzte Fassung (6 Teile) vorhanden",
-                gs.calcSimilarity(databaseObjects.get("1423911"), apiObject), 0.8f, true);
+                gs.calcSimilarity(databaseObjects.get("1423911"), apiObject), 0.8f, false);
     }
 
 

@@ -89,7 +89,11 @@ public class DatabaseImportService {
         GenericObject radioPlay = new GenericObject(genericModel,id);
 
         try {
-            radioPlay.addDescriptionProperty(RadioPlayType.TITLE, bean.getTitle());
+            List<String> titles = new ArrayList<>(List.of(bean.getTitle()));
+            if( !"".equals(bean.getSubTitle() )){
+                titles.add(bean.getSubTitle());
+            }
+            radioPlay.addDescriptionProperty(RadioPlayType.TITLE, titles);
             radioPlay.addDescriptionProperty(RadioPlayType.SHOW_TITLE, bean.getShowTitle());
             radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
             radioPlay.addDescriptionProperty(RadioPlayType.DURATION, String.valueOf(bean.getDurationInSeconds()));
@@ -138,6 +142,8 @@ public class DatabaseImportService {
         private String title = "";
         @JsonProperty("LITV")
         private String longTitle = "";
+        @JsonProperty("UNTI")
+        private String subTitle = "";
         @JsonProperty("BIO")
         private String bio = "";
         @JsonProperty("INH")
@@ -199,6 +205,14 @@ public class DatabaseImportService {
 
         public void setLongTitle(String longTitle) {
             this.longTitle = longTitle;
+        }
+
+        public String getSubTitle() {
+            return subTitle;
+        }
+
+        public void setSubTitle(String subTitle) {
+            this.subTitle = subTitle;
         }
 
         public String getBio() {
@@ -310,6 +324,7 @@ public class DatabaseImportService {
                     ", showTitle='" + showTitle + '\'' +
                     ", title='" + title + '\'' +
                     ", longTitle='" + longTitle + '\'' +
+                    ", subTitle='" + subTitle + '\'' +
                     ", bio='" + bio + '\'' +
                     ", description='" + description + '\'' +
                     ", actors=" + actors +
