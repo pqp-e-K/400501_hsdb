@@ -12,9 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,12 +42,12 @@ public class DatabaseImportService {
         return DriverManager.getConnection("jdbc:mariadb://"+URL+"/"+DB+"?user="+USER+"&password="+PASS+"");
     }
 
-    public List<GenericObject> getRadioPlays(){
+    public Map<String,GenericObject> getRadioPlays(){
         return getRadioPlays("");
     }
 
-    public List<GenericObject> getRadioPlays(String query){
-        List<GenericObject> result = new ArrayList<>();
+    public Map<String,GenericObject> getRadioPlays(String query){
+        Map<String,GenericObject> result = new HashMap<>();
         String sql = "SELECT DUKEY, VOLLINFO FROM "+DB+"."+TAB+" "+query+";";
         try(Connection connection = createConnection()) {
             try(Statement stmt = connection.createStatement()){
@@ -62,7 +60,7 @@ public class DatabaseImportService {
                             id,
                             beanFromXmlString(xml)
                     );
-                    result.add(radioPlay);
+                    result.put(id,radioPlay);
                 }
             } catch (SQLException | JsonProcessingException throwables){
                 LOG.error(throwables.getMessage(), throwables);
@@ -252,9 +250,9 @@ public class DatabaseImportService {
 
             float seconds = 0F;
             if( parts.length > 0 ){
-                seconds += Float.parseFloat(parts[0]);
+                seconds += Float.parseFloat(parts[1]);
                 if( parts.length > 1 ){ // 5'21 -> seconds = 5 * 60 + 21
-                    seconds += Float.parseFloat(parts[1]) * 60;
+                    seconds += Float.parseFloat(parts[0]) * 60;
                 }
             }
             return seconds;
@@ -284,7 +282,7 @@ public class DatabaseImportService {
             return Stream.concat(
                     Stream.of(getAuthor(), getDirector(), getTranslator()),
                     getActorNames().stream()
-            ).collect(Collectors.toList());
+            ).map(name -> name.replaceAll("\\[.*\\]", "").trim()).collect(Collectors.toList());
         }
 
         @Override

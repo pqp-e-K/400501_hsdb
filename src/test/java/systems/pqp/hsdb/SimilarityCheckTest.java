@@ -18,20 +18,19 @@ public class SimilarityCheckTest {
     public void testSimilarity() throws IOException {
         // Jules Verne Reise von der Erde zum Mond
         // GenericObject aus Database
-        List<GenericObject> databaseObjects =
+        Map<String,GenericObject> databaseObjects =
                 new DatabaseImportService().getRadioPlays(
                         "WHERE DUKEY = 1444441"
                 );
         Assert.assertEquals(1, databaseObjects.size());
-        GenericObject dbObject = databaseObjects.get(0);
+        GenericObject dbObject = databaseObjects.get("1444441");
 
         // GenericObject aus Api (mocked aus Datei)
         GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/jules-verne-95022544.json"));
 
         GenericSimilarity gs = new GenericSimilarity();
 
-        Assert.assertEquals(1.0f, gs.calcSimilarity(apiObject, dbObject),0.0f);
-
+        Assert.assertTrue( gs.calcSimilarity(apiObject, dbObject) < 0.8f);  //Unterschiedliche Umsetzung
     }
 
     @Test
@@ -49,7 +48,7 @@ public class SimilarityCheckTest {
          * +---------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
          */
         // Christa Wolf: Kassandra
-        List<GenericObject> databaseObjects =
+        Map<String,GenericObject> databaseObjects =
                 new DatabaseImportService().getRadioPlays(
                         "WHERE DUKEY = 1372136 OR DUKEY = 1393951 OR DUKEY = 1393952 OR DUKEY = 1393953 OR DUKEY = 1424348"
                 );
@@ -59,11 +58,11 @@ public class SimilarityCheckTest {
 
         GenericSimilarity gs = new GenericSimilarity();
 
-        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(0), apiObject), 0.0f);
-        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(1), apiObject), 0.0f);
-        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(2), apiObject), 0.0f);
-        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(3), apiObject), 0.0f);
-        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(4), apiObject), 0.0f);
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1372136"), apiObject) >= 0.8f);
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1393951"), apiObject) < 0.8f);
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1393952"), apiObject) < 0.8f);
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1393953"), apiObject) < 0.8f);
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1424348"), apiObject) < 0.8f);
 
     }
 
@@ -81,7 +80,7 @@ public class SimilarityCheckTest {
          * +---------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
          */
         // Fjodor Dostojewski: Der Doppelgänger
-        List<GenericObject> databaseObjects =
+        Map<String,GenericObject> databaseObjects =
                 new DatabaseImportService().getRadioPlays(
                         "WHERE DUKEY = 1377607 OR DUKEY = 1444949 OR DUKEY = 1466678 OR DUKEY = 1522315"
                 );
@@ -90,10 +89,12 @@ public class SimilarityCheckTest {
         GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/dostojewski-94663538.json"));
 
         GenericSimilarity gs = new GenericSimilarity();
-        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(0), apiObject), 0.0f);
-        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(1), apiObject), 0.0f);
-        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(2), apiObject), 0.0f);
-        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(3), apiObject), 0.0f);
+
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1444949"), apiObject) >= 0.8f);
+
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1377607"), apiObject) < 0.8f);
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1466678"), apiObject) < 0.8f);
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1522315"), apiObject) < 0.8f);
     }
 
     @Test
@@ -115,7 +116,7 @@ public class SimilarityCheckTest {
          * +---------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
          */
         // Sodom und Gomorrha
-        List<GenericObject> databaseObjects =
+        Map<String,GenericObject> databaseObjects =
                 new DatabaseImportService().getRadioPlays(
                         "WHERE DUKEY = 1373362 OR DUKEY = 1411923 OR DUKEY = 1477013 OR DUKEY = 1527012 OR DUKEY = 1550580 OR DUKEY = 4949489 OR DUKEY = 4949491 OR DUKEY = 4949492 OR DUKEY = 4987009"
                 );
@@ -125,15 +126,22 @@ public class SimilarityCheckTest {
 
         // Tipp: Mit command+option+shift + Mauszeiger kann man Blockauswahlen
         GenericSimilarity gs = new GenericSimilarity();
-        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(0), apiObject), 0.0f);
-        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(1), apiObject), 0.0f);
-        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(2), apiObject), 0.0f);
-        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(3), apiObject), 0.0f);
-        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(4), apiObject), 0.0f);
-        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(5), apiObject), 0.0f);
-        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(6), apiObject), 0.0f);
-        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(7), apiObject), 0.0f);
-        Assert.assertEquals(1.0f, gs.calcSimilarity(databaseObjects.get(8), apiObject), 0.0f);
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1411923"), apiObject) < 0.8f);
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1373362"), apiObject) < 0.8f);
+
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1477013"), apiObject) < 0.8f);
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1527012"), apiObject) < 0.8f);
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1550580"), apiObject) < 0.8f);
+
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("4987009"), apiObject) < 0.8f);
+
+
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("4949489"), apiObject) < 0.8f);     //Teil 1
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("4949491"), apiObject) < 0.8f);     //Teil 2
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("4949492"), apiObject) < 0.8f);     //Teil 3
+
+        //Teil 4 fehlt in HSDB
+
     }
 
     Map loadJsonFromFile(String fileName) throws IOException {

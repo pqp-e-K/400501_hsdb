@@ -5,7 +5,7 @@ import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.List;
+import java.util.Map;
 
 public class DatabaseImportServiceTest {
 
@@ -39,7 +39,7 @@ public class DatabaseImportServiceTest {
     @Test
     public void getRadioPlays() {
         DatabaseImportService databaseImportService = new DatabaseImportService();
-        List<GenericObject> result = databaseImportService.getRadioPlays();
+        Map<String,GenericObject> result = databaseImportService.getRadioPlays();
         Assert.assertNotNull(result);
         Assert.assertTrue(result.size() > 0);
     }
