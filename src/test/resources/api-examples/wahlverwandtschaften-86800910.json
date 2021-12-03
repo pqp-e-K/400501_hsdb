@@ -1,0 +1,143 @@
+{
+  "_links": {
+    "self": {
+      "href": "./items/86800910",
+      "name": "item"
+    },
+    "mt:bestQualityPlaybackUrl": {
+      "href": "https://mediandr-a.akamaihd.net/download/podcasts/podcast4336/AU-20210224-1039-3300.mp3"
+    },
+    "mt:downloadUrl": {
+      "href": "https://mediandr-a.akamaihd.net/download/podcasts/podcast4336/AU-20210224-1039-3300.mp3"
+    },
+    "mt:image": {
+      "href": "https://img.ardmediathek.de/standard/00/86/81/24/06/-1774185891/{ratio}/{width}?mandant\u003dard",
+      "name": "Porträt Johann Wolfgang Goethe",
+      "title": "picture-alliance",
+      "templated": true
+    },
+    "mt:mediaCollection": {
+      "href": "./media/86800910"
+    },
+    "mt:playCounting": {
+      "href": "./items/86800910/count/increment"
+    },
+    "mt:sharing": {
+      "href": "https://audiothek.ardmediathek.de/items/86800910"
+    },
+    "mt:squareImage": {
+      "href": "https://img.ardmediathek.de/standard/00/86/81/24/08/-1774185891/{ratio}/{width}?mandant\u003dard",
+      "name": "Porträt Johann Wolfgang Goethe",
+      "title": "picture-alliance",
+      "templated": true
+    }
+  },
+  "duration": 4777.0,
+  "id": "86800910",
+  "publicationStartDateAndTime": "2021-03-08T16:00:00.000+0100",
+  "synopsis": "Zweiteiliges Liebesdrama nach einem Roman von Johann Wolfgang von Goethe. Erster Teil: In seinem 1809 erschienenen Roman \"Die Wahlverwandtschaften\" übertrug Goethe die Lehre von der Affinität bestimmter Elemente, miteinander eine Verbindung einzugehen und wieder aufzulösen, aus der chemischen Wissenschaft auf die Geschlechterverhältnisse. Das Ehepaar Eduard und Charlotte, die sich auf ihrem Landsitz für die Zweisamkeit einrichten, nehmen den Hauptmann, einen Jugendfreund Eduards, und im Gegenzug Ottilie, die Nichte von Charlotte, zu sich ins Haus. So beginnt das Unglück in der Logik der \"Wahlverwandtschaften\": Zwischen dem Hauptmann und Charlotte einerseits sowie Eduard und Ottilie andererseits entsteht eine wachsende Zuneigung. Während der Hauptmann und Charlotte ihr Gefühl zu unterdrücken versuchen, gibt sich Eduard seiner Verliebtheit zu Ottilie hin. Es kommt fast zu einem \"doppelten Bruch\" und die sich anziehende Kräfte lösen sich wieder. Walter Adlers hat das als \"unausdeutbar\" geltende Werk Goethes über einen folgenschweren Ehebruch für das Hörspiel adaptiert - mit Burghart Klaußner als Eduard und Imogen Kogge als Charlotte und vielen anderen. Mit Thomas Holtzmann (Erzähler), Burghart Klaußner (Eduard), Imogen Kogge (Charlotte), Christian Redl (Hauptmann), Janna Striebeck (Ottilie), Martin Reinke (Graf), Christiane Leuchtmann-Korff (Baronesse) und Gerhard Garbers (Geselle). Bearbeitung und Regie: Walter Adler. Redaktion: Michael Becker. Produktion: NDR 1999 l 80 min. Verfügbar bis 01.03.2022. https://ndr.de/radiokunst",
+  "title": "Johann Wolfgang von Goethe: Die Wahlverwandtschaften (1/2) | Roman",
+  "tracking": {
+    "title": "ARD Audiothek/{page.tracking.chapter1}/NDR Hörspiel Box/Johann Wolfgang von Goethe: Die Wahlverwandtschaften .../86800910/20210308_1600",
+    "chapter1": "{page.tracking.chapter1}",
+    "play": {
+      "title": "ARD Audiothek/{page.tracking.chapter1}/NDR Hörspiel Box/Johann Wolfgang von Goethe: Die Wahlverwandtschaften .../86800910/20210308_1600",
+      "chapter1": "{page.tracking.chapter1}",
+      "chapter2": "NDR Hörspiel Box",
+      "sticky": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Sticky Player/NDR Hörspiel Box/Johann Wolfgang von Goethe: Die Wahlverwandtschaften (1/2) | Roman/86800910/20210308_1600",
+        "chapter1": "Sticky Player"
+      },
+      "autopilot": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Autopilot/NDR Hörspiel Box/Johann Wolfgang von Goethe: Die Wahlverwandtschaften (1/2) | Roman/86800910/20210308_1600",
+        "chapter1": "Autopilot"
+      },
+      "mediaType": "audio",
+      "lra": "NDR",
+      "channel": "NDR Kultur",
+      "show": "NDR Hörspiel Box",
+      "contentType": "2",
+      "source": "NDR",
+      "mediaDistributionType": "1",
+      "contentId": "86800910",
+      "publicationDate": "20210308",
+      "clipLength": "4777",
+      "clipTitle": "Johann Wolfgang von Goethe: Die Wahlverwandtschaften (1/2) | Roman"
+    }
+  },
+  "_embedded": {
+    "mt:programSet": {
+      "_links": {
+        "self": {
+          "href": "./programsets/46941692{?order,offset,limit}",
+          "name": "programSet",
+          "templated": true
+        },
+        "mt:image": {
+          "href": "https://img.ardmediathek.de/standard/00/64/21/95/46/-2114473875/{ratio}/{width}?mandant\u003dard",
+          "templated": true
+        },
+        "mt:sharing": {
+          "href": "https://audiothek.ardmediathek.de/programsets/46941692"
+        },
+        "mt:squareImage": {
+          "href": "https://img.ardmediathek.de/standard/00/64/21/95/46/-2114473875/{ratio}/{width}?mandant\u003dard",
+          "templated": true
+        },
+        "mt:synd_rss": {
+          "href": "https://audiothek.ardmediathek.de/programsets/46941692/synd_rss"
+        }
+      },
+      "id": "46941692",
+      "numberOfElements": 101.0,
+      "synopsis": "Der Podcast zum Wegträumen und Wachwerden: Krimis und Klassiker, Literatur und Pop als Download. Alles in einer Box.",
+      "title": "NDR Hörspiel Box",
+      "_embedded": {
+        "mt:publicationService": {
+          "_links": {
+            "self": {
+              "href": "./publicationservices/5850",
+              "name": "publicationService"
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/80/06/555337067/{ratio}/{width}?mandant\u003dard",
+              "templated": true
+            },
+            "mt:onlinePortal": {
+              "href": "http://www.ndr.de/ndrkultur/"
+            }
+          },
+          "brandingColor": "#c33e2f",
+          "genre": "Kultur",
+          "id": "5850",
+          "numberOfElements": 22.0,
+          "organizationName": "NDR",
+          "title": "NDR Kultur"
+        },
+        "mt:editorialCategories": {
+          "_links": {
+            "self": {
+              "href": "./editorialcategories/42914712{?offset,limit}",
+              "name": "editorialCategory",
+              "templated": true
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            },
+            "mt:squareImage": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            }
+          },
+          "id": "42914712",
+          "title": "Hörspiel \u0026 Lesung "
+        }
+      }
+    }
+  }
+}

@@ -56,9 +56,15 @@ public class DatabaseImportService {
                     String id = resultSet.getString(1);
                     String xml = resultSet.getString(2);
 
+                    VollinfoBean bean = beanFromXmlString(xml);
+
+                    if( LOG.isDebugEnabled() ){
+                        LOG.debug(bean.toString());
+                    }
+
                     GenericObject radioPlay = genericObjectFromBean(
                             id,
-                            beanFromXmlString(xml)
+                            bean
                     );
                     result.put(id,radioPlay);
                 }
@@ -84,6 +90,7 @@ public class DatabaseImportService {
 
         try {
             radioPlay.addDescriptionProperty(RadioPlayType.TITLE, bean.getTitle());
+            radioPlay.addDescriptionProperty(RadioPlayType.SHOW_TITLE, bean.getShowTitle());
             radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
             radioPlay.addDescriptionProperty(RadioPlayType.DURATION, String.valueOf(bean.getDurationInSeconds()));
             radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, bean.getPublicationDt());
@@ -125,6 +132,8 @@ public class DatabaseImportService {
         private String author = "";
         @JsonProperty("UEB")
         private String translator = "";
+        @JsonProperty("RTI")
+        private String showTitle="";
         @JsonProperty("RHTI")
         private String title = "";
         @JsonProperty("LITV")
@@ -166,6 +175,14 @@ public class DatabaseImportService {
 
         public void setTranslator(String translator) {
             this.translator = translator;
+        }
+
+        public String getShowTitle() {
+            return showTitle;
+        }
+
+        public void setShowTitle(String showTitle) {
+            this.showTitle = showTitle;
         }
 
         public String getTitle() {
@@ -290,8 +307,10 @@ public class DatabaseImportService {
                     "category='" + category + '\'' +
                     ", author='" + author + '\'' +
                     ", translator='" + translator + '\'' +
+                    ", showTitle='" + showTitle + '\'' +
                     ", title='" + title + '\'' +
                     ", longTitle='" + longTitle + '\'' +
+                    ", bio='" + bio + '\'' +
                     ", description='" + description + '\'' +
                     ", actors=" + actors +
                     ", director='" + director + '\'' +

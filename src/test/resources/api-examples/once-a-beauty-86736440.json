@@ -1,0 +1,147 @@
+{
+  "_links": {
+    "self": {
+      "href": "./items/86736440",
+      "name": "item"
+    },
+    "mt:bestQualityPlaybackUrl": {
+      "href": "https://wdrmedien-a.akamaihd.net/medp/ondemand/weltweit/fsk0/237/2377044/2377044_32855720.mp3"
+    },
+    "mt:downloadUrl": {
+      "href": "https://wdrmedien-a.akamaihd.net/medp/podcast/weltweit/fsk0/237/2377044/wdr3hoerspiel_2021-03-05_onceabeautyrechterterrorhinterbuergerlicherfassade_wdr3.mp3"
+    },
+    "mt:image": {
+      "href": "https://img.ardmediathek.de/standard/00/86/73/64/48/2121327408/{ratio}/{width}?mandant\u003dard",
+      "name": "Über einem Feldweg braut sich ein Sturm zusammen.",
+      "title": "Weigelstein/imago images/Shotshop",
+      "templated": true
+    },
+    "mt:mediaCollection": {
+      "href": "./media/86736440"
+    },
+    "mt:playCounting": {
+      "href": "./items/86736440/count/increment"
+    },
+    "mt:sharing": {
+      "href": "https://audiothek.ardmediathek.de/items/86736440"
+    },
+    "mt:squareImage": {
+      "href": "https://img.ardmediathek.de/standard/00/86/73/64/50/2121327408/{ratio}/{width}?mandant\u003dard",
+      "name": "Über einem Feldweg braut sich ein Sturm zusammen.",
+      "title": "Weigelstein/imago images/Shotshop",
+      "templated": true
+    }
+  },
+  "duration": 3207.0,
+  "id": "86736440",
+  "publicationStartDateAndTime": "2021-03-05T19:04:35.000+0100",
+  "synopsis": "•Krimi• Thana hat ein Geheimnis. Auf der Flucht vor zwei Männern in einem schwarzen Auto taucht sie in Mehrendorf unter, einer verschlafenen Kleinstadt in der Provinz. Aber der friedliche Eindruck täuscht - in Mehrendorf brodelt es. Thana wird konfrontiert mit Extremismus, Terror, Gewalt und Mord. // Von Bodo Traber / Komposition: Andre Abshagen / Regie: Bodo Traber / Produktion: WDR 2021",
+  "title": "Once a Beauty - Rechter Terror hinter bürgerlicher Fassade",
+  "tracking": {
+    "title": "ARD Audiothek/{page.tracking.chapter1}/Hörspiel/Once a Beauty - Rechter Terror hinter bürgerlicher Fassade/86736440/20210305_1904",
+    "chapter1": "{page.tracking.chapter1}",
+    "play": {
+      "title": "ARD Audiothek/{page.tracking.chapter1}/Hörspiel/Once a Beauty - Rechter Terror hinter bürgerlicher Fassade/86736440/20210305_1904",
+      "chapter1": "{page.tracking.chapter1}",
+      "chapter2": "Hörspiel",
+      "sticky": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Sticky Player/Hörspiel/Once a Beauty - Rechter Terror hinter bürgerlicher Fassade/86736440/20210305_1904",
+        "chapter1": "Sticky Player"
+      },
+      "autopilot": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Autopilot/Hörspiel/Once a Beauty - Rechter Terror hinter bürgerlicher Fassade/86736440/20210305_1904",
+        "chapter1": "Autopilot"
+      },
+      "mediaType": "audio",
+      "lra": "WDR",
+      "channel": "WDR 3",
+      "show": "Hörspiel",
+      "contentType": "2",
+      "source": "WDR",
+      "mediaDistributionType": "1",
+      "contentId": "86736440",
+      "publicationDate": "20210305",
+      "clipLength": "3207",
+      "clipTitle": "Once a Beauty - Rechter Terror hinter bürgerlicher Fassade"
+    }
+  },
+  "_embedded": {
+    "mt:programSet": {
+      "_links": {
+        "self": {
+          "href": "./programsets/31649612{?order,offset,limit}",
+          "name": "programSet",
+          "templated": true
+        },
+        "mt:image": {
+          "href": "https://img.ardmediathek.de/standard/00/47/45/69/92/-1815344529/{ratio}/{width}?mandant\u003dard",
+          "name": "Sendereihenbild WDR 3 Hörspiel: Kompass, Logo WDR 3, Schriftzug Hörspiel",
+          "title": "wdr",
+          "templated": true
+        },
+        "mt:sharing": {
+          "href": "https://audiothek.ardmediathek.de/programsets/31649612"
+        },
+        "mt:squareImage": {
+          "href": "https://img.ardmediathek.de/standard/00/47/45/69/92/-1815344529/{ratio}/{width}?mandant\u003dard",
+          "name": "Sendereihenbild WDR 3 Hörspiel: Kompass, Logo WDR 3, Schriftzug Hörspiel",
+          "title": "wdr",
+          "templated": true
+        },
+        "mt:synd_rss": {
+          "href": "https://audiothek.ardmediathek.de/programsets/31649612/synd_rss"
+        }
+      },
+      "id": "31649612",
+      "numberOfElements": 365.0,
+      "synopsis": "Zeit für Geschichten, Szenen, neue Gedanken und Klänge",
+      "title": "Hörspiel",
+      "_embedded": {
+        "mt:publicationService": {
+          "_links": {
+            "self": {
+              "href": "./publicationservices/5356",
+              "name": "publicationService"
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/92/13/78/-295433861/{ratio}/{width}?mandant\u003dard",
+              "templated": true
+            },
+            "mt:onlinePortal": {
+              "href": "http://www1.wdr.de/radio/wdr3/"
+            }
+          },
+          "brandingColor": "#b0bf2e",
+          "genre": "Kultur",
+          "id": "5356",
+          "numberOfElements": 12.0,
+          "organizationName": "WDR",
+          "title": "WDR 3"
+        },
+        "mt:editorialCategories": {
+          "_links": {
+            "self": {
+              "href": "./editorialcategories/42914712{?offset,limit}",
+              "name": "editorialCategory",
+              "templated": true
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            },
+            "mt:squareImage": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            }
+          },
+          "id": "42914712",
+          "title": "Hörspiel \u0026 Lesung "
+        }
+      }
+    }
+  }
+}

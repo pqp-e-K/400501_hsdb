@@ -1,8 +1,3 @@
-/*
- * 03.11.2021
- * Copyright (c) 2021 HUK-COBURG. All Rights Reserved.
- */
-
 package systems.pqp.hsdb;
 
 import org.apache.logging.log4j.LogManager;

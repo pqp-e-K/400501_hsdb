@@ -1,0 +1,143 @@
+{
+  "_links": {
+    "self": {
+      "href": "./items/92281450",
+      "name": "item"
+    },
+    "mt:bestQualityPlaybackUrl": {
+      "href": "https://media.neuland.br.de/file/1834923/c/feed/terra-incognita-1-6-science-fiction-oeko-thriller-aus-dem-jahr-1962.mp3"
+    },
+    "mt:downloadUrl": {
+      "href": "https://media.neuland.br.de/file/1834923/c/feed/terra-incognita-1-6-science-fiction-oeko-thriller-aus-dem-jahr-1962.mp3"
+    },
+    "mt:image": {
+      "href": "https://img.ardmediathek.de/standard/00/92/30/91/06/2121327408/{ratio}/{width}?mandant\u003dard",
+      "name": "Totenkopf auf Stein",
+      "title": "Colourbox.de",
+      "templated": true
+    },
+    "mt:mediaCollection": {
+      "href": "./media/92281450"
+    },
+    "mt:playCounting": {
+      "href": "./items/92281450/count/increment"
+    },
+    "mt:sharing": {
+      "href": "https://audiothek.ardmediathek.de/items/92281450"
+    },
+    "mt:squareImage": {
+      "href": "https://img.ardmediathek.de/standard/00/92/30/91/04/555337067/{ratio}/{width}?mandant\u003dard",
+      "name": "Totenkopf auf einem Stein",
+      "title": "Colourbox.de",
+      "templated": true
+    }
+  },
+  "duration": 3302.0,
+  "id": "92281450",
+  "publicationStartDateAndTime": "2021-08-19T11:50:00.000+0200",
+  "synopsis": "Aus dem Jahr 1962 | Kult-Hörspiel · Der Höhlenforscher Stacey wurde in seinem Obstgarten buchstäblich vom Boden verschluckt. Einige Tage später wird sein Kollege Professor Lomax vermisst. Scotland Yard beauftragt Polizei-Inspektor Adams und den Spezialisten Dr. Gauge mit dem Fall. Die Ermittler stoßen auf eine seltsame Grube und Teergeruch. // Mit Horst Tappert, Heinz Schimmelpfennig, Albert Weiland, Marlies Schoenau, Peter Lühr u.a. / Aus dem Englischen von Peter Bahama / Komposition: Walter Kabel / Regie: Wilm Ten Haaf / BR 1962// Aktuelle Hörspiel-Empfehlungen per Mail: www.hörspielpool.de/newsletter",
+  "title": "Philip Levene: Terra Incognita (1/6) | Science-Fiction Öko-Thriller",
+  "tracking": {
+    "title": "ARD Audiothek/{page.tracking.chapter1}/Hörspiel Pool/Philip Levene: Terra Incognita (1/6) | Science-Fiction .../92281450/20210819_1150",
+    "chapter1": "{page.tracking.chapter1}",
+    "play": {
+      "title": "ARD Audiothek/{page.tracking.chapter1}/Hörspiel Pool/Philip Levene: Terra Incognita (1/6) | Science-Fiction .../92281450/20210819_1150",
+      "chapter1": "{page.tracking.chapter1}",
+      "chapter2": "Hörspiel Pool",
+      "sticky": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Sticky Player/Hörspiel Pool/Philip Levene: Terra Incognita (1/6) | Science-Fiction Öko-Thriller/92281450/20210819_1150",
+        "chapter1": "Sticky Player"
+      },
+      "autopilot": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Autopilot/Hörspiel Pool/Philip Levene: Terra Incognita (1/6) | Science-Fiction Öko-Thriller/92281450/20210819_1150",
+        "chapter1": "Autopilot"
+      },
+      "mediaType": "audio",
+      "lra": "BR",
+      "channel": "Bayern 2",
+      "show": "Hörspiel Pool",
+      "contentType": "2",
+      "source": "BR",
+      "mediaDistributionType": "1",
+      "contentId": "92281450",
+      "publicationDate": "20210819",
+      "clipLength": "3302",
+      "clipTitle": "Philip Levene: Terra Incognita (1/6) | Science-Fiction Öko-Thriller"
+    }
+  },
+  "_embedded": {
+    "mt:programSet": {
+      "_links": {
+        "self": {
+          "href": "./programsets/7263856{?order,offset,limit}",
+          "name": "programSet",
+          "templated": true
+        },
+        "mt:image": {
+          "href": "https://img.ardmediathek.de/standard/00/49/10/38/96/-1829554053/{ratio}/{width}?mandant\u003dard",
+          "templated": true
+        },
+        "mt:sharing": {
+          "href": "https://audiothek.ardmediathek.de/programsets/7263856"
+        },
+        "mt:squareImage": {
+          "href": "https://img.ardmediathek.de/standard/00/49/10/38/96/-1829554053/{ratio}/{width}?mandant\u003dard",
+          "templated": true
+        },
+        "mt:synd_rss": {
+          "href": "https://audiothek.ardmediathek.de/programsets/7263856/synd_rss"
+        }
+      },
+      "id": "7263856",
+      "numberOfElements": 734.0,
+      "synopsis": "Jede Zeit ist Hörspielzeit! Im Hörspiel Pool finden Sie zahlreiche BR-Hörspiele und Medienkunst aus den Bereichen Literatur, Doku, Pop und Sound Art.",
+      "title": "Hörspiel Pool",
+      "_embedded": {
+        "mt:publicationService": {
+          "_links": {
+            "self": {
+              "href": "./publicationservices/5562",
+              "name": "publicationService"
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/78/86/-295433861/{ratio}/{width}?mandant\u003dard",
+              "templated": true
+            },
+            "mt:onlinePortal": {
+              "href": "http://www.br.de/radio/bayern2/index.html"
+            }
+          },
+          "brandingColor": "#ec711a",
+          "genre": "Kultur",
+          "id": "5562",
+          "numberOfElements": 85.0,
+          "organizationName": "BR",
+          "title": "Bayern 2"
+        },
+        "mt:editorialCategories": {
+          "_links": {
+            "self": {
+              "href": "./editorialcategories/42914712{?offset,limit}",
+              "name": "editorialCategory",
+              "templated": true
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            },
+            "mt:squareImage": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            }
+          },
+          "id": "42914712",
+          "title": "Hörspiel \u0026 Lesung "
+        }
+      }
+    }
+  }
+}

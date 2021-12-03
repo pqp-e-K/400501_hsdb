@@ -61,6 +61,7 @@ public class ApiImportService {
                 }
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 Map result = gson.fromJson(content, Map.class);
+                LOG.info("Found "+result.size()+" records in api...");
                 FileWriter writer = new FileWriter("api.json",false);
                 gson.toJson(result, writer);
                 writer.flush();
@@ -130,6 +131,11 @@ public class ApiImportService {
         Map programSet = (LinkedTreeMap)embedded.get("mt:programSet");
         Map programSetLinks = (LinkedTreeMap)programSet.get("_links");
 
+        String showTitle = "";
+        if( programSet.containsKey("title")){
+            showTitle = (String)programSet.get("title");
+        }
+
         String linkAudiothek = (String)(((LinkedTreeMap)programSetLinks.get("mt:sharing")).get("href"));
 
         String publisher = "";
@@ -141,6 +147,7 @@ public class ApiImportService {
         GenericObject radioPlay = new GenericObject(genericModel,id);
 
         radioPlay.addDescriptionProperty(RadioPlayType.TITLE, title);
+        radioPlay.addDescriptionProperty(RadioPlayType.SHOW_TITLE, showTitle);
         radioPlay.addDescriptionProperty(RadioPlayType.BIO, description);
         radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, description);
         radioPlay.addDescriptionProperty(RadioPlayType.DURATION, duration);

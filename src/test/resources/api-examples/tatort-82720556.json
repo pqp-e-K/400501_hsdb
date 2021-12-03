@@ -1,0 +1,147 @@
+{
+  "_links": {
+    "self": {
+      "href": "./items/82720556",
+      "name": "item"
+    },
+    "mt:bestQualityPlaybackUrl": {
+      "href": "https://avdl.ard.de/radio/radiotatort/bankraub-und-gerechtigkeit.l.mp3"
+    },
+    "mt:downloadUrl": {
+      "href": "https://avdl.ard.de/radio/radiotatort/bankraub-und-gerechtigkeit.l.mp3"
+    },
+    "mt:image": {
+      "href": "https://img.ardmediathek.de/standard/00/82/87/80/40/-1774185891/{ratio}/{width}?mandant\u003dard",
+      "name": "Illustration des ARD Radio Tatorts \"Bankraub und Betrug\"",
+      "title": "Jürgen Frey / ARD.de",
+      "templated": true
+    },
+    "mt:mediaCollection": {
+      "href": "./media/82720556"
+    },
+    "mt:playCounting": {
+      "href": "./items/82720556/count/increment"
+    },
+    "mt:sharing": {
+      "href": "https://audiothek.ardmediathek.de/items/82720556"
+    },
+    "mt:squareImage": {
+      "href": "https://img.ardmediathek.de/standard/00/82/87/80/40/-1774185891/{ratio}/{width}?mandant\u003dard",
+      "name": "Illustration des ARD Radio Tatorts \"Bankraub und Betrug\"",
+      "title": "Jürgen Frey / ARD.de",
+      "templated": true
+    }
+  },
+  "duration": 3136.0,
+  "id": "82720556",
+  "publicationStartDateAndTime": "2020-11-11T09:00:00.000+0100",
+  "synopsis": "Sie tragen Masken, wie die meisten Menschen, die in Zeiten der Pandemie eine Bank betreten, und das macht die Ermittlungsarbeit für Kriminalhauptkommissarin Jaqueline Hosnicz und ihren Partner Jakob Rosenberg nicht leichter. In ihrem zweiten Fall haben es die Münchner Ermittler, die weiterhin dort eingesetzt werden, wo sie keinen großen Schaden anrichten können, mit einer Serie von Banküberfällen zu tun. Ihre erste Frage lautet: Wer ist heute noch so blöd, sich auf Bankraub zu spezialisieren? Wo doch allgemein bekannt ist, dass der Arbeitslohn in der Regel gering und die Aufklärungsquote extrem hoch ist. Auffällig ist, dass die Bande ruhig und ohne sinnlose Gewalt vorgeht und über äußerst diffizile Fluchtwege davonrast. Ihre zweite Frage: Was hat es mit dem Märchen von den „Gangstern mit dem guten Herz“ (Lokalpresse) auf sich? Ihre Überlegungen werden jäh beendet, als es einen erneuten Banküberfall gibt, diesmal mit einem Toten. Und einem Bekennerschreiben: „Wir sind in der Tradition des bayerischen Bankräubers Theo Berger und wir holen uns die soziale Gerechtigkeit, um die wir alle beschissen werden.“ Hauptkommissar Rosenberg kennt die Geschichte um den sogenannten ‚Al Capone vom Donaumoos‘ und weiß: „Das hätte es jetzt aber nicht auch noch gebraucht.“| Autor: Franz Dobler | Produktion BR 2020",
+  "title": "Bankraub und Gerechtigkeit | Die Münchner Kommissare ermitteln",
+  "tracking": {
+    "title": "ARD Audiothek/{page.tracking.chapter1}/ARD Radio Tatort/Bankraub und Gerechtigkeit | Die Münchner Kommissare .../82720556/20201111_0900",
+    "chapter1": "{page.tracking.chapter1}",
+    "play": {
+      "title": "ARD Audiothek/{page.tracking.chapter1}/ARD Radio Tatort/Bankraub und Gerechtigkeit | Die Münchner Kommissare .../82720556/20201111_0900",
+      "chapter1": "{page.tracking.chapter1}",
+      "chapter2": "ARD Radio Tatort",
+      "sticky": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Sticky Player/ARD Radio Tatort/Bankraub und Gerechtigkeit | Die Münchner Kommissare ermitteln/82720556/20201111_0900",
+        "chapter1": "Sticky Player"
+      },
+      "autopilot": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Autopilot/ARD Radio Tatort/Bankraub und Gerechtigkeit | Die Münchner Kommissare ermitteln/82720556/20201111_0900",
+        "chapter1": "Autopilot"
+      },
+      "mediaType": "audio",
+      "lra": "ARD.de",
+      "channel": "ARD.de",
+      "show": "ARD Radio Tatort",
+      "contentType": "2",
+      "source": "BR",
+      "mediaDistributionType": "1",
+      "contentId": "82720556",
+      "publicationDate": "20201111",
+      "clipLength": "3136",
+      "clipTitle": "Bankraub und Gerechtigkeit | Die Münchner Kommissare ermitteln"
+    }
+  },
+  "_embedded": {
+    "mt:programSet": {
+      "_links": {
+        "self": {
+          "href": "./programsets/1998988{?order,offset,limit}",
+          "name": "programSet",
+          "templated": true
+        },
+        "mt:image": {
+          "href": "https://img.ardmediathek.de/standard/00/76/81/64/64/-1774185891/{ratio}/{width}?mandant\u003dard",
+          "name": "ARD Radio Tatort",
+          "title": "ARD",
+          "templated": true
+        },
+        "mt:sharing": {
+          "href": "https://audiothek.ardmediathek.de/programsets/1998988"
+        },
+        "mt:squareImage": {
+          "href": "https://img.ardmediathek.de/standard/00/76/81/64/64/-1774185891/{ratio}/{width}?mandant\u003dard",
+          "name": "ARD Radio Tatort",
+          "title": "ARD",
+          "templated": true
+        },
+        "mt:synd_rss": {
+          "href": "https://audiothek.ardmediathek.de/programsets/1998988/synd_rss"
+        }
+      },
+      "id": "1998988",
+      "numberOfElements": 38.0,
+      "synopsis": "In dem Gemeinschaftsprojekt ARD Radio Tatort sorgen spannende und unterhaltende Originalhörspiele prominenter Autorinnen und Autoren für akustischen Nervenkitzel. Exklusiv immer 5 Tage vorab in der Audiothek verfügbar - ein Jahr lang abrufbar, jeden Monat neu!",
+      "title": "ARD Radio Tatort",
+      "_embedded": {
+        "mt:publicationService": {
+          "_links": {
+            "self": {
+              "href": "./publicationservices/542816",
+              "name": "publicationService"
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/95/74/46/555337067/{ratio}/{width}?mandant\u003dard",
+              "templated": true
+            },
+            "mt:onlinePortal": {
+              "href": "http://www.ard.de/home/radio/Radio/22550/index.html"
+            }
+          },
+          "brandingColor": "#001a4b",
+          "genre": "Kultur",
+          "id": "542816",
+          "numberOfElements": 17.0,
+          "organizationName": "ARD.de",
+          "title": "ARD.de"
+        },
+        "mt:editorialCategories": {
+          "_links": {
+            "self": {
+              "href": "./editorialcategories/42914712{?offset,limit}",
+              "name": "editorialCategory",
+              "templated": true
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            },
+            "mt:squareImage": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            }
+          },
+          "id": "42914712",
+          "title": "Hörspiel \u0026 Lesung "
+        }
+      }
+    }
+  }
+}

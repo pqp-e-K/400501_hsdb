@@ -1,0 +1,143 @@
+{
+  "_links": {
+    "self": {
+      "href": "./items/86652248",
+      "name": "item"
+    },
+    "mt:bestQualityPlaybackUrl": {
+      "href": "https://media.neuland.br.de/file/1818661/c/feed/1-24-die-mitschriften-aus-dem-saal-a101.mp3"
+    },
+    "mt:downloadUrl": {
+      "href": "https://media.neuland.br.de/file/1818661/c/feed/1-24-die-mitschriften-aus-dem-saal-a101.mp3"
+    },
+    "mt:image": {
+      "href": "https://img.ardmediathek.de/standard/00/86/45/67/36/-1774185891/{ratio}/{width}?mandant\u003dard",
+      "name": "Saal 101",
+      "title": "picture alliance/dpa Montage: BR",
+      "templated": true
+    },
+    "mt:mediaCollection": {
+      "href": "./media/86652248"
+    },
+    "mt:playCounting": {
+      "href": "./items/86652248/count/increment"
+    },
+    "mt:sharing": {
+      "href": "https://audiothek.ardmediathek.de/items/86652248"
+    },
+    "mt:squareImage": {
+      "href": "https://img.ardmediathek.de/standard/00/86/45/67/36/-1774185891/{ratio}/{width}?mandant\u003dard",
+      "name": "Saal 101",
+      "title": "picture alliance/dpa Montage: BR",
+      "templated": true
+    }
+  },
+  "duration": 1784.0,
+  "id": "86652248",
+  "publicationStartDateAndTime": "2021-02-18T18:30:00.000+0100",
+  "synopsis": "Erster Verhandlungstag des NSU-Prozesses gegen die Hauptangeklagte Beate Zschäpe und die Mitangeklagten Ralf Wohlleben, Carsten S., André Eminger und Holger Gerlach: ARD-Reporter über Ablauf und Stimmung in Saal A101 - und ihr teils bitteres Fazit nach Prozessende./ BR für die ARD und DLF 2021 mit Martina Gedeck, Gabriel Raab, Kathrin von Steinburg u.a.",
+  "title": "Die Mitschriften aus dem Saal A101 (1/24) | Doku-Hörspiel zum NSU-Prozess",
+  "tracking": {
+    "title": "ARD Audiothek/{page.tracking.chapter1}/Saal 101 - Dokumentarhörspiel zum NSU-Prozess/Die Mitschriften aus dem Saal A101 (1/24) | Doku-.../86652248/20210218_1830",
+    "chapter1": "{page.tracking.chapter1}",
+    "play": {
+      "title": "ARD Audiothek/{page.tracking.chapter1}/Saal 101 - Dokumentarhörspiel zum NSU-Prozess/Die Mitschriften aus dem Saal A101 (1/24) | Doku-.../86652248/20210218_1830",
+      "chapter1": "{page.tracking.chapter1}",
+      "chapter2": "Saal 101 - Dokumentarhörspiel zum NSU-Prozess",
+      "sticky": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Sticky Player/Saal 101 - Dokumentarhörspiel zum NSU-Prozess/Die Mitschriften aus dem Saal A101 (1/24) | Doku-Hörspiel zum NSU-Prozess/86652248/20210218_1830",
+        "chapter1": "Sticky Player"
+      },
+      "autopilot": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Autopilot/Saal 101 - Dokumentarhörspiel zum NSU-Prozess/Die Mitschriften aus dem Saal A101 (1/24) | Doku-Hörspiel zum NSU-Prozess/86652248/20210218_1830",
+        "chapter1": "Autopilot"
+      },
+      "mediaType": "audio",
+      "lra": "BR",
+      "channel": "Bayern 2",
+      "show": "Saal 101 - Dokumentarhörspiel zum NSU-Prozess",
+      "contentType": "2",
+      "source": "BR",
+      "mediaDistributionType": "1",
+      "contentId": "86652248",
+      "publicationDate": "20210218",
+      "clipLength": "1784",
+      "clipTitle": "Die Mitschriften aus dem Saal A101 (1/24) | Doku-Hörspiel zum NSU-Prozess"
+    }
+  },
+  "_embedded": {
+    "mt:programSet": {
+      "_links": {
+        "self": {
+          "href": "./programsets/85721498{?order,offset,limit}",
+          "name": "programSet",
+          "templated": true
+        },
+        "mt:image": {
+          "href": "https://img.ardmediathek.de/standard/00/85/72/14/96/-1774185891/{ratio}/{width}?mandant\u003dard",
+          "templated": true
+        },
+        "mt:sharing": {
+          "href": "https://audiothek.ardmediathek.de/programsets/85721498"
+        },
+        "mt:squareImage": {
+          "href": "https://img.ardmediathek.de/standard/00/85/72/14/96/-1774185891/{ratio}/{width}?mandant\u003dard",
+          "templated": true
+        },
+        "mt:synd_rss": {
+          "href": "https://audiothek.ardmediathek.de/programsets/85721498/synd_rss"
+        }
+      },
+      "id": "85721498",
+      "numberOfElements": 26.0,
+      "synopsis": "6. Mai 2013, Oberlandesgericht München: Im Saal A 101 beginnt der Prozess gegen die Hauptangeklagte Beate Zschäpe und vier Mitangeklagte. Es ist das größte Rechtsterrorismusverfahren der deutschen Geschichte. Zehn Morde, zwei Bombenanschläge und 15 Raubüberfälle wurden vom Nationalsozialistischen Untergrund (NSU) verübt. Das Dokumentarhörspiel verdichtet 6000 Seiten Protokolle und Notizen der ARD-Gerichtsreporter zu einem einzigartigen Stück Zeitgeschichte: Es lässt die Zeugenbefragungen miterleben und gibt damit tiefe Einblicke in deutsche Abgründe.",
+      "title": "Saal 101 - Dokumentarhörspiel zum NSU-Prozess",
+      "_embedded": {
+        "mt:publicationService": {
+          "_links": {
+            "self": {
+              "href": "./publicationservices/5562",
+              "name": "publicationService"
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/78/86/-295433861/{ratio}/{width}?mandant\u003dard",
+              "templated": true
+            },
+            "mt:onlinePortal": {
+              "href": "http://www.br.de/radio/bayern2/index.html"
+            }
+          },
+          "brandingColor": "#ec711a",
+          "genre": "Kultur",
+          "id": "5562",
+          "numberOfElements": 85.0,
+          "organizationName": "BR",
+          "title": "Bayern 2"
+        },
+        "mt:editorialCategories": {
+          "_links": {
+            "self": {
+              "href": "./editorialcategories/42914712{?offset,limit}",
+              "name": "editorialCategory",
+              "templated": true
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            },
+            "mt:squareImage": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            }
+          },
+          "id": "42914712",
+          "title": "Hörspiel \u0026 Lesung "
+        }
+      }
+    }
+  }
+}

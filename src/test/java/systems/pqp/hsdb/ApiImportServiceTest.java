@@ -21,7 +21,6 @@ public class ApiImportServiceTest {
     public void getRadioPlays() throws ImportException {
         List<GenericObject> result = new ApiImportService().getRadioPlays();
         Assert.assertTrue("Ergebnismenge ist > 0",result.size() > 0);
-        System.out.println(result);
     }
 
     @Test

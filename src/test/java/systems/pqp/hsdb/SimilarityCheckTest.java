@@ -144,6 +144,7 @@ public class SimilarityCheckTest {
     // -- Neue Tests mit Beispielen aus Mail -- //
 
     /**
+     * Hörspiel, ARD-Audiothek weitere Metadaten vorhanden (Beispiel für gute Datenlage)
      * Once a Beauty
      * https://hoerspiele.dra.de/vollinfo.php?dukey=4987635&vi=1&SID
      * https://www.ardaudiothek.de/episode/hoerspiel/once-a-beauty-rechter-terror-hinter-buergerlicher-fassade/wdr-3/86736440
@@ -155,9 +156,147 @@ public class SimilarityCheckTest {
                 new DatabaseImportService().getRadioPlays(
                         "WHERE DUKEY = 4987635"
                 );
-        System.out.println(databaseObjects);
 
         GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/once-a-beauty-86736440.json"));
+        GenericSimilarity gs = new GenericSimilarity();
+        assertSimilarity("Hörspiel, ARD-Audiothek weitere Metadaten vorhanden (Beispiel für gute Datenlage)",
+                gs.calcSimilarity(databaseObjects.get("4987635"), apiObject), 0.8f, true);
+    }
+
+    /**
+     * Hörspiel, in ARD-Audiothek schlechte Datenlage
+     * De Rerum Natura
+     * https://hoerspiele.dra.de/vollinfo.php?dukey=4913587&vi=1&SID
+     * https://www.ardaudiothek.de/episode/hoerspiel/de-rerum-natura-dance-of-the-elements-oder-ueber-die-natur-der-dinge-nach-lukrez/deutschlandfunk-kultur/92212772
+     * @throws IOException
+     */
+    @Test
+    public void testSimilarity6() throws IOException {
+        Map<String,GenericObject> databaseObjects =
+                new DatabaseImportService().getRadioPlays(
+                        "WHERE DUKEY = 4913587"
+                );
+
+        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/de-rerum-natura-92212772.json"));
+        GenericSimilarity gs = new GenericSimilarity();
+        assertSimilarity("Hörspiel, in ARD-Audiothek schlechte Datenlage",
+                gs.calcSimilarity(databaseObjects.get("4913587"), apiObject), 0.8f, true);
+    }
+
+    /**
+     * Hörspiel (Mehrteiler) in ARD-Audiothek Metadaten + Pressetext vorhanden, Titel unsauber:
+     * https://hoerspiele.dra.de/vollinfo.php?dukey=1429898&vi=4&SID
+     * https://www.ardaudiothek.de/episode/ndr-hoerspiel-box/johann-wolfgang-von-goethe-die-wahlverwandtschaften-1-2-oder-roman/ndr-kultur/86800910
+     * @throws IOException
+     */
+    @Test
+    public void testSimilarity7() throws IOException {
+        Map<String,GenericObject> databaseObjects =
+                new DatabaseImportService().getRadioPlays(
+                        "WHERE DUKEY = 1429898"
+                );
+        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/wahlverwandtschaften-86800910.json"));
+        GenericSimilarity gs = new GenericSimilarity();
+        assertSimilarity("Hörspiel (Mehrteiler) in ARD-Audiothek Metadaten + Pressetext vorhanden, Titel unsauber",
+                gs.calcSimilarity(databaseObjects.get("1429898"), apiObject), 0.8f, true);
+    }
+
+    /**
+     * Hörspieltitel gleich, aber nicht identischer Datensatz:
+     * https://hoerspiele.dra.de/vollinfo.php?dukey=1443307&vi=1&SID
+     * https://www.ardaudiothek.de/episode/ndr-hoerspiel-box/johann-wolfgang-von-goethe-die-wahlverwandtschaften-1-2-oder-roman/ndr-kultur/86800910
+     * @throws IOException
+     */
+    @Test
+    public void testSimilarity8() throws IOException {
+        Map<String,GenericObject> databaseObjects =
+                new DatabaseImportService().getRadioPlays(
+                        "WHERE DUKEY = 1443307"
+                );
+        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/wahlverwandtschaften-86800910.json"));
+        GenericSimilarity gs = new GenericSimilarity();
+        assertSimilarity("Hörspieltitel gleich, aber nicht identischer Datensatz",
+                gs.calcSimilarity(databaseObjects.get("1443307"), apiObject), 0.8f, false);
+    }
+
+    /**
+     * Hörspielreihe, unterschiedliche Teilung (12 vs. 24 Teile)
+     * - bei Hörspielreihen wäre es generell wünschenswert,
+     * wenn auf die Sendungsseite der ARD-Audiothek, nicht eine einzelne Episodenseite, verlinkt würde.
+     * Dies würde das Problem der unterschiedlichen Teilung elegant lösen.
+     *
+     * https://hoerspiele.dra.de/vollinfo.php?dukey=4988145&vi=11&SID
+     *
+     * https://www.ardaudiothek.de/sendung/saal-101-dokumentarhoerspiel-zum-nsu-prozess/85721498
+     * @throws IOException
+     */
+    @Test
+    public void testSimilarity9() throws IOException {
+        Map<String,GenericObject> databaseObjects =
+                new DatabaseImportService().getRadioPlays(
+                        "WHERE DUKEY = 4988145"
+                );
+        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/nsu-prozess-85721498.json"));
+        GenericSimilarity gs = new GenericSimilarity();
+        assertSimilarity("Hörspielreihe, unterschiedliche Teilung (12 vs. 24 Teile)",
+                gs.calcSimilarity(databaseObjects.get("4988145"), apiObject), 0.8f, true);
+    }
+
+    /**
+     * Hörspieltitel identisch, Untertitel unterschiedlich
+     * https://hoerspiele.dra.de/vollinfo.php?dukey=4987715&vi=10&SID
+     *
+     * https://www.ardaudiothek.de/episode/hoerspiel-studio/r_crusoe-tm-oder-dystopie-einer-kuenstlich-intelligente-welt/swr2/90266522
+     */
+    @Test
+    public void testSimilarity10() throws IOException {
+        Map<String,GenericObject> databaseObjects =
+                new DatabaseImportService().getRadioPlays(
+                        "WHERE DUKEY = 4987715"
+                );
+        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/ki-90266522.json"));
+        GenericSimilarity gs = new GenericSimilarity();
+        assertSimilarity("Hörspieltitel identisch, Untertitel unterschiedlich",
+                gs.calcSimilarity(databaseObjects.get("4987715"), apiObject), 0.8f, true);
+    }
+
+    /**
+     * Hörspielreihe: ARD Radio Tatort
+     * (eigenes Beispiel, das im Word funktioniert nicht, da die ID nicht im Dump vorkommt...)
+     * https://www.ardaudiothek.de/episode/ard-radio-tatort/bankraub-und-gerechtigkeit-oder-die-muenchner-kommissare-ermitteln/ard-de/82720556/
+     *
+     * https://hoerspiele.dra.de/vollinfo.php?dukey=4981555&vi=5&SID
+     *
+     */
+    @Test
+    public void testSimilarity11() throws IOException {
+        Map<String,GenericObject> databaseObjects =
+                new DatabaseImportService().getRadioPlays(
+                        "WHERE DUKEY = 4981555"
+                );
+        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/tatort-82720556.json"));
+        GenericSimilarity gs = new GenericSimilarity();
+        assertSimilarity("Hörspielreihe: ARD Radio Tatort",
+                gs.calcSimilarity(databaseObjects.get("4981555"), apiObject), 0.8f, true);
+    }
+
+    /**
+     * Mehrteiler, in HSPDB zwei Fassungen (6 und 8 Teile), in ARD-Audiothek nur gekürzte Fassung (6 Teile) vorhanden
+     * a)	https://hoerspiele.dra.de/vollinfo.php?dukey=1423911&vi=14&SID
+     * b)	https://hoerspiele.dra.de/vollinfo.php?dukey=4993131&vi=6&SID TODO nicht in hsdb-dump!
+     *
+     * https://www.ardaudiothek.de/episode/hoerspiel-pool/terra-incognita-1-6-oder-science-fiction-oeko-thriller/bayern-2/92281450
+     */
+    @Test
+    public void testSimilarity12() throws IOException {
+        Map<String,GenericObject> databaseObjects =
+                new DatabaseImportService().getRadioPlays(
+                        "WHERE DUKEY = 1423911"
+                );
+        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/terra-incognita-92281450.json"));
+        GenericSimilarity gs = new GenericSimilarity();
+        assertSimilarity("Mehrteiler, in HSPDB zwei Fassungen (6 und 8 Teile), in ARD-Audiothek nur gekürzte Fassung (6 Teile) vorhanden",
+                gs.calcSimilarity(databaseObjects.get("1423911"), apiObject), 0.8f, true);
     }
 
 
@@ -175,5 +314,13 @@ public class SimilarityCheckTest {
         Map json = gson.fromJson(new InputStreamReader(stream), Map.class);
         stream.close();
         return json;
+    }
+
+    void assertSimilarity(String message, Float value, Float compareValue, boolean greater){
+        if( greater ) {
+            Assert.assertTrue(message + " " + value, value > compareValue);
+        } else {
+            Assert.assertTrue(message + " " + value, value < compareValue);
+        }
     }
 }

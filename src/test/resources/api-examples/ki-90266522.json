@@ -1,0 +1,147 @@
+{
+  "_links": {
+    "self": {
+      "href": "./items/90266522",
+      "name": "item"
+    },
+    "mt:bestQualityPlaybackUrl": {
+      "href": "https://pdodswr-a.akamaihd.net/swr/swr2/hoerspiel/podcast/2021/06/swr2-hoerspiel-studio-20210617-2205-wittmann-und-zeitblom-rcrusoe.l.mp3"
+    },
+    "mt:downloadUrl": {
+      "href": "https://avdlswr-a.akamaihd.net/swr/swr2/hoerspiel/podcast/2021/06/swr2-hoerspiel-studio-20210617-2205-wittmann-und-zeitblom-rcrusoe.l.mp3"
+    },
+    "mt:image": {
+      "href": "https://img.ardmediathek.de/standard/00/90/26/65/30/-1774185891/{ratio}/{width}?mandant\u003dard",
+      "name": "wittmann/zeitblom versteinerter Fußabdruck",
+      "title": "Pressestelle, René Liebert",
+      "templated": true
+    },
+    "mt:mediaCollection": {
+      "href": "./media/90266522"
+    },
+    "mt:playCounting": {
+      "href": "./items/90266522/count/increment"
+    },
+    "mt:sharing": {
+      "href": "https://audiothek.ardmediathek.de/items/90266522"
+    },
+    "mt:squareImage": {
+      "href": "https://img.ardmediathek.de/standard/00/90/26/65/30/-1774185891/{ratio}/{width}?mandant\u003dard",
+      "name": "wittmann/zeitblom versteinerter Fußabdruck",
+      "title": "Pressestelle, René Liebert",
+      "templated": true
+    }
+  },
+  "duration": 3211.0,
+  "id": "90266522",
+  "publicationStartDateAndTime": "2021-06-17T22:05:00.000+0200",
+  "synopsis": "Science fiction als Sound- und Pop-Hörspiel: Nach dem SuperGAU ist die Welt ohne Menschen. Es startet automatisch eine KI namens G.A.I.A. zur Wiederbesiedlung des Planeten | Von wittmann/zeitblom | Musik und Realisation: Christian Wittmann/Zeitblom | Produktion: Deutschlandfunk/SWR 2021",
+  "title": "r_crusoe™ | Dystopie einer künstlich-intelligente Welt",
+  "tracking": {
+    "title": "ARD Audiothek/{page.tracking.chapter1}/SWR2 Hörspiel/r_crusoe™ | Dystopie einer künstlich-intelligente Welt/90266522/20210617_2205",
+    "chapter1": "{page.tracking.chapter1}",
+    "play": {
+      "title": "ARD Audiothek/{page.tracking.chapter1}/SWR2 Hörspiel/r_crusoe™ | Dystopie einer künstlich-intelligente Welt/90266522/20210617_2205",
+      "chapter1": "{page.tracking.chapter1}",
+      "chapter2": "SWR2 Hörspiel",
+      "sticky": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Sticky Player/SWR2 Hörspiel/r_crusoe™ | Dystopie einer künstlich-intelligente Welt/90266522/20210617_2205",
+        "chapter1": "Sticky Player"
+      },
+      "autopilot": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Autopilot/SWR2 Hörspiel/r_crusoe™ | Dystopie einer künstlich-intelligente Welt/90266522/20210617_2205",
+        "chapter1": "Autopilot"
+      },
+      "mediaType": "audio",
+      "lra": "SWR",
+      "channel": "SWR2",
+      "show": "SWR2 Hörspiel",
+      "contentType": "2",
+      "source": "SWR",
+      "mediaDistributionType": "1",
+      "contentId": "90266522",
+      "publicationDate": "20210617",
+      "clipLength": "3211",
+      "clipTitle": "r_crusoe™ | Dystopie einer künstlich-intelligente Welt"
+    }
+  },
+  "_embedded": {
+    "mt:programSet": {
+      "_links": {
+        "self": {
+          "href": "./programsets/8758656{?order,offset,limit}",
+          "name": "programSet",
+          "templated": true
+        },
+        "mt:image": {
+          "href": "https://img.ardmediathek.de/standard/00/73/98/73/24/-295433861/{ratio}/{width}?mandant\u003dard",
+          "name": "Sendungsbild SWR2 Hörspiel-Studio",
+          "title": "SWR",
+          "templated": true
+        },
+        "mt:sharing": {
+          "href": "https://audiothek.ardmediathek.de/programsets/8758656"
+        },
+        "mt:squareImage": {
+          "href": "https://img.ardmediathek.de/standard/00/68/57/90/30/-2114473875/{ratio}/{width}?mandant\u003dard",
+          "name": "Sendungsbild SWR2 Hörspiel-Studio",
+          "title": "SWR",
+          "templated": true
+        },
+        "mt:synd_rss": {
+          "href": "https://audiothek.ardmediathek.de/programsets/8758656/synd_rss"
+        }
+      },
+      "id": "8758656",
+      "numberOfElements": 87.0,
+      "synopsis": "Originalhörspiele, Bearbeitungen der Weltliteratur, Adaptionen herausragender Gegenwartsromane: Zeit und Raum für emotionale Geschichten und starke Figuren.",
+      "title": "SWR2 Hörspiel",
+      "_embedded": {
+        "mt:publicationService": {
+          "_links": {
+            "self": {
+              "href": "./publicationservices/2956",
+              "name": "publicationService"
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/92/12/70/-2114473875/{ratio}/{width}?mandant\u003dard",
+              "templated": true
+            },
+            "mt:onlinePortal": {
+              "href": "http://www.swr.de/swr2/"
+            }
+          },
+          "brandingColor": "#000000",
+          "genre": "Kultur",
+          "id": "2956",
+          "numberOfElements": 43.0,
+          "organizationName": "SWR",
+          "title": "SWR2"
+        },
+        "mt:editorialCategories": {
+          "_links": {
+            "self": {
+              "href": "./editorialcategories/42914712{?offset,limit}",
+              "name": "editorialCategory",
+              "templated": true
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            },
+            "mt:squareImage": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            }
+          },
+          "id": "42914712",
+          "title": "Hörspiel \u0026 Lesung "
+        }
+      }
+    }
+  }
+}
