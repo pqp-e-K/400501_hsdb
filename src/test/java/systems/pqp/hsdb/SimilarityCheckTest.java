@@ -58,7 +58,7 @@ public class SimilarityCheckTest {
 
         GenericSimilarity gs = new GenericSimilarity();
 
-        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1372136"), apiObject) >= 0.8f);
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1372136"), apiObject) < 0.8f);
         Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1393951"), apiObject) < 0.8f);
         Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1393952"), apiObject) < 0.8f);
         Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1393953"), apiObject) < 0.8f);
@@ -90,8 +90,7 @@ public class SimilarityCheckTest {
 
         GenericSimilarity gs = new GenericSimilarity();
 
-        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1444949"), apiObject) >= 0.8f);
-
+        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1444949"), apiObject) < 0.8f);
         Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1377607"), apiObject) < 0.8f);
         Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1466678"), apiObject) < 0.8f);
         Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1522315"), apiObject) < 0.8f);
