@@ -1,4 +1,4 @@
-package systems.pqp.hsdb;
+package systems.pqp.hsdb.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,7 +10,12 @@ import de.ard.sad.normdb.similarity.model.generic.GenericModel;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.pqp.hsdb.Config;
+import systems.pqp.hsdb.RadioPlayType;
+import systems.pqp.hsdb.SimilarityBean;
 
+import javax.script.ScriptEngine;
+import java.io.Serializable;
 import java.sql.*;
 import java.util.*;
 import java.util.regex.MatchResult;
@@ -19,33 +24,159 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class DatabaseImportService {
+/**
+ * Data-Access-Object für HSDB-Datenbank
+ */
+public class HsdbDao {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DatabaseImportService.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(HsdbDao.class.getName());
     private static final Config CONFIG = Config.Config();
 
-    private static final String USER = CONFIG.getProperty("hsdb.user");
-    private static final String PASS = CONFIG.getProperty("hsdb.pass");
-    private static final String URL  = CONFIG.getProperty("hsdb.url");
-    private static final String DB   = CONFIG.getProperty("hsdb.db");
-    private static final String TAB  = CONFIG.getProperty("hsdb.table");
+    private static final String USER = CONFIG.getProperty(Config.HSDB_USER);
+    private static final String PASS = CONFIG.getProperty(Config.HSDB_PASS);
+    private static final String URL  = CONFIG.getProperty(Config.HSDB_URL);
+    private static final String DB   = CONFIG.getProperty(Config.HSDB_DB);
+    private static final String TAB  = CONFIG.getProperty(Config.HSDB_TABLE);
+    private static final String MAPPING_TABLE_COL_ID = "ID";
+    private static final String MAPPING_TABLE_COL_DUKEY = "DUKEY";
+    private static final String MAPPING_TABLE_COL_AUDIOTHEK_ID = "AUDIOTHEK_ID";
+    private static final String MAPPING_TABLE_COL_DELETED = "DELETED";
+    private static final String MAPPING_TABLE_COL_AUDIOTHEK_LINK = "AUDIOTHEK_LINK";
+    private static final String MAPPING_TABLE_COL_VALIDATION_DATE = "VALIDATION_DT";
+    private static final String MAPPING_TAB = CONFIG.getProperty(Config.HSDB_MAPPING_TABLE);
     private static final XmlMapper XML_MAPPER = new XmlMapper();
 
-    public DatabaseImportService() {}
+    private static final String UPSERT_CHECK_QUERY = String.format(
+            "SELECT %s FROM %s.%s WHERE %s = ? AND %s = ?",
+            MAPPING_TABLE_COL_ID,
+            DB,
+            MAPPING_TAB,
+            MAPPING_TABLE_COL_DUKEY,
+            MAPPING_TABLE_COL_AUDIOTHEK_ID
+    );
+    private static final String UPDATE_STMT = String.format(
+            "UPDATE %s.%s SET %s = ?, %s = ? WHERE %s = ?",
+            DB,
+            MAPPING_TAB,
+            MAPPING_TABLE_COL_AUDIOTHEK_LINK,
+            MAPPING_TABLE_COL_VALIDATION_DATE,
+            MAPPING_TABLE_COL_ID
+    );
+    private static final String INSERT_STMT = String.format(
+            "INSERT INTO %s.%s(%s,%s,%s,%s,%s) VALUES(?,?,?,?,?)",
+            DB,
+            MAPPING_TAB,
+            MAPPING_TABLE_COL_DUKEY,
+            MAPPING_TABLE_COL_AUDIOTHEK_ID,
+            MAPPING_TABLE_COL_AUDIOTHEK_LINK,
+            MAPPING_TABLE_COL_VALIDATION_DATE,
+            MAPPING_TABLE_COL_DELETED
+    );
+
+    public HsdbDao() {}
 
     /**
-     * Connect to mariadb
-     * @return Connection
-     * @throws SQLException if connection fails
+     * Upsert eine List aus SimilarityBean-Objekten
+     * @param similarities
      */
-    Connection createConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:mariadb://"+URL+"/"+DB+"?user="+USER+"&password="+PASS+"");
+    public void upsertMany(List<SimilarityBean> similarities){
+        try(
+                Connection connection = createConnection();
+                PreparedStatement upsertCheck = connection.prepareStatement(UPSERT_CHECK_QUERY);
+                PreparedStatement update = connection.prepareStatement(UPDATE_STMT);
+                PreparedStatement insert = connection.prepareStatement(INSERT_STMT);
+        ){
+            similarities.forEach(
+                    similarityBean -> {
+                        try {
+                            if(checkUpsert(upsertCheck, similarityBean)){
+                                // update
+                                updateOne(update, similarityBean, true);
+                            } else {
+                                // insert
+                                insertOne(insert, similarityBean, true);
+                            }
+                        } catch (SQLException e) {
+                            LOG.error("Upsert similiarity failed for {}", similarityBean, e);
+                        }
+                    }
+            );
+            connection.commit();
+        } catch (SQLException throwables) {
+            LOG.error(throwables.getMessage(), throwables);
+        }
     }
 
+    /**
+     *
+     * @param upsertCheck
+     * @param bean
+     * @return
+     * @throws SQLException
+     */
+    private boolean checkUpsert(PreparedStatement upsertCheck, SimilarityBean bean) throws SQLException {
+        upsertCheck.setString(1, bean.getDukey());
+        upsertCheck.setString(2, bean.getAudiothekId());
+        ResultSet checkResult = upsertCheck.executeQuery();
+        if( checkResult.getFetchSize() > 1 ){ // kann eigentlich nie passieren
+            LOG.warn("Mehrere Einträge in {}.{} gefunden für {},{}",DB,MAPPING_TAB,bean.getDukey(),bean.getAudiothekId());
+        }
+
+        if( checkResult.next() ){
+            bean.setId(checkResult.getString(1));
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     *
+     * @param update
+     * @param similarityBean
+     * @return
+     * @throws SQLException
+     */
+    public String updateOne(PreparedStatement update, SimilarityBean similarityBean, boolean execute) throws SQLException {
+        update.setString(1, similarityBean.getAudiothekLink());
+        update.setString(2, similarityBean.getValidationDateTime().toString());
+        update.setString(3, similarityBean.getId());
+        if(execute){
+            update.executeUpdate();
+        }
+        return similarityBean.getId();
+    }
+
+    /**
+     *
+     * @param insert
+     * @param similarityBean
+     * @param execute
+     * @throws SQLException
+     */
+    public void insertOne(PreparedStatement insert, SimilarityBean similarityBean, boolean execute) throws SQLException {
+        insert.setString(1, similarityBean.getDukey());
+        insert.setString(2, similarityBean.getAudiothekId());
+        insert.setString(3, similarityBean.getAudiothekLink());
+        insert.setString(4, similarityBean.getValidationDateTime().toString());
+        insert.setBoolean(5, false);
+        if(execute) {
+            insert.executeUpdate();
+        }
+    }
+
+    /**
+     * Gibt Map mit Key=DUKEY(String) und Value=GenericObject
+     * @return Map<String,GenericObject>
+     */
     public Map<String,GenericObject> getRadioPlays(){
         return getRadioPlays("");
     }
 
+    /**
+     * Gibt Map mit Key=DUKEY(String) und Value=GenericObject
+     * @param query SQL-Query-String, z.B. "WHERE id=123 AND foo > 0"
+     * @return Map<String,GenericObject>
+     */
     public Map<String,GenericObject> getRadioPlays(String query){
         Map<String,GenericObject> result = new HashMap<>();
         String sql = "SELECT DUKEY, VOLLINFO FROM "+DB+"."+TAB+" "+query+";";
@@ -78,11 +209,11 @@ public class DatabaseImportService {
         return result;
     }
 
-    /***
-     *
-     * @param id
-     * @param bean
-     * @return
+    /**
+     * Parsed VollinfoBean zu GenericObject
+     * @param id String, DUKEY
+     * @param bean VollinfoBean
+     * @return GenericObject
      */
     GenericObject genericObjectFromBean(String id, VollinfoBean bean){
         GenericModel genericModel = new GenericModel(RadioPlayType.class);
@@ -113,12 +244,10 @@ public class DatabaseImportService {
         return radioPlay;
     }
 
-
-
     /**
-     *
-     * @param xml
-     * @return
+     * Parsed XML-String zu VollinfoBean-Objekt
+     * @param xml String
+     * @return VollinfoBean
      * @throws JsonProcessingException
      */
     VollinfoBean beanFromXmlString(String xml) throws JsonProcessingException {
@@ -127,8 +256,11 @@ public class DatabaseImportService {
 
     }
 
+    /**
+     * Java-Bean für VOLLINFO-XML-Daten in hs_du-Tabelle
+     */
     @JsonIgnoreProperties(ignoreUnknown = true)
-    static class VollinfoBean {
+    static class VollinfoBean implements Serializable {
 
         @JsonProperty("KAT")
         private String category = "";
@@ -158,6 +290,8 @@ public class DatabaseImportService {
         private String duration = "";
         @JsonProperty("PROD")
         private String productionCompany = "";
+
+        public VollinfoBean(){}
 
         public String getCategory() {
             return category;
@@ -340,12 +474,14 @@ public class DatabaseImportService {
      *
      */
     @JsonIgnoreProperties(ignoreUnknown = true)
-    static class ActorBean {
+    static class ActorBean implements Serializable{
         @JacksonXmlProperty(isAttribute = true)
         private String rolle = "";
         @JsonProperty("NAM")
         @JacksonXmlText
         private String name = "";
+
+        public ActorBean(){}
 
         public String getRolle() {
             return rolle;
@@ -372,5 +508,13 @@ public class DatabaseImportService {
         }
     }
 
+    /**
+     * Connect to mariadb
+     * @return Connection
+     * @throws SQLException if connection fails
+     */
+    Connection createConnection() throws SQLException {
+        return DriverManager.getConnection("jdbc:mariadb://"+URL+"/"+DB+"?user="+USER+"&password="+PASS+"");
+    }
 
 }

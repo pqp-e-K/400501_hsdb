@@ -1,9 +1,10 @@
-package systems.pqp.hsdb;
+package systems.pqp.hsdb.dao;
 
 import com.google.gson.Gson;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import org.junit.Assert;
 import org.junit.Test;
+import systems.pqp.hsdb.ImportException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +12,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 
-public class ApiImportServiceTest {
+public class AudiothekDaoTest {
 
 
     /**
@@ -19,14 +20,14 @@ public class ApiImportServiceTest {
      */
     @Test
     public void getRadioPlays() throws ImportException {
-        List<GenericObject> result = new ApiImportService().getRadioPlays();
+        List<GenericObject> result = new AudiothekDao().getRadioPlays();
         Assert.assertTrue("Ergebnismenge ist > 0",result.size() > 0);
     }
 
     @Test
     public void genericObjectsFromJson() throws IOException {
         Map apiResponse = loadJsonFromFile("api-examples/api.json");
-        List<GenericObject> result = ApiImportService.genericObjectsFromJson(apiResponse);
+        List<GenericObject> result = AudiothekDao.genericObjectsFromJson(apiResponse);
         Assert.assertTrue("Ergebnismenge ist > 0",result.size() > 0);
         System.out.println(result);
     }

@@ -5,6 +5,8 @@ import de.ard.sad.normdb.similarity.compare.generic.GenericSimilarity;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import org.junit.Assert;
 import org.junit.Test;
+import systems.pqp.hsdb.dao.AudiothekDao;
+import systems.pqp.hsdb.dao.HsdbDao;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,23 +15,23 @@ import java.util.Map;
 
 public class SimilarityCheckTest {
 
+    SimilarityCheck similarityCheck = new SimilarityCheck();
+
     @Test
     public void testSimilarity() throws IOException {
         // Jules Verne Reise von der Erde zum Mond
         // GenericObject aus Database
         Map<String,GenericObject> databaseObjects =
-                new DatabaseImportService().getRadioPlays(
+                new HsdbDao().getRadioPlays(
                         "WHERE DUKEY = 1444441"
                 );
         Assert.assertEquals(1, databaseObjects.size());
         GenericObject dbObject = databaseObjects.get("1444441");
 
         // GenericObject aus Api (mocked aus Datei)
-        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/jules-verne-95022544.json"));
+        GenericObject apiObject = AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/jules-verne-95022544.json"));
 
-        GenericSimilarity gs = new GenericSimilarity();
-
-        Assert.assertTrue( gs.calcSimilarity(apiObject, dbObject) < 0.8f);  //Unterschiedliche Umsetzung
+        Assert.assertFalse( similarityCheck.checkSimilarity(dbObject, apiObject));  //Unterschiedliche Umsetzung
     }
 
     @Test
@@ -48,12 +50,12 @@ public class SimilarityCheckTest {
          */
         // Christa Wolf: Kassandra
         Map<String,GenericObject> databaseObjects =
-                new DatabaseImportService().getRadioPlays(
+                new HsdbDao().getRadioPlays(
                         "WHERE DUKEY = 1372136 OR DUKEY = 1393951 OR DUKEY = 1393952 OR DUKEY = 1393953 OR DUKEY = 1424348"
                 );
         Assert.assertEquals(5, databaseObjects.size());
 
-        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/christa-wolf-94736562.json"));
+        GenericObject apiObject = AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/christa-wolf-94736562.json"));
 
         GenericSimilarity gs = new GenericSimilarity();
 
@@ -80,19 +82,19 @@ public class SimilarityCheckTest {
          */
         // Fjodor Dostojewski: Der Doppelgänger
         Map<String,GenericObject> databaseObjects =
-                new DatabaseImportService().getRadioPlays(
+                new HsdbDao().getRadioPlays(
                         "WHERE DUKEY = 1377607 OR DUKEY = 1444949 OR DUKEY = 1466678 OR DUKEY = 1522315"
                 );
         Assert.assertEquals(4, databaseObjects.size());
 
-        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/dostojewski-94663538.json"));
+        GenericObject apiObject = AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/dostojewski-94663538.json"));
 
         GenericSimilarity gs = new GenericSimilarity();
 
-        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1444949"), apiObject) < 0.8f);
-        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1377607"), apiObject) < 0.8f);
-        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1466678"), apiObject) < 0.8f);
-        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1522315"), apiObject) < 0.8f);
+        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("1444949"), apiObject));
+        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("1377607"), apiObject));
+        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("1466678"), apiObject));
+        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("1522315"), apiObject));
     }
 
     @Test
@@ -115,29 +117,23 @@ public class SimilarityCheckTest {
          */
         // Sodom und Gomorrha
         Map<String,GenericObject> databaseObjects =
-                new DatabaseImportService().getRadioPlays(
+                new HsdbDao().getRadioPlays(
                         "WHERE DUKEY = 1373362 OR DUKEY = 1411923 OR DUKEY = 1477013 OR DUKEY = 1527012 OR DUKEY = 1550580 OR DUKEY = 4949489 OR DUKEY = 4949491 OR DUKEY = 4949492 OR DUKEY = 4987009"
                 );
         Assert.assertEquals(9, databaseObjects.size());
 
-        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/sodom-und-gomorrha-94512976.json"));
+        GenericObject apiObject = AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/sodom-und-gomorrha-94512976.json"));
 
         // Tipp: Mit command+option+shift + Mauszeiger kann man Blockauswahlen
-        GenericSimilarity gs = new GenericSimilarity();
-        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1411923"), apiObject) < 0.8f);
-        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1373362"), apiObject) < 0.8f);
-
-        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1477013"), apiObject) < 0.8f);
-        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1527012"), apiObject) < 0.8f);
-        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("1550580"), apiObject) < 0.8f);
-
-        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("4987009"), apiObject) < 0.8f);
-
-
-        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("4949489"), apiObject) < 0.8f);     //Teil 1
-        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("4949491"), apiObject) < 0.8f);     //Teil 2
-        Assert.assertTrue(gs.calcSimilarity(databaseObjects.get("4949492"), apiObject) < 0.8f);     //Teil 3
-
+        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("1411923"), apiObject));
+        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("1373362"), apiObject));
+        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("1477013"), apiObject));
+        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("1527012"), apiObject));
+        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("1550580"), apiObject));
+        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("4987009"), apiObject));
+        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("4949489"), apiObject));     //Teil 1
+        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("4949491"), apiObject));     //Teil 2
+        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("4949492"), apiObject));     //Teil 3
         //Teil 4 fehlt in HSDB
     }
 
@@ -153,11 +149,11 @@ public class SimilarityCheckTest {
     @Test
     public void guteDatenlage() throws IOException {
         Map<String,GenericObject> databaseObjects =
-                new DatabaseImportService().getRadioPlays(
+                new HsdbDao().getRadioPlays(
                         "WHERE DUKEY = 4987635"
                 );
 
-        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/once-a-beauty-86736440.json"));
+        GenericObject apiObject = AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/once-a-beauty-86736440.json"));
         GenericSimilarity gs = new GenericSimilarity();
         assertSimilarity("Hörspiel, ARD-Audiothek weitere Metadaten vorhanden (Beispiel für gute Datenlage)",
                 gs.calcSimilarity(databaseObjects.get("4987635"), apiObject), 0.8f, true);
@@ -173,11 +169,11 @@ public class SimilarityCheckTest {
     @Test
     public void schlechteDatenlage() throws IOException {
         Map<String,GenericObject> databaseObjects =
-                new DatabaseImportService().getRadioPlays(
+                new HsdbDao().getRadioPlays(
                         "WHERE DUKEY = 4913587"
                 );
 
-        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/de-rerum-natura-92212772.json"));
+        GenericObject apiObject = AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/de-rerum-natura-92212772.json"));
         GenericSimilarity gs = new GenericSimilarity();
         assertSimilarity("Hörspiel, in ARD-Audiothek schlechte Datenlage",
                 gs.calcSimilarity(databaseObjects.get("4913587"), apiObject), 0.8f, true);
@@ -192,10 +188,10 @@ public class SimilarityCheckTest {
     @Test
     public void verschachtelterTitel() throws IOException {
         Map<String,GenericObject> databaseObjects =
-                new DatabaseImportService().getRadioPlays(
+                new HsdbDao().getRadioPlays(
                         "WHERE DUKEY = 1429898"
                 );
-        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/wahlverwandtschaften-86800910.json"));
+        GenericObject apiObject = AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/wahlverwandtschaften-86800910.json"));
         GenericSimilarity gs = new GenericSimilarity();
         assertSimilarity("Hörspiel (Mehrteiler) in ARD-Audiothek Metadaten + Pressetext vorhanden, Titel unsauber",
                 gs.calcSimilarity(databaseObjects.get("1429898"), apiObject), 0.8f, true);
@@ -215,10 +211,10 @@ public class SimilarityCheckTest {
     @Test
     public void unterschiedlicheTeilung() throws IOException {
         Map<String,GenericObject> databaseObjects =
-                new DatabaseImportService().getRadioPlays(
+                new HsdbDao().getRadioPlays(
                         "WHERE DUKEY = 4988145"
                 );
-        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/nsu-prozess-85721498.json"));
+        GenericObject apiObject = AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/nsu-prozess-85721498.json"));
         GenericSimilarity gs = new GenericSimilarity();
         assertSimilarity("Hörspielreihe, unterschiedliche Teilung (12 vs. 24 Teile)",
                 gs.calcSimilarity(databaseObjects.get("4988145"), apiObject), 0.8f, true);
@@ -233,10 +229,10 @@ public class SimilarityCheckTest {
     @Test
     public void unterschiedlicheUntertitel() throws IOException {
         Map<String,GenericObject> databaseObjects =
-                new DatabaseImportService().getRadioPlays(
+                new HsdbDao().getRadioPlays(
                         "WHERE DUKEY = 4987715"
                 );
-        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/ki-90266522.json"));
+        GenericObject apiObject = AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/ki-90266522.json"));
         GenericSimilarity gs = new GenericSimilarity();
         assertSimilarity("Hörspieltitel identisch, Untertitel unterschiedlich",
                 gs.calcSimilarity(databaseObjects.get("4987715"), apiObject), 0.8f, true);
@@ -253,10 +249,10 @@ public class SimilarityCheckTest {
     @Test
     public void tatortFolgen() throws IOException {
         Map<String,GenericObject> databaseObjects =
-                new DatabaseImportService().getRadioPlays(
+                new HsdbDao().getRadioPlays(
                         "WHERE DUKEY = 4981555"
                 );
-        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/tatort-82720556.json"));
+        GenericObject apiObject = AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/tatort-82720556.json"));
         GenericSimilarity gs = new GenericSimilarity();
         assertSimilarity("Hörspielreihe: ARD Radio Tatort",
                 gs.calcSimilarity(databaseObjects.get("4981555"), apiObject), 0.8f, true);
@@ -271,10 +267,10 @@ public class SimilarityCheckTest {
     @Test
     public void gleichAberNichtIdentisch() throws IOException {
         Map<String,GenericObject> databaseObjects =
-                new DatabaseImportService().getRadioPlays(
+                new HsdbDao().getRadioPlays(
                         "WHERE DUKEY = 1443307"
                 );
-        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/wahlverwandtschaften-86800910.json"));
+        GenericObject apiObject = AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/wahlverwandtschaften-86800910.json"));
         GenericSimilarity gs = new GenericSimilarity();
         assertSimilarity("Hörspieltitel gleich, aber nicht identischer Datensatz",
                 gs.calcSimilarity(databaseObjects.get("1443307"), apiObject), 0.8f, false);
@@ -291,10 +287,10 @@ public class SimilarityCheckTest {
     @Test
     public void falscheFassung() throws IOException {
         Map<String,GenericObject> databaseObjects =
-                new DatabaseImportService().getRadioPlays(
+                new HsdbDao().getRadioPlays(
                         "WHERE DUKEY = 1423911"
                 );
-        GenericObject apiObject = ApiImportService.genericObjectFromJson(loadJsonFromFile("api-examples/terra-incognita-92281450.json"));
+        GenericObject apiObject = AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/terra-incognita-92281450.json"));
         GenericSimilarity gs = new GenericSimilarity();
         assertSimilarity("Mehrteiler, in HSPDB zwei Fassungen (6 und 8 Teile), in ARD-Audiothek nur gekürzte Fassung (6 Teile) vorhanden",
                 gs.calcSimilarity(databaseObjects.get("1423911"), apiObject), 0.8f, false);

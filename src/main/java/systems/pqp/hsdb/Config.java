@@ -10,6 +10,14 @@ import java.util.Properties;
 
 public class Config extends Properties {
 
+    public static final String HSDB_USER = "hsdb.user";
+    public static final String HSDB_PASS = "hsdb.pass";
+    public static final String HSDB_URL = "hsdb.url";
+    public static final String HSDB_DB = "hsdb.db";
+    public static final String HSDB_TABLE = "hsdb.table";
+    public static final String HSDB_MAPPING_TABLE = "hsdb.mapping.table";
+    public static final String THRESHOLD = "check.threshold";
+
     private static final String PREFIX = "similarity";
     private static final Logger LOG = LogManager.getLogger(Config.class);
     private static Config instance = null;

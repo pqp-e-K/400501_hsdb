@@ -1,14 +1,15 @@
-package systems.pqp.hsdb;
+package systems.pqp.hsdb.dao;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
-import de.ard.sad.normdb.similarity.compare.basic.string.EqualSimilarity;
 import de.ard.sad.normdb.similarity.model.generic.GenericModel;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
-import de.ard.sad.normdb.similarity.model.generic.GenricObjectType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.pqp.hsdb.Config;
+import systems.pqp.hsdb.ImportException;
+import systems.pqp.hsdb.RadioPlayType;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -18,19 +19,19 @@ import java.util.List;
 import java.util.Map;
 
 
-public class ApiImportService {
+public class AudiothekDao {
     /**
      *
      */
 
-    private static final Logger LOG = LoggerFactory.getLogger(ApiImportService.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(AudiothekDao.class.getName());
     private static final Config CONFIG = Config.Config();
 
     private static final int RADIO_PLAY_ID = Integer.parseInt(CONFIG.getProperty("api.category.id"));
     private static final String API_URL = CONFIG.getProperty("api.url");
     private static final String LIMIT = CONFIG.getProperty("api.limit","100000");
 
-    public ApiImportService(){}
+    public AudiothekDao(){}
 
     /**
      *
@@ -80,7 +81,7 @@ public class ApiImportService {
         }
     }
 
-    static List<GenericObject> genericObjectsFromJson(Map apiResponse){
+    public static List<GenericObject> genericObjectsFromJson(Map apiResponse){
         List<GenericObject> resultList = new ArrayList<>();
         ((ArrayList<LinkedTreeMap>)((LinkedTreeMap)apiResponse.get("_embedded")).get("mt:items")).forEach(
                 entry -> resultList.add(genericObjectFromJson(entry))
@@ -96,7 +97,7 @@ public class ApiImportService {
      * @param embeddedObject
      * @return
      */
-    static GenericObject genericObjectFromJson(Map embeddedObject){
+    public static GenericObject genericObjectFromJson(Map embeddedObject){
         String id = String.valueOf(embeddedObject.get("id"));
         String title = String.valueOf(embeddedObject.get("title"));
         List<String> involvedNames = new ArrayList<>();

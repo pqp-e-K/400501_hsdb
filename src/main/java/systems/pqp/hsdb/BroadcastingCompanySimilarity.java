@@ -15,22 +15,11 @@ public class BroadcastingCompanySimilarity implements GenricObjectType.SimAlgori
         bcList.add(List.of("SWF","Südwestfunk Rundfunk"));
         bcList.add(List.of("NDR","Norddeutscher Rundfunk"));
         bcList.add(List.of("DLR","Deutschlandradio"));
-
         bcList.add(List.of("ÖRF","Österreichischer Rundfunk"));
-
         bcList.add(List.of("HR","hr","Hessischer Rundfunk","hr2-kultur"));
-
-
         bcList.add(List.of("RBB","rbb","Rundfunk Berlin-Brandenburg","rbbKultur"));
-
         bcList.add(List.of("MDR","Mitteldeutscher Rundfunk","MDR KULTUR"));
-
         bcList.add(List.of("BR","Bayerischer Rundfunk"));
-
-
-
-
-
     }
 
     public float calcSimilarity(String pattern, String target) {
