@@ -12,6 +12,7 @@ public class BroadcastingCompanySimilarity implements GenricObjectType.SimAlgori
     public BroadcastingCompanySimilarity() {
         bcList.add(List.of("SR","Saarländische Rundfunk","SR 2 KulturRadio"));
         bcList.add(List.of("WDR","Westdeutscher Rundfunk"));
+        bcList.add(List.of("NWDR","Nordwestdeutscher Rundfunk"));
         bcList.add(List.of("SWF","Südwestfunk Rundfunk"));
         bcList.add(List.of("NDR","Norddeutscher Rundfunk"));
         bcList.add(List.of("DLR","Deutschlandradio"));
@@ -20,6 +21,8 @@ public class BroadcastingCompanySimilarity implements GenricObjectType.SimAlgori
         bcList.add(List.of("RBB","rbb","Rundfunk Berlin-Brandenburg","rbbKultur"));
         bcList.add(List.of("MDR","Mitteldeutscher Rundfunk","MDR KULTUR"));
         bcList.add(List.of("BR","Bayerischer Rundfunk"));
+        bcList.add(List.of("RB","Radio Bremen"));
+
     }
 
     public float calcSimilarity(String pattern, String target) {
@@ -42,12 +45,13 @@ public class BroadcastingCompanySimilarity implements GenricObjectType.SimAlgori
 
     private List<String> createSynonyms(String element) {
         ArrayList<String> synonyms= new ArrayList<String>();
+        synonyms.add(element);
 
         if(element != null) {
-            element = element.toLowerCase();
+            //element = element.toLowerCase();
             for(List<String>bcNames:bcList) {
                 for(String bcName:bcNames) {
-                    if (element.contains(bcName.toLowerCase())) {
+                    if (element.contains(bcName)) {
                         addAllWithoutDuplicates(bcNames,synonyms);
                     }
                 }
