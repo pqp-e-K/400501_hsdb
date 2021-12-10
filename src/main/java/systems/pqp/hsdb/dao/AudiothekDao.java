@@ -15,6 +15,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class AudiothekDao {
      * @return
      * @throws ImportException
      */
-    List<GenericObject> getRadioPlays() throws ImportException {
+    public Map<String, GenericObject> getRadioPlays() throws ImportException {
         return getRadioPlays(RADIO_PLAY_ID, API_URL);
     }
 
@@ -49,7 +50,7 @@ public class AudiothekDao {
      * @return
      * @throws ImportException
      */
-    List<GenericObject> getRadioPlays(int radioPlayId, String apiUrl) throws ImportException {
+    public Map<String, GenericObject> getRadioPlays(int radioPlayId, String apiUrl) throws ImportException {
         try {
             URL url = new URL(apiUrl + "/" + radioPlayId + "?offset=0&limit="+LIMIT);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -62,7 +63,6 @@ public class AudiothekDao {
                 }
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 Map result = gson.fromJson(content, Map.class);
-                LOG.info("Found "+result.size()+" records in api...");
                 FileWriter writer = new FileWriter("api.json",false);
                 gson.toJson(result, writer);
                 writer.flush();
@@ -81,15 +81,15 @@ public class AudiothekDao {
         }
     }
 
-    public static List<GenericObject> genericObjectsFromJson(Map apiResponse){
-        List<GenericObject> resultList = new ArrayList<>();
+    public static Map<String, GenericObject> genericObjectsFromJson(Map apiResponse){
+        Map<String, GenericObject> resultMap = new HashMap<>();
         ((ArrayList<LinkedTreeMap>)((LinkedTreeMap)apiResponse.get("_embedded")).get("mt:items")).forEach(
-                entry -> resultList.add(genericObjectFromJson(entry))
+                entry -> resultMap.put((String) entry.get("id"),(genericObjectFromJson(entry)))
         );
 
-        LOG.info("Num Program-Sets: {}", resultList.size());
+        LOG.info("Num Program-Sets: {}", resultMap.size());
 
-        return resultList;
+        return resultMap;
     }
 
     /**
@@ -129,6 +129,7 @@ public class AudiothekDao {
         String publicationDt = String.valueOf(embeddedObject.get("publicationStartDateAndTime"));
 
         Map tracking = (LinkedTreeMap)embeddedObject.get("tracking");
+        Map links = (LinkedTreeMap)embeddedObject.get("_links");
         Map embedded = (LinkedTreeMap)embeddedObject.get("_embedded");
         Map programSet = (LinkedTreeMap)embedded.get("mt:programSet");
         Map programSetLinks = (LinkedTreeMap)programSet.get("_links");
@@ -138,7 +139,8 @@ public class AudiothekDao {
             showTitle = (String)programSet.get("title");
         }
 
-        String linkAudiothek = (String)(((LinkedTreeMap)programSetLinks.get("mt:sharing")).get("href"));
+        //String linkAudiothek = (String)(((LinkedTreeMap)programSetLinks.get("mt:sharing")).get("href"));
+        String linkAudiothek = (String)(((LinkedTreeMap)links.get("mt:sharing")).get("href"));
 
         List<String> publisher = new ArrayList<>();
         if(null != ((LinkedTreeMap)programSet.get("_embedded")).get("mt:publicationService")) {

@@ -11,7 +11,10 @@ import systems.pqp.hsdb.dao.HsdbDao;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class SimilarityCheckTest {
 
@@ -159,6 +162,18 @@ public class SimilarityCheckTest {
                 gs.calcSimilarity(databaseObjects.get("4987635"), apiObject), 0.8f, true);
     }
 
+    @Test
+    public void mapPartitionMatch() throws IOException {
+        Map<String,GenericObject> databaseObjects =
+                new HsdbDao().getRadioPlays(
+                        "WHERE DUKEY = 4987635"
+                );
+        Map<String, GenericObject> apiObjects = new HashMap<>();
+        apiObjects.put("86736440", AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/once-a-beauty-86736440.json")));
+
+        Assert.assertEquals(1, similarityCheck.mapPartition(new ArrayList<>(databaseObjects.keySet()), databaseObjects, apiObjects));
+    }
+
     /**
      * Hörspiel, in ARD-Audiothek schlechte Datenlage
      * De Rerum Natura
@@ -276,6 +291,18 @@ public class SimilarityCheckTest {
                 gs.calcSimilarity(databaseObjects.get("1443307"), apiObject), 0.8f, false);
     }
 
+    @Test
+    public void mapPartitionsNoMatch() throws IOException {
+        Map<String,GenericObject> databaseObjects =
+                new HsdbDao().getRadioPlays(
+                        "WHERE DUKEY = 1443307"
+                );
+        Map<String, GenericObject> apiObjects = new HashMap<>();
+        apiObjects.put("86800910", AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/wahlverwandtschaften-86800910.json")));
+
+        Assert.assertEquals(0, similarityCheck.mapPartition(new ArrayList<>(databaseObjects.keySet()), databaseObjects, apiObjects));
+    }
+
     /**
      * Mehrteiler, in HSPDB zwei Fassungen (6 und 8 Teile), in ARD-Audiothek nur gekürzte Fassung (6 Teile) vorhanden
      * a)	https://hoerspiele.dra.de/vollinfo.php?dukey=1423911&vi=14&SID
@@ -296,6 +323,36 @@ public class SimilarityCheckTest {
                 gs.calcSimilarity(databaseObjects.get("1423911"), apiObject), 0.8f, false);
     }
 
+    @Test
+    public void dorfDisko() throws IOException {
+        Map<String,GenericObject> databaseObjects =
+                new HsdbDao().getRadioPlays(
+                        "WHERE DUKEY = 1363831"
+                );
+        AudiothekDao audiothekDao = new AudiothekDao();
+        GenericObject apiObject = AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/dorfdisco-57571284.json"));
+        GenericSimilarity gs = new GenericSimilarity();
+        assertSimilarity("Dorfdisko",
+                gs.calcSimilarity(databaseObjects.get("1363831"), apiObject), 0.8f, false);
+    }
+
+
+    // !! INTEGRATION TEST MIT ALLEN DATEN AUS DATENBANK !! DAUERT LANGE !! //
+
+    @Test
+    public void mapSimilarities() throws ImportException, ExecutionException, InterruptedException {
+        AudiothekDao audiothekDao = new AudiothekDao();
+        Map<String, GenericObject> audiothekObjects = audiothekDao.getRadioPlays();
+
+        HsdbDao hsdbDao = new HsdbDao();
+        Map<String, GenericObject> hsdbObjects = hsdbDao.getRadioPlays();
+
+        SimilarityCheck similarityCheck = new SimilarityCheck();
+        similarityCheck.mapSimilarities(hsdbObjects, audiothekObjects, 10);
+    }
+
+
+    // --------------------------------------- //
 
     /**
      * Helfer-Methode zum Laden eines JSON-File

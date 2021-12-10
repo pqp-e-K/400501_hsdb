@@ -86,6 +86,7 @@ public class HsdbDao {
                 PreparedStatement update = connection.prepareStatement(UPDATE_STMT);
                 PreparedStatement insert = connection.prepareStatement(INSERT_STMT);
         ){
+            connection.setAutoCommit(false);
             similarities.forEach(
                     similarityBean -> {
                         try {

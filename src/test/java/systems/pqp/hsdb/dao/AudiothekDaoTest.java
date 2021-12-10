@@ -5,11 +5,11 @@ import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import org.junit.Assert;
 import org.junit.Test;
 import systems.pqp.hsdb.ImportException;
+import systems.pqp.hsdb.RadioPlayType;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.List;
 import java.util.Map;
 
 public class AudiothekDaoTest {
@@ -20,14 +20,21 @@ public class AudiothekDaoTest {
      */
     @Test
     public void getRadioPlays() throws ImportException {
-        List<GenericObject> result = new AudiothekDao().getRadioPlays();
+        Map<String, GenericObject> result = new AudiothekDao().getRadioPlays();
         Assert.assertTrue("Ergebnismenge ist > 0",result.size() > 0);
+    }
+
+    @Test
+    public void checkLinks() throws IOException {
+        Map apiResponse = loadJsonFromFile("api-examples/christa-wolf-94736562.json");
+        GenericObject result = AudiothekDao.genericObjectFromJson(apiResponse);
+        Assert.assertEquals("https://audiothek.ardmediathek.de/items/94736562", result.getProperties(RadioPlayType.LINK_AUDIOTHEK).get(0).getDescriptions().get(0));
     }
 
     @Test
     public void genericObjectsFromJson() throws IOException {
         Map apiResponse = loadJsonFromFile("api-examples/api.json");
-        List<GenericObject> result = AudiothekDao.genericObjectsFromJson(apiResponse);
+        Map<String, GenericObject> result = AudiothekDao.genericObjectsFromJson(apiResponse);
         Assert.assertTrue("Ergebnismenge ist > 0",result.size() > 0);
         System.out.println(result);
     }

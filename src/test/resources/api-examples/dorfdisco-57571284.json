@@ -1,0 +1,147 @@
+{
+  "_links": {
+    "self": {
+      "href": "./items/57571284",
+      "name": "item"
+    },
+    "mt:bestQualityPlaybackUrl": {
+      "href": "https://wdrmedien-a.akamaihd.net/medp/ondemand/weltweit/fsk0/177/1772041/1772041_20695014.mp3"
+    },
+    "mt:downloadUrl": {
+      "href": "https://wdrmedien-a.akamaihd.net/medp/podcast/weltweit/fsk0/177/1772041/wdr3hoerspiel_2019-10-20_dorfdiscojungefraukehrtinihrostdeutschesheimatkaffzurueck_wdr3.mp3"
+    },
+    "mt:image": {
+      "href": "https://img.ardmediathek.de/standard/00/67/48/34/20/-295433861/{ratio}/{width}?mandant\u003dard",
+      "name": "Unterfränkische Wirtschaft innen um 1960, Heimatmuseum in Unterfranken.",
+      "title": "WDR / mauritius images / imageBROKER / Helmut Meyer zur Capellen",
+      "templated": true
+    },
+    "mt:mediaCollection": {
+      "href": "./media/57571284"
+    },
+    "mt:playCounting": {
+      "href": "./items/57571284/count/increment"
+    },
+    "mt:sharing": {
+      "href": "https://audiothek.ardmediathek.de/items/57571284"
+    },
+    "mt:squareImage": {
+      "href": "https://img.ardmediathek.de/standard/00/57/57/12/92/-1829554053/{ratio}/{width}?mandant\u003dard",
+      "name": "Unterfränkische Wirtschaft innen um 1960, Heimatmuseum in Unterfranken.",
+      "title": "WDR / mauritius images / imageBROKER / Helmut Meyer zur Capellen",
+      "templated": true
+    }
+  },
+  "duration": 2884.0,
+  "id": "57571284",
+  "publicationStartDateAndTime": "2019-10-20T19:04:00.000+0200",
+  "synopsis": "•Drama• Plötzlich ist Mandy wieder da. In ihrem Heimatort, einem Kaff im Osten. Ein Jahr lang war sie weg. Wollte Karriere machen beim Film. Gelandet ist sie in einer Soap, ausgenutzt von einem Bruce, der Nacktfotos von ihr ins Netz stellt. Dann lieber zurück in die Provinz. // Von Lisa Sommerfeldt / Regie: Susanne Krings / WDR 2018 / www.hoerspiel.wdr.de",
+  "title": "Dorfdisco | Geschichte über den Einfluss der Vergangenheit aufs Jetzt",
+  "tracking": {
+    "title": "ARD Audiothek/{page.tracking.chapter1}/Hörspiel/Dorfdisco | Geschichte über den Einfluss der .../57571284/20191020_1904",
+    "chapter1": "{page.tracking.chapter1}",
+    "play": {
+      "title": "ARD Audiothek/{page.tracking.chapter1}/Hörspiel/Dorfdisco | Geschichte über den Einfluss der .../57571284/20191020_1904",
+      "chapter1": "{page.tracking.chapter1}",
+      "chapter2": "Hörspiel",
+      "sticky": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Sticky Player/Hörspiel/Dorfdisco | Geschichte über den Einfluss der Vergangenheit aufs Jetzt/57571284/20191020_1904",
+        "chapter1": "Sticky Player"
+      },
+      "autopilot": {
+        "title": "ARD Audiothek/{page.tracking.chapter1}/Autopilot/Hörspiel/Dorfdisco | Geschichte über den Einfluss der Vergangenheit aufs Jetzt/57571284/20191020_1904",
+        "chapter1": "Autopilot"
+      },
+      "mediaType": "audio",
+      "lra": "WDR",
+      "channel": "WDR 3",
+      "show": "Hörspiel",
+      "contentType": "2",
+      "source": "WDR",
+      "mediaDistributionType": "1",
+      "contentId": "57571284",
+      "publicationDate": "20191020",
+      "clipLength": "2884",
+      "clipTitle": "Dorfdisco | Geschichte über den Einfluss der Vergangenheit aufs Jetzt"
+    }
+  },
+  "_embedded": {
+    "mt:programSet": {
+      "_links": {
+        "self": {
+          "href": "./programsets/31649612{?order,offset,limit}",
+          "name": "programSet",
+          "templated": true
+        },
+        "mt:image": {
+          "href": "https://img.ardmediathek.de/standard/00/47/45/69/92/-1815344529/{ratio}/{width}?mandant\u003dard",
+          "name": "Sendereihenbild WDR 3 Hörspiel: Kompass, Logo WDR 3, Schriftzug Hörspiel",
+          "title": "wdr",
+          "templated": true
+        },
+        "mt:sharing": {
+          "href": "https://audiothek.ardmediathek.de/programsets/31649612"
+        },
+        "mt:squareImage": {
+          "href": "https://img.ardmediathek.de/standard/00/47/45/69/92/-1815344529/{ratio}/{width}?mandant\u003dard",
+          "name": "Sendereihenbild WDR 3 Hörspiel: Kompass, Logo WDR 3, Schriftzug Hörspiel",
+          "title": "wdr",
+          "templated": true
+        },
+        "mt:synd_rss": {
+          "href": "https://audiothek.ardmediathek.de/programsets/31649612/synd_rss"
+        }
+      },
+      "id": "31649612",
+      "numberOfElements": 371.0,
+      "synopsis": "Zeit für Geschichten, Szenen, neue Gedanken und Klänge",
+      "title": "Hörspiel",
+      "_embedded": {
+        "mt:publicationService": {
+          "_links": {
+            "self": {
+              "href": "./publicationservices/5356",
+              "name": "publicationService"
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/92/13/78/-295433861/{ratio}/{width}?mandant\u003dard",
+              "templated": true
+            },
+            "mt:onlinePortal": {
+              "href": "http://www1.wdr.de/radio/wdr3/"
+            }
+          },
+          "brandingColor": "#b0bf2e",
+          "genre": "Kultur",
+          "id": "5356",
+          "numberOfElements": 12.0,
+          "organizationName": "WDR",
+          "title": "WDR 3"
+        },
+        "mt:editorialCategories": {
+          "_links": {
+            "self": {
+              "href": "./editorialcategories/42914712{?offset,limit}",
+              "name": "editorialCategory",
+              "templated": true
+            },
+            "mt:image": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            },
+            "mt:squareImage": {
+              "href": "https://img.ardmediathek.de/standard/00/42/91/77/34/-295433861/{ratio}/{width}?mandant\u003dard",
+              "name": "Kategorie Hörspiel",
+              "title": "picture-alliance/dpa",
+              "templated": true
+            }
+          },
+          "id": "42914712",
+          "title": "Hörspiel \u0026 Lesung "
+        }
+      }
+    }
+  }
+}
