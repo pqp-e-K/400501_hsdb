@@ -94,10 +94,10 @@ public class SimilarityCheckTest {
 
         GenericSimilarity gs = new GenericSimilarity();
 
-        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("1444949"), apiObject));
-        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("1377607"), apiObject));
-        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("1466678"), apiObject));
-        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("1522315"), apiObject));
+        Assert.assertFalse(similarityCheck.checkSimilarity(databaseObjects.get("1444949"), apiObject));
+        Assert.assertFalse(similarityCheck.checkSimilarity(databaseObjects.get("1377607"), apiObject));
+        Assert.assertFalse(similarityCheck.checkSimilarity(databaseObjects.get("1466678"), apiObject));
+        Assert.assertFalse(similarityCheck.checkSimilarity(databaseObjects.get("1522315"), apiObject));
     }
 
     @Test
@@ -128,15 +128,15 @@ public class SimilarityCheckTest {
         GenericObject apiObject = AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/sodom-und-gomorrha-94512976.json"));
 
         // Tipp: Mit command+option+shift + Mauszeiger kann man Blockauswahlen
-        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("1411923"), apiObject));
-        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("1373362"), apiObject));
-        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("1477013"), apiObject));
-        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("1527012"), apiObject));
-        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("1550580"), apiObject));
-        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("4987009"), apiObject));
-        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("4949489"), apiObject));     //Teil 1
-        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("4949491"), apiObject));     //Teil 2
-        Assert.assertTrue(similarityCheck.checkSimilarity(databaseObjects.get("4949492"), apiObject));     //Teil 3
+        Assert.assertFalse(similarityCheck.checkSimilarity(databaseObjects.get("1411923"), apiObject));
+        Assert.assertFalse(similarityCheck.checkSimilarity(databaseObjects.get("1373362"), apiObject));
+        Assert.assertFalse(similarityCheck.checkSimilarity(databaseObjects.get("1477013"), apiObject));
+        Assert.assertFalse(similarityCheck.checkSimilarity(databaseObjects.get("1527012"), apiObject));
+        Assert.assertFalse(similarityCheck.checkSimilarity(databaseObjects.get("1550580"), apiObject));
+        Assert.assertFalse(similarityCheck.checkSimilarity(databaseObjects.get("4987009"), apiObject));
+        Assert.assertFalse(similarityCheck.checkSimilarity(databaseObjects.get("4949489"), apiObject));     //Teil 1
+        Assert.assertFalse(similarityCheck.checkSimilarity(databaseObjects.get("4949491"), apiObject));     //Teil 2
+        Assert.assertFalse(similarityCheck.checkSimilarity(databaseObjects.get("4949492"), apiObject));     //Teil 3
         //Teil 4 fehlt in HSDB
     }
 
@@ -171,7 +171,7 @@ public class SimilarityCheckTest {
         Map<String, GenericObject> apiObjects = new HashMap<>();
         apiObjects.put("86736440", AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/once-a-beauty-86736440.json")));
 
-        Assert.assertEquals(1, similarityCheck.mapPartition(new ArrayList<>(databaseObjects.keySet()), databaseObjects, apiObjects));
+        Assert.assertEquals(1, similarityCheck.mapPartition(new ArrayList<>(apiObjects.keySet()), databaseObjects, apiObjects));
     }
 
     /**
@@ -300,7 +300,7 @@ public class SimilarityCheckTest {
         Map<String, GenericObject> apiObjects = new HashMap<>();
         apiObjects.put("86800910", AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/wahlverwandtschaften-86800910.json")));
 
-        Assert.assertEquals(0, similarityCheck.mapPartition(new ArrayList<>(databaseObjects.keySet()), databaseObjects, apiObjects));
+        Assert.assertEquals(0, similarityCheck.mapPartition(new ArrayList<>(apiObjects.keySet()), databaseObjects, apiObjects));
     }
 
     /**
@@ -329,7 +329,6 @@ public class SimilarityCheckTest {
                 new HsdbDao().getRadioPlays(
                         "WHERE DUKEY = 1363831"
                 );
-        AudiothekDao audiothekDao = new AudiothekDao();
         GenericObject apiObject = AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/dorfdisco-57571284.json"));
         GenericSimilarity gs = new GenericSimilarity();
         assertSimilarity("Dorfdisko",
@@ -339,7 +338,7 @@ public class SimilarityCheckTest {
 
     // !! INTEGRATION TEST MIT ALLEN DATEN AUS DATENBANK !! DAUERT LANGE !! //
 
-    @Test
+    // TODO @Test
     public void mapSimilarities() throws ImportException, ExecutionException, InterruptedException {
         AudiothekDao audiothekDao = new AudiothekDao();
         Map<String, GenericObject> audiothekObjects = audiothekDao.getRadioPlays();
