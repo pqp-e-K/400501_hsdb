@@ -1,0 +1,79 @@
+package systems.pqp.hsdb;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+/**
+ *
+ */
+public class SimilarityBean implements Serializable {
+
+    private String id;
+    private String dukey;
+    private String audiothekId;
+    private String audiothekLink;
+    private LocalDateTime validationDateTime;
+    private boolean deleted;
+
+    public SimilarityBean(){}
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getDukey() {
+        return dukey;
+    }
+
+    public void setDukey(String dukey) {
+        this.dukey = dukey;
+    }
+
+    public String getAudiothekId() {
+        return audiothekId;
+    }
+
+    public void setAudiothekId(String audiothekId) {
+        this.audiothekId = audiothekId;
+    }
+
+    public String getAudiothekLink() {
+        return audiothekLink;
+    }
+
+    public void setAudiothekLink(String audiothekLink) {
+        this.audiothekLink = audiothekLink;
+    }
+
+    public LocalDateTime getValidationDateTime() {
+        return validationDateTime;
+    }
+
+    public void setValidationDateTime(LocalDateTime validationDateTime) {
+        this.validationDateTime = validationDateTime;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    @Override
+    public String toString() {
+        return "SimilarityBean{" +
+                "id='" + id + '\'' +
+                ", dukey='" + dukey + '\'' +
+                ", audiothekId='" + audiothekId + '\'' +
+                ", audiothekLink='" + audiothekLink + '\'' +
+                ", validationDateTime=" + validationDateTime +
+                ", deleted=" + deleted +
+                '}';
+    }
+}
