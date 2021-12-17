@@ -7,10 +7,7 @@ import de.ard.sad.normdb.similarity.model.generic.GenericModel;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import systems.pqp.hsdb.Config;
-import systems.pqp.hsdb.DataHarmonizer;
-import systems.pqp.hsdb.ImportException;
-import systems.pqp.hsdb.RadioPlayType;
+import systems.pqp.hsdb.*;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -163,7 +160,11 @@ public class AudiothekDao {
         radioPlay.addDescriptionProperty(RadioPlayType.BIO, description);
         radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, description);
         radioPlay.addDescriptionProperty(RadioPlayType.DURATION, duration);
-        radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(publicationDt));
+        try {
+            radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(publicationDt));
+        } catch (DataHarmonizerException e) {
+            LOG.warn(e.getMessage(), e);
+        }
         radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, publisher);
         radioPlay.addDescriptionProperty(RadioPlayType.BIO, description);
         radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, description);

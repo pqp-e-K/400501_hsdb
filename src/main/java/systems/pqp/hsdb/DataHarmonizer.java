@@ -13,7 +13,13 @@ public class DataHarmonizer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DataHarmonizer.class);
 
-    public String date(String date){
+    /**
+     * Prüft input date auf format und wandelt es in einheitliches Format um.
+     * @param date String
+     * @return String
+     * @throws DataHarmonizerException wenn format nicht erkannt
+     */
+    public String date(String date) throws DataHarmonizerException {
 
         Pattern germanDate = Pattern.compile("[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}", Pattern.CASE_INSENSITIVE);
         Matcher matcher = germanDate.matcher(date);
@@ -57,7 +63,7 @@ public class DataHarmonizer {
             return year + "-" + month + "-" + day;
         }
 
-        return "Not matched";
+        throw new DataHarmonizerException(String.format("Date format not supported: %s", date));
     }
 
 }

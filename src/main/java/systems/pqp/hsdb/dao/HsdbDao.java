@@ -10,10 +10,7 @@ import de.ard.sad.normdb.similarity.model.generic.GenericModel;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import systems.pqp.hsdb.Config;
-import systems.pqp.hsdb.DataHarmonizer;
-import systems.pqp.hsdb.RadioPlayType;
-import systems.pqp.hsdb.SimilarityBean;
+import systems.pqp.hsdb.*;
 
 import javax.script.ScriptEngine;
 import java.io.Serializable;
@@ -233,7 +230,11 @@ public class HsdbDao {
             radioPlay.addDescriptionProperty(RadioPlayType.SHOW_TITLE, bean.getShowTitle());
             radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
             radioPlay.addDescriptionProperty(RadioPlayType.DURATION, String.valueOf(bean.getDurationInSeconds()));
-            radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(bean.getPublicationDt()));
+            try {
+                radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(bean.getPublicationDt()));
+            } catch (DataHarmonizerException e) {
+                LOG.warn(e.getMessage(), e);
+            }
             radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
             radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, bean.getDescription());
             radioPlay.addDescriptionProperty(RadioPlayType.LONG_TITLE, bean.getLongTitle());
@@ -245,7 +246,6 @@ public class HsdbDao {
             LOG.error(exception.getMessage(), exception);
             LOG.info(bean.toString());
         }
-
         return radioPlay;
     }
 
