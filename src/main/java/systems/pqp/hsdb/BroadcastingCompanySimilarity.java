@@ -28,7 +28,7 @@ public class BroadcastingCompanySimilarity implements GenricObjectType.SimAlgori
         bcList.add(List.of("RBB","rbb","Rundfunk Berlin-Brandenburg","RUNDFUNK BERLIN-BRANDENBURG","SENDER FREIES BERLIN","rbbKultur","radioeins"));
         bcList.add(List.of("SR","SAARLÄNDISCHER RUNDFUNK","Saarländische Rundfunk","SR 2 KulturRadio"));
         bcList.add(List.of("SWF","Südwestfunk Rundfunk"));
-        bcList.add(List.of("SWR","SWR1","SWR2","SWR3","SÜDDEUTSCHER RUNDFUNK","SÜDWESTRUNDFUNK","Südwestrunfunk","Südwestrundfunk 2021"));
+        bcList.add(List.of("SWR","SWR1","SWR2","SWR3","SÜDDEUTSCHER RUNDFUNK","SÜDWESTRUNDFUNK","Südwestrundfunk","Südwestrundfunk 2021"));
         bcList.add(List.of("WDR","WDR 3","WDR 5","Westdeutscher Rundfunk","WESTDEUTSCHER RUNDFUNK","1LIVE"));
         bcList.add(List.of("YLEISRADIO","yleisradio"));
     }
@@ -55,10 +55,9 @@ public class BroadcastingCompanySimilarity implements GenricObjectType.SimAlgori
         ArrayList<String> synonyms= new ArrayList<String>();
 
         if(element != null) {
-            element = element.toLowerCase();
             for(List<String>bcNames:bcList) {
                 for(String bcName:bcNames) {
-                    if (element.contains(bcName.toLowerCase())) {
+                    if (element.contains(bcName)) {
                         addAllWithoutDuplicates(bcNames,synonyms);
                     }
                 }
