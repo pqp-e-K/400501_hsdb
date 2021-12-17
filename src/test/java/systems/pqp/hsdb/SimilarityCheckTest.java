@@ -337,8 +337,7 @@ public class SimilarityCheckTest {
 
 
     // !! INTEGRATION TEST MIT ALLEN DATEN AUS DATENBANK !! DAUERT LANGE !! //
-
-    // TODO @Test
+    // @Test
     public void mapSimilarities() throws ImportException, ExecutionException, InterruptedException {
         AudiothekDao audiothekDao = new AudiothekDao();
         Map<String, GenericObject> audiothekObjects = audiothekDao.getRadioPlays();

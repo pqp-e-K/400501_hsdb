@@ -8,6 +8,7 @@ import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.pqp.hsdb.Config;
+import systems.pqp.hsdb.DataHarmonizer;
 import systems.pqp.hsdb.ImportException;
 import systems.pqp.hsdb.RadioPlayType;
 
@@ -31,6 +32,7 @@ public class AudiothekDao {
     private static final int RADIO_PLAY_ID = Integer.parseInt(CONFIG.getProperty("api.category.id"));
     private static final String API_URL = CONFIG.getProperty("api.url");
     private static final String LIMIT = CONFIG.getProperty("api.limit","100000");
+    private static final DataHarmonizer DATA_HARMONIZER = new DataHarmonizer();
 
     public AudiothekDao(){}
 
@@ -161,7 +163,7 @@ public class AudiothekDao {
         radioPlay.addDescriptionProperty(RadioPlayType.BIO, description);
         radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, description);
         radioPlay.addDescriptionProperty(RadioPlayType.DURATION, duration);
-        radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, publicationDt);
+        radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(publicationDt));
         radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, publisher);
         radioPlay.addDescriptionProperty(RadioPlayType.BIO, description);
         radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, description);
