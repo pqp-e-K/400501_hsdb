@@ -180,13 +180,14 @@ public class HsdbDao {
      */
     public Map<String,GenericObject> getRadioPlays(String query){
         Map<String,GenericObject> result = new HashMap<>();
-        String sql = "SELECT DUKEY, VOLLINFO FROM "+DB+"."+TAB+" "+query+";";
+        String sql = "SELECT DUKEY, VOLLINFO, SORTRFA FROM "+DB+"."+TAB+" "+query+";";
         try(Connection connection = createConnection()) {
             try(Statement stmt = connection.createStatement()){
                 ResultSet resultSet = stmt.executeQuery(sql);
                 while(resultSet.next()){
                     String id = resultSet.getString(1);
                     String xml = resultSet.getString(2);
+                    String publisher = resultSet.getString(3);
 
                     VollinfoBean bean = beanFromXmlString(xml);
 
@@ -198,6 +199,7 @@ public class HsdbDao {
                             id,
                             bean
                     );
+                    radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, publisher);
                     result.put(id,radioPlay);
                 }
             } catch (SQLException | JsonProcessingException throwables){
@@ -436,18 +438,36 @@ public class HsdbDao {
         }
 
         public List<String> getActorNames() {
-            return getActors().stream().map(ActorBean::getName).collect(Collectors.toList());
+            return getActors().stream().map(ActorBean::getName).filter(name -> !"".equals(name)).collect(Collectors.toList());
         }
 
         public List<String> getActorRoles() {
-            return getActors().stream().map(ActorBean::getRolle).collect(Collectors.toList());
+            return getActors().stream().map(ActorBean::getRolle).filter(name -> !"".equals(name)).collect(Collectors.toList());
         }
 
         public List<String> getInvolvedNames() {
-            return Stream.concat(
-                    Stream.of(getAuthor(), getDirector(), getTranslator()),
-                    getActorNames().stream()
-            ).map(name -> name.replaceAll("\\[.*\\]", "").trim()).collect(Collectors.toList());
+
+            List<String> involvedPersons = new ArrayList<>();
+            if(!"".equals(getAuthor())){
+                involvedPersons.add(getAuthor());
+            }
+            if(!"".equals(getDirector())){
+                involvedPersons.add(getDirector());
+            }
+            if(!"".equals(getTranslator())){
+                involvedPersons.add(getTranslator());
+            }
+            if(!getActorNames().isEmpty()){
+                getActorNames().forEach(
+                        actorName -> {
+                            if(!"".equals(actorName)){
+                                involvedPersons.add(actorName);
+                            }
+                        }
+                );
+            }
+
+            return involvedPersons.stream().map(name -> name.replaceAll("\\[.*\\]", "").trim()).collect(Collectors.toList());
         }
 
         @Override

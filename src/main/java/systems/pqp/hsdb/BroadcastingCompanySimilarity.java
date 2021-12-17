@@ -12,13 +12,13 @@ public class BroadcastingCompanySimilarity implements GenricObjectType.SimAlgori
     public BroadcastingCompanySimilarity() {
         bcList.add(List.of("ABC","ABC RADIO NATIONAL","ABC SYDNEY - AUSTRALIAN BROADCASTING CORPORATION"));
         bcList.add(List.of("ARD","ARD.de"));
-        bcList.add(List.of("BR","Bayerischer Rundfunk","BAYERISCHER RUNDFUNK","Bayern 2","Bayerischer Rundfunk 2012","BR Heimat","DEUTSCHE STUNDE IN BAYERN GMBH (MÜNCHEN)"));
+        bcList.add(List.of("BR","Bayerischer Rundfunk","BAYERISCHER RUNDFUNK","Bayern 2","Bayerischer Rundfunk 2012","Bayerischer Rundfunk 2020","BR Heimat","DEUTSCHE STUNDE IN BAYERN GMBH (MÜNCHEN)"));
         bcList.add(List.of("BBC","BBC DEUTSCHER DIENST"));
         bcList.add(List.of("BERLINER RUNDFUNK","Berliner Rundfunk"));
         bcList.add(List.of("CBS","COLUMBIA BROADCASTING SYSTEM (CBS)"));
-        bcList.add(List.of("DLR","Deutschlandradio"));
+        bcList.add(List.of("DLR","Deutschlandradio","DEUTSCHLANDRADIO"));
         bcList.add(List.of("DEUTSCHE WELLE","Deutsche Welle"));
-        bcList.add(List.of("DEUTSCHLANDFUNK","Deutschlandfunk","Deutschlandfunk Kultur","DEUTSCHLANDSENDER","DEUTSCHLANDSENDER KULTUR","DS KULTUR"));
+        bcList.add(List.of("DEUTSCHLANDFUNK","Deutschlandfunk","Deutschlandfunk Kultur","DEUTSCHLANDSENDER","DEUTSCHLANDSENDER KULTUR","DS KULTUR","Dlf Nova"));
         bcList.add(List.of("HR","hr","hr-2","hr2-kultur","hr3","Hessischer Rundfunk","HESSISCHER RUNDFUNK"));
         bcList.add(List.of("MDR","MITTELDEUTSCHER RUNDFUNK","MITTELDEUTSCHER RUNDFUNK (1946-1952)","MIRAG - MITTELDEUTSCHE RUNDFUNK AG (LEIPZIG)","Mitteldeutscher Rundfunk","MDR KULTUR"));
         bcList.add(List.of("NDR","Norddeutscher Rundfunk","NORDDEUTSCHER RUNDFUNK","NDR Kultur","NDR 1 Welle Nord"));
@@ -28,8 +28,9 @@ public class BroadcastingCompanySimilarity implements GenricObjectType.SimAlgori
         bcList.add(List.of("RBB","rbb","Rundfunk Berlin-Brandenburg","RUNDFUNK BERLIN-BRANDENBURG","SENDER FREIES BERLIN","rbbKultur","radioeins"));
         bcList.add(List.of("SR","SAARLÄNDISCHER RUNDFUNK","Saarländische Rundfunk","SR 2 KulturRadio"));
         bcList.add(List.of("SWF","Südwestfunk Rundfunk"));
-        bcList.add(List.of("SWR","SWR1","SWR2","SWR3","SÜDDEUTSCHER RUNDFUNK","SÜDWESTRUNDFUNK"));
+        bcList.add(List.of("SWR","SWR1","SWR2","SWR3","SÜDDEUTSCHER RUNDFUNK","SÜDWESTRUNDFUNK","Südwestrunfunk","Südwestrundfunk 2021"));
         bcList.add(List.of("WDR","WDR 3","WDR 5","Westdeutscher Rundfunk","WESTDEUTSCHER RUNDFUNK","1LIVE"));
+        bcList.add(List.of("YLEISRADIO","yleisradio"));
     }
 
     public float calcSimilarity(String pattern, String target) {
