@@ -96,7 +96,7 @@ public class SimilarityCheck {
             return 0;
         }
 
-        LOG.info("Partition[{}]: Aktualisiere Gemeinsamkeiten in Datenbank...", audiothekIds.hashCode());
+        LOG.info("Partition[{}]: Aktualisiere {} Gemeinsamkeiten in Datenbank...", audiothekIds.hashCode(), foundSimilarities);
         HsdbDao dao = new HsdbDao();
         dao.upsertMany(foundSimilarities);
         LOG.info("Partition[{}]: Update erfolgreich. Ende.", audiothekIds.hashCode());

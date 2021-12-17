@@ -335,21 +335,6 @@ public class SimilarityCheckTest {
                 gs.calcSimilarity(databaseObjects.get("1363831"), apiObject), 0.8f, false);
     }
 
-
-    // !! INTEGRATION TEST MIT ALLEN DATEN AUS DATENBANK !! DAUERT LANGE !! //
-    // @Test
-    public void mapSimilarities() throws ImportException, ExecutionException, InterruptedException {
-        AudiothekDao audiothekDao = new AudiothekDao();
-        Map<String, GenericObject> audiothekObjects = audiothekDao.getRadioPlays();
-
-        HsdbDao hsdbDao = new HsdbDao();
-        Map<String, GenericObject> hsdbObjects = hsdbDao.getRadioPlays();
-
-        SimilarityCheck similarityCheck = new SimilarityCheck();
-        similarityCheck.mapSimilarities(hsdbObjects, audiothekObjects, 10);
-    }
-
-
     // --------------------------------------- //
 
     /**
