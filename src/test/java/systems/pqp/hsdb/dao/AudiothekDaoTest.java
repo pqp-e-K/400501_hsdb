@@ -43,8 +43,8 @@ public class AudiothekDaoTest {
     public void genericObjectsFromJson() throws IOException {
         Map apiResponse = loadJsonFromFile("api-examples/api.json");
         Map<String, GenericObject> result = AudiothekDao.genericObjectsFromJson(apiResponse);
-        Assert.assertTrue("Ergebnismenge ist > 0",result.size() > 0);
-        System.out.println(result);
+        Assert.assertTrue("Ergebnismenge ist > 100",result.size() > 100);
+        //System.out.println(result);
     }
 
 
