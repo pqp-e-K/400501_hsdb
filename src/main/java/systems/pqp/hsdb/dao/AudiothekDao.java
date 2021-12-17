@@ -149,6 +149,9 @@ public class AudiothekDao {
         if(((LinkedTreeMap)tracking.get("play")).containsKey("source")){
             publisher.add((String) ((LinkedTreeMap)tracking.get("play")).get("source"));
         }
+        if(((LinkedTreeMap)tracking.get("play")).containsKey("lra")){
+            publisher.add((String) ((LinkedTreeMap)tracking.get("play")).get("lra"));
+        }
 
         GenericModel genericModel = new GenericModel(RadioPlayType.class);
         GenericObject radioPlay = new GenericObject(genericModel,id);
