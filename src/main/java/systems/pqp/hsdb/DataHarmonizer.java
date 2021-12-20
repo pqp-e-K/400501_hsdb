@@ -21,6 +21,20 @@ public class DataHarmonizer {
      */
     public String date(String date) throws DataHarmonizerException {
 
+        /*Pattern circaYear = Pattern.compile("(circa|ca\\.?)\\s?[0-9]{4}", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = circaYear.matcher(date);
+        if( matcher.matches() ){
+            LOGGER.debug("Circa Year");
+            String[] parts = date.split("\\s");
+            String year = parts[1];
+            String month = "XX";
+            String day = "XX";
+            return year + "-" + month + "-" + day;
+        }*/
+
+        // Daten bereinigen, alles entfernen ("circa" usw), was keine Zahl oder ein Steuerzeichen ist
+        date = date.replaceAll("(circa\\s?)|(ca\\.?\\s?)", "");
+
         Pattern germanDate = Pattern.compile("[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}", Pattern.CASE_INSENSITIVE);
         Matcher matcher = germanDate.matcher(date);
         if( matcher.matches() ){
@@ -32,14 +46,21 @@ public class DataHarmonizer {
             return year + "-" + month + "-" + day;
         }
 
-        Pattern shortGermanDate = Pattern.compile("[0-9]{2}\\.[0-9]{4}", Pattern.CASE_INSENSITIVE);
+        Pattern shortGermanDate = Pattern.compile("([0-9]{2}\\.)?[0-9]{4}", Pattern.CASE_INSENSITIVE);
         matcher = shortGermanDate.matcher(date);
         if( matcher.matches() ){
             LOGGER.debug("Short German Date");
             String[] parts = date.split("\\.");
             String day = "XX";
-            String month = parts[0];
-            String year = parts[1];
+            String month;
+            String year;
+            if( parts.length > 1 ) {
+                month = parts[0];
+                year = parts[1];
+            } else {
+                month = "XX";
+                year = parts[0];
+            }
             return year + "-" + month + "-" + day;
         }
 

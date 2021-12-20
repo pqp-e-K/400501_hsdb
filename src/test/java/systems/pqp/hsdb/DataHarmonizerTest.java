@@ -51,4 +51,26 @@ public class DataHarmonizerTest {
         String input = "2021 02 18 10:21:21.21321";
         harmonizer.date(input);
     }
+
+    @Test
+    public void circaYear() throws DataHarmonizerException {
+        DataHarmonizer harmonizer = new DataHarmonizer();
+        String input = "circa 1970";
+        Assert.assertEquals("1970-XX-XX", harmonizer.date(input));
+        input = "ca 1970";
+        Assert.assertEquals("1970-XX-XX", harmonizer.date(input));
+        input = "ca. 1970";
+        Assert.assertEquals("1970-XX-XX", harmonizer.date(input));
+        input = "circa 01.1976";
+        Assert.assertEquals("1976-01-XX", harmonizer.date(input));
+        input = "12.04.1975";
+        Assert.assertEquals("1975-04-12", harmonizer.date(input));
+    }
+
+    @Test
+    public void onlyYear() throws DataHarmonizerException {
+        DataHarmonizer harmonizer = new DataHarmonizer();
+        String input = "1970";
+        Assert.assertEquals("1970-XX-XX", harmonizer.date(input));
+    }
 }
