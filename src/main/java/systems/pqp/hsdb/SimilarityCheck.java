@@ -2,6 +2,7 @@ package systems.pqp.hsdb;
 
 import de.ard.sad.normdb.similarity.compare.generic.GenericSimilarity;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
+import de.ard.sad.normdb.similarity.model.generic.types.RadioPlayType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.pqp.hsdb.dao.HsdbDao;
