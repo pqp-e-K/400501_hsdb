@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 import de.ard.sad.normdb.similarity.model.generic.GenericModel;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
+import de.ard.sad.normdb.similarity.model.generic.types.RadioPlayType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.pqp.hsdb.*;

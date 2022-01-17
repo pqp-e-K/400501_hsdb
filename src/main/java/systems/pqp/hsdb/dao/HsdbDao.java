@@ -8,11 +8,14 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import de.ard.sad.normdb.similarity.model.generic.GenericModel;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
+import de.ard.sad.normdb.similarity.model.generic.types.RadioPlayType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import systems.pqp.hsdb.*;
+import systems.pqp.hsdb.Config;
+import systems.pqp.hsdb.DataHarmonizer;
+import systems.pqp.hsdb.DataHarmonizerException;
+import systems.pqp.hsdb.SimilarityBean;
 
-import javax.script.ScriptEngine;
 import java.io.Serializable;
 import java.sql.*;
 import java.util.*;
@@ -20,7 +23,6 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Data-Access-Object für HSDB-Datenbank
