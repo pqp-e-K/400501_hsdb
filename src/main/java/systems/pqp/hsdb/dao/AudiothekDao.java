@@ -186,7 +186,7 @@ public class AudiothekDao {
      * @return Map<String, GenericObject>
      * @throws IOException
      */
-    Map<String, GenericObject> genericObjectsFromDisk(String path) throws IOException {
+    public static Map<String, GenericObject> genericObjectsFromDisk(String path) throws IOException {
 
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         File input = new File(loader.getResource(path).getFile());

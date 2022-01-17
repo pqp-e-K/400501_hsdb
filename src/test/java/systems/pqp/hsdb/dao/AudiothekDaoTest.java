@@ -38,8 +38,7 @@ public class AudiothekDaoTest {
 
     @Test
     public void genericObjectsFromJson() throws IOException {
-        Map apiResponse = loadJsonFromFile("api-examples/api.json");
-        Map<String, GenericObject> result = AudiothekDao.genericObjectsFromJson(apiResponse);
+        Map<String, GenericObject> result = AudiothekDao.genericObjectsFromDisk("api-examples/api.json.zip");
         Assert.assertTrue("Ergebnismenge ist > 100",result.size() > 100);
         //System.out.println(result);
     }
@@ -123,7 +122,7 @@ public class AudiothekDaoTest {
 
     @Test
     public void genericObjectFromDisk() throws IOException {
-        Map<String, GenericObject> result = new AudiothekDao().genericObjectsFromDisk("api-examples/api.json.zip");
+        Map<String, GenericObject> result = AudiothekDao.genericObjectsFromDisk("api-examples/api.json.zip");
         Assert.assertTrue(result.size() > 0);
     }
 
