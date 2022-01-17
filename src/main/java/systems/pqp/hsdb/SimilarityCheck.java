@@ -10,15 +10,18 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import com.google.common.collect.Lists;
 
 public class SimilarityCheck {
 
-    private static GenericSimilarity similarityTest = new GenericSimilarity();
     private Config config = Config.Config();
     private static final Logger LOG = LoggerFactory.getLogger(SimilarityCheck.class.getName());
 
@@ -30,7 +33,7 @@ public class SimilarityCheck {
      * @param audiothekObject GenericObject, Objekt aus Audiothek
      * @return boolean, true wenn gleich
      */
-    public boolean checkSimilarity(GenericObject hsdbObject, GenericObject audiothekObject){
+    public boolean checkSimilarity(GenericSimilarity similarityTest, GenericObject hsdbObject, GenericObject audiothekObject){
         float similarity = similarityTest.calcSimilarity(hsdbObject, audiothekObject);
         return Float.parseFloat(config.getProperty(Config.THRESHOLD)) <= similarity;
     }
@@ -73,11 +76,16 @@ public class SimilarityCheck {
         Instant instant = Instant.ofEpochMilli(System.currentTimeMillis());
         LocalDateTime ldt = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
         List<SimilarityBean> foundSimilarities = new ArrayList<>();
+        GenericSimilarity similarityTest = new GenericSimilarity();
+        int toProcess = audiothekIds.size();
+        AtomicInteger processed = new AtomicInteger(0);
+
+        printProgress(System.currentTimeMillis(),toProcess,processed.get());
         audiothekIds.forEach(
                 audiothekId -> {
                     hsdbObjects.keySet().forEach(
                             hsdbKey -> {
-                                if (checkSimilarity(hsdbObjects.get(hsdbKey), audiothekObjects.get(audiothekId))) {
+                                if (checkSimilarity(similarityTest, hsdbObjects.get(hsdbKey), audiothekObjects.get(audiothekId))) {
                                     SimilarityBean similarityBean = new SimilarityBean();
                                     similarityBean.setDukey(hsdbKey);
                                     similarityBean.setAudiothekId(audiothekId);
@@ -88,7 +96,10 @@ public class SimilarityCheck {
                                 }
                             }
                     );
-                    LOG.info("Partition[{}]: {} fertig", audiothekIds.hashCode(), audiothekId);
+                    processed.addAndGet(1);
+                    System.out.println("Finished " + processed.get() + "/" + toProcess);
+                    //LOG.info("Partition[{}]: {} fertig", audiothekIds.hashCode(), audiothekId);
+
                 }
         );
         if(foundSimilarities.isEmpty()){
@@ -103,4 +114,34 @@ public class SimilarityCheck {
         return foundSimilarities.size();
     }
 
+    /**
+     *
+     * @param startTime
+     * @param total
+     * @param current
+     */
+    private void printProgress(long startTime, long total, long current) {
+        long eta = current == 0 ? 0 :
+                (total - current) * (System.currentTimeMillis() - startTime) / current;
+
+        String etaHms = current == 0 ? "N/A" :
+                String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(eta),
+                        TimeUnit.MILLISECONDS.toMinutes(eta) % TimeUnit.HOURS.toMinutes(1),
+                        TimeUnit.MILLISECONDS.toSeconds(eta) % TimeUnit.MINUTES.toSeconds(1));
+
+        StringBuilder string = new StringBuilder(140);
+        int percent = (int) (current * 100 / total);
+        string
+                .append('\r')
+                .append(String.join("", Collections.nCopies(percent == 0 ? 2 : 2 - (int) (Math.log10(percent)), " ")))
+                .append(String.format(" %d%% [", percent))
+                .append(String.join("", Collections.nCopies(percent, "=")))
+                .append('>')
+                .append(String.join("", Collections.nCopies(100 - percent, " ")))
+                .append(']')
+                .append(String.join("", Collections.nCopies(current == 0 ? (int) (Math.log10(total)) : (int) (Math.log10(total)) - (int) (Math.log10(current)), " ")))
+                .append(String.format(" %d/%d, ETA: %s", current, total, etaHms));
+
+        System.out.print(string);
+    }
 }

@@ -12,10 +12,9 @@ import systems.pqp.hsdb.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 
 public class AudiothekDao {
@@ -26,8 +25,8 @@ public class AudiothekDao {
     private static final Logger LOG = LoggerFactory.getLogger(AudiothekDao.class.getName());
     private static final Config CONFIG = Config.Config();
 
-    private static final int RADIO_PLAY_ID = Integer.parseInt(CONFIG.getProperty("api.category.id"));
-    private static final String API_URL = CONFIG.getProperty("api.url");
+    static final int RADIO_PLAY_ID = Integer.parseInt(CONFIG.getProperty("api.category.id"));
+    static final String API_URL = CONFIG.getProperty("api.url");
     private static final String LIMIT = CONFIG.getProperty("api.limit","100000");
     private static final DataHarmonizer DATA_HARMONIZER = new DataHarmonizer();
 
@@ -51,26 +50,10 @@ public class AudiothekDao {
      */
     public Map<String, GenericObject> getRadioPlays(int radioPlayId, String apiUrl) throws ImportException {
         try {
-            URL url = new URL(apiUrl + "/" + radioPlayId + "?offset=0&limit="+LIMIT);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            if( connection.getResponseCode() == 200 ) {
-                String content = getContentFromInputStream(connection.getInputStream()).toString();
-                connection.disconnect();
-                if( LOG.isDebugEnabled() ) {
-                    LOG.debug(content);
-                }
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                Map result = gson.fromJson(content, Map.class);
-                FileWriter writer = new FileWriter("api.json",false);
-                gson.toJson(result, writer);
-                writer.flush();
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Map result = gson.fromJson(fetchAll(radioPlayId, apiUrl), Map.class);
 
-                return genericObjectsFromJson(result);
-
-            } else {
-                throw new ImportException("Response-Code: " + connection.getResponseCode());
-            }
+            return genericObjectsFromJson(result);
 
         } catch (IOException ioException){
             if( LOG.isDebugEnabled() ){
@@ -86,7 +69,7 @@ public class AudiothekDao {
                 entry -> resultMap.put((String) entry.get("id"),(genericObjectFromJson(entry)))
         );
 
-        LOG.info("Num Program-Sets: {}", resultMap.size());
+        LOG.info("Fetch finished...Num Program-Sets: {}", resultMap.size());
 
         return resultMap;
     }
@@ -193,5 +176,54 @@ public class AudiothekDao {
         }
         in.close();
         return content;
+    }
+
+    /**
+     * Methode fuer Chefe
+     * Laedt und entpackt api.json.zip aus test/resources/api-examples und gibt genericObjectsFromJson zurueck
+     * @param path String
+     * @return Map<String, GenericObject>
+     * @throws IOException
+     */
+    Map<String, GenericObject> genericObjectsFromDisk(String path) throws IOException {
+
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        File input = new File(loader.getResource(path).getFile());
+
+        try (ZipFile zipFile = new ZipFile(input)) {
+            Enumeration<? extends ZipEntry> entries = zipFile.entries();
+
+            if (entries.hasMoreElements()) {
+                Gson gson = new Gson();
+                ZipEntry entry = entries.nextElement();
+                InputStream stream = zipFile.getInputStream(entry);
+                return genericObjectsFromJson(gson.fromJson(new InputStreamReader(stream), Map.class));
+            }
+        }
+        return new HashMap<>();
+    }
+
+    String fetchAll(int radioPlayId, String apiUrl) throws IOException, ImportException {
+        LOG.info("Fetching Radio-Plays from api...");
+        URL url = new URL(apiUrl + "/" + radioPlayId + "?offset=0&limit="+LIMIT);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        if( connection.getResponseCode() == 200 ) {
+            String content = getContentFromInputStream(connection.getInputStream()).toString();
+            connection.disconnect();
+            if( LOG.isDebugEnabled() ) {
+                LOG.debug(content);
+            }
+            /*Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Map result = gson.fromJson(content, Map.class);
+            FileWriter writer = new FileWriter("api.json",false);
+            gson.toJson(result, writer);
+            writer.flush();*/
+
+            return content;
+
+        } else {
+            throw new ImportException("Response-Code: " + connection.getResponseCode());
+        }
     }
 }

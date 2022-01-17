@@ -11,10 +11,7 @@ import org.slf4j.LoggerFactory;
 import systems.pqp.hsdb.ImportException;
 import systems.pqp.hsdb.RadioPlayType;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +42,16 @@ public class AudiothekDaoTest {
         Map<String, GenericObject> result = AudiothekDao.genericObjectsFromJson(apiResponse);
         Assert.assertTrue("Ergebnismenge ist > 100",result.size() > 100);
         //System.out.println(result);
+    }
+
+    @Test
+    public void fetchAndSaveAll() throws ImportException, IOException {
+        String result = new AudiothekDao().fetchAll(AudiothekDao.RADIO_PLAY_ID, AudiothekDao.API_URL);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        FileWriter resultWriter = new FileWriter("audiothek.json");
+        gson.toJson(gson.fromJson(result, Map.class), resultWriter);
+        resultWriter.flush();
+        resultWriter.close();
     }
 
 
@@ -112,6 +119,12 @@ public class AudiothekDaoTest {
         gson.toJson(publisherAggregationMap, writer);
         writer.flush();
         writer.close();
+    }
+
+    @Test
+    public void genericObjectFromDisk() throws IOException {
+        Map<String, GenericObject> result = new AudiothekDao().genericObjectsFromDisk("api-examples/api.json.zip");
+        Assert.assertTrue(result.size() > 0);
     }
 
     /**
