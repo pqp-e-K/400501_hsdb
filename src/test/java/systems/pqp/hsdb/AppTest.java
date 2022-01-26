@@ -56,7 +56,7 @@ public class AppTest {
     }
 
 
-    // @Test großer integrations-test -- dauert derzeit bei 10 threads ca. 4h
+    @Test //großer integrations-test -- dauert derzeit bei 10 threads ca. 4h
     public void similarityCheck() throws ImportException, ExecutionException, InterruptedException {
         AudiothekDao audiothekDao = new AudiothekDao();
         Map<String, GenericObject> audiothekObjects = audiothekDao.getRadioPlays();

@@ -83,28 +83,10 @@ public class AudiothekDao {
     public static GenericObject genericObjectFromJson(Map embeddedObject){
         String id = String.valueOf(embeddedObject.get("id"));
         String title = String.valueOf(embeddedObject.get("title"));
-        List<String> involvedNames = new ArrayList<>();
 
         //Überflüssige Klammerung entfernen
         if(title.indexOf("(") < title.indexOf(")")) {
             title = title.replaceAll("\\(.*\\)", "").trim();
-        }
-
-        //Doppelpunkt Prefix extrahieren & ggf. als involved Person hinzufügen
-        int idx = title.indexOf(":")+1;
-        if(idx > 0) {
-            String prefix = title.substring(0,idx-1).trim();
-            int idxWhitespace = prefix.indexOf(" ");
-            if(idxWhitespace > -1 && prefix.length()-(idxWhitespace+1) > 2) {
-                involvedNames.add(prefix);
-            }
-            title = title.substring(idx).trim();
-        }
-
-        //Abschließenden Suffix entfernen
-        idx = title.indexOf("/");
-        if(idx > 0) {
-            title = title.substring(0,idx).trim();
         }
 
         String description = String.valueOf(embeddedObject.get("synopsis"));
@@ -154,8 +136,6 @@ public class AudiothekDao {
         radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, description);
         radioPlay.addDescriptionProperty(RadioPlayType.LINK_AUDIOTHEK, linkAudiothek);
         radioPlay.addDescriptionProperty(RadioPlayType.LONG_TITLE, title);
-        if(involvedNames.size()>0)
-            radioPlay.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, involvedNames);
 
 
         return radioPlay;
