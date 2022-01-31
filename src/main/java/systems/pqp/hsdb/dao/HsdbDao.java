@@ -39,6 +39,7 @@ public class HsdbDao {
     private static final String TAB  = CONFIG.getProperty(Config.HSDB_TABLE);
     private static final String MAPPING_TABLE_COL_ID = "ID";
     private static final String MAPPING_TABLE_COL_DUKEY = "DUKEY";
+    private static final String MAPPING_TABLE_COL_SCORE = "SCORE";
     private static final String MAPPING_TABLE_COL_AUDIOTHEK_ID = "AUDIOTHEK_ID";
     private static final String MAPPING_TABLE_COL_DELETED = "DELETED";
     private static final String MAPPING_TABLE_COL_AUDIOTHEK_LINK = "AUDIOTHEK_LINK";
@@ -56,19 +57,21 @@ public class HsdbDao {
             MAPPING_TABLE_COL_AUDIOTHEK_ID
     );
     private static final String UPDATE_STMT = String.format(
-            "UPDATE %s.%s SET %s = ?, %s = ? WHERE %s = ?",
+            "UPDATE %s.%s SET %s = ?, %s = ?, %s = ? WHERE %s = ?",
             DB,
             MAPPING_TAB,
+            MAPPING_TABLE_COL_SCORE,
             MAPPING_TABLE_COL_AUDIOTHEK_LINK,
             MAPPING_TABLE_COL_VALIDATION_DATE,
             MAPPING_TABLE_COL_ID
     );
     private static final String INSERT_STMT = String.format(
-            "INSERT INTO %s.%s(%s,%s,%s,%s,%s) VALUES(?,?,?,?,?)",
+            "INSERT INTO %s.%s(%s,%s,%s,%s,%s,%s) VALUES(?,?,?,?,?,?)",
             DB,
             MAPPING_TAB,
             MAPPING_TABLE_COL_DUKEY,
             MAPPING_TABLE_COL_AUDIOTHEK_ID,
+            MAPPING_TABLE_COL_SCORE,
             MAPPING_TABLE_COL_AUDIOTHEK_LINK,
             MAPPING_TABLE_COL_VALIDATION_DATE,
             MAPPING_TABLE_COL_DELETED
@@ -139,9 +142,10 @@ public class HsdbDao {
      * @throws SQLException
      */
     public String updateOne(PreparedStatement update, SimilarityBean similarityBean, boolean execute) throws SQLException {
-        update.setString(1, similarityBean.getAudiothekLink());
-        update.setString(2, similarityBean.getValidationDateTime().toString());
-        update.setString(3, similarityBean.getId());
+        update.setFloat(1, similarityBean.getScore());
+        update.setString(2, similarityBean.getAudiothekLink());
+        update.setString(3, similarityBean.getValidationDateTime().toString());
+        update.setString(4, similarityBean.getId());
         if(execute){
             update.executeUpdate();
         }
@@ -158,9 +162,10 @@ public class HsdbDao {
     public void insertOne(PreparedStatement insert, SimilarityBean similarityBean, boolean execute) throws SQLException {
         insert.setString(1, similarityBean.getDukey());
         insert.setString(2, similarityBean.getAudiothekId());
-        insert.setString(3, similarityBean.getAudiothekLink());
-        insert.setString(4, similarityBean.getValidationDateTime().toString());
-        insert.setBoolean(5, false);
+        insert.setFloat(3, similarityBean.getScore());
+        insert.setString(4, similarityBean.getAudiothekLink());
+        insert.setString(5, similarityBean.getValidationDateTime().toString());
+        insert.setBoolean(6, false);
         if(execute) {
             insert.executeUpdate();
         }

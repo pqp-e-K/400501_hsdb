@@ -11,6 +11,7 @@ public class SimilarityBean implements Serializable {
     private String id;
     private String dukey;
     private String audiothekId;
+    private Float score;
     private String audiothekLink;
     private LocalDateTime validationDateTime;
     private boolean deleted;
@@ -39,6 +40,14 @@ public class SimilarityBean implements Serializable {
 
     public void setAudiothekId(String audiothekId) {
         this.audiothekId = audiothekId;
+    }
+
+    public Float getScore() {
+        return score;
+    }
+
+    public void setScore(Float score) {
+        this.score = score;
     }
 
     public String getAudiothekLink() {
@@ -72,6 +81,7 @@ public class SimilarityBean implements Serializable {
                 ", dukey='" + dukey + '\'' +
                 ", audiothekId='" + audiothekId + '\'' +
                 ", audiothekLink='" + audiothekLink + '\'' +
+                ", score='" + score + '\'' +
                 ", validationDateTime=" + validationDateTime +
                 ", deleted=" + deleted +
                 '}';

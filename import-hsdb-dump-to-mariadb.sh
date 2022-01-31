@@ -19,8 +19,8 @@ import() {
 docker exec -i hsdb-mariadb sh -c 'exec mysql -uroot -p"$MARIADB_ROOT_PASSWORD" --default-character-set=utf8mb4' < "./$FOLDER_NAME/create_database.sql"
 
 ### import
-import ./$FOLDER_NAME/Haupttabelle___hs_du.sql &&
-import ./$FOLDER_NAME/Hilfstabellen_mit_Wertelisten.sql &&
-import ./$FOLDER_NAME/hs_suchdatum.sql &&
-import ./$FOLDER_NAME/hs_suchzeile.sql
+#import ./$FOLDER_NAME/Haupttabelle___hs_du.sql &&
+#import ./$FOLDER_NAME/Hilfstabellen_mit_Wertelisten.sql &&
+#import ./$FOLDER_NAME/hs_suchdatum.sql &&
+#import ./$FOLDER_NAME/hs_suchzeile.sql
 import ./$FOLDER_NAME/hs_link_audiothek.sql
