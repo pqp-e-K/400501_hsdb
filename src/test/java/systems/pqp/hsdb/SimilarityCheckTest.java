@@ -451,8 +451,44 @@ class SimilarityCheckTest {
 
     @ParameterizedTest
     //4996682 ist vermutlich noch nicht im HSPDB Dump ("94396158-4996682")
-    @ValueSource(strings = {"91404194-1440603","92731810-4205631","95956576-4924994","95956552-4924992","67252498-4973380","90406454-4974332","90406454-4975621","96394444-1444110"})
+    @ValueSource(strings = {"96271614-4970483","91332794-4988367","89793344-4205980","85454902-4986671","91404194-1440603","92731810-4205631","95956576-4924994","95956552-4924992","67252498-4973380","90406454-4974332","90406454-4975621","96394444-1444110","78744726-4975756"})
     void duKey_verlinken(String ids) {
+        String[] splittedIds = ids.split("-");
+        String duKey = splittedIds[1];
+        Map<String, GenericObject> databaseObjects =
+                new HsdbDao().getRadioPlays(
+                        "WHERE DUKEY = " + duKey
+                );
+
+        RadioPlaytypeSimilarity gs = new RadioPlaytypeSimilarity();
+
+        GenericObject apiObject = audiothekObjects.get(splittedIds[0]);
+
+        assertSimilarity("duKey_nichtVerlinken",
+                gs.calcSimilarity(databaseObjects.get(duKey), apiObject), 0.8f, true);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"89793298-4605830","95692196-4922799"})
+    void duKey_verlinken2(String ids) {
+        String[] splittedIds = ids.split("-");
+        String duKey = splittedIds[1];
+        Map<String, GenericObject> databaseObjects =
+                new HsdbDao().getRadioPlays(
+                        "WHERE DUKEY = " + duKey
+                );
+
+        RadioPlaytypeSimilarity gs = new RadioPlaytypeSimilarity();
+
+        GenericObject apiObject = audiothekObjects.get(splittedIds[0]);
+
+        assertSimilarity("duKey_nichtVerlinken",
+                gs.calcSimilarity(databaseObjects.get(duKey), apiObject), 0.8f, true);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"95488054-4995425","95488054-95488074","95488054-95488064","95488054-95488064","95488054-95519438","88339158-4989146"})
+    void duKey_verlinken_unterschiedliche_stueckelung(String ids) {
         String[] splittedIds = ids.split("-");
         String duKey = splittedIds[1];
         Map<String, GenericObject> databaseObjects =
