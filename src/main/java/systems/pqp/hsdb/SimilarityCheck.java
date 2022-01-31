@@ -1,6 +1,5 @@
 package systems.pqp.hsdb;
 
-import de.ard.sad.normdb.similarity.compare.generic.GenericSimilarity;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import de.ard.sad.normdb.similarity.model.generic.types.RadioPlayType;
 import org.apache.logging.log4j.LogManager;
@@ -34,7 +33,7 @@ public class SimilarityCheck {
      * @param audiothekObject GenericObject, Objekt aus Audiothek
      * @return boolean, true wenn gleich
      */
-    public boolean checkSimilarity(GenericSimilarity similarityTest, GenericObject hsdbObject, GenericObject audiothekObject){
+    public boolean checkSimilarity(RadioPlaytypeSimilarity similarityTest, GenericObject hsdbObject, GenericObject audiothekObject){
         float similarity = similarityTest.calcSimilarity(hsdbObject, audiothekObject);
         return Float.parseFloat(config.getProperty(Config.THRESHOLD)) <= similarity;
     }
@@ -77,7 +76,7 @@ public class SimilarityCheck {
         Instant instant = Instant.ofEpochMilli(System.currentTimeMillis());
         LocalDateTime ldt = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
         List<SimilarityBean> foundSimilarities = new ArrayList<>();
-        GenericSimilarity similarityTest = new GenericSimilarity();
+        RadioPlaytypeSimilarity similarityTest = new RadioPlaytypeSimilarity();
         int toProcess = audiothekIds.size();
         AtomicInteger processed = new AtomicInteger(0);
 
