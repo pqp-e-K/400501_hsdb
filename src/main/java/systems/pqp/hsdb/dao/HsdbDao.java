@@ -236,7 +236,10 @@ public class HsdbDao {
             radioPlay.addDescriptionProperty(RadioPlayType.TITLE, titles);
             radioPlay.addDescriptionProperty(RadioPlayType.SHOW_TITLE, bean.getShowTitle());
             radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
-            radioPlay.addDescriptionProperty(RadioPlayType.DURATION, String.valueOf(bean.getDurationInSeconds()));
+
+            Float duration = bean.getDurationInSeconds();
+            if(duration>0.0f)   //Dauer nur hinzufügen, sofern Angabe existiert
+                radioPlay.addDescriptionProperty(RadioPlayType.DURATION, String.valueOf(bean.getDurationInSeconds()));
             try {
                 radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(bean.getPublicationDt()));
             } catch (DataHarmonizerException e) {
@@ -246,6 +249,7 @@ public class HsdbDao {
             radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, bean.getDescription());
             radioPlay.addDescriptionProperty(RadioPlayType.LONG_TITLE, bean.getLongTitle());
             radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, null == bean.getProductionCompany() ? "" : bean.getProductionCompany());
+            radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, null == bean.getAbrfa() ? "" : bean.getAbrfa());
             radioPlay.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, bean.getInvolvedNames());
             radioPlay.addDescriptionProperty(RadioPlayType.PERSON_ROLE, bean.getActorRoles());
 
@@ -302,6 +306,8 @@ public class HsdbDao {
         private String duration = "";
         @JsonProperty("PROD")
         private String productionCompany = "";
+        @JsonProperty("ABRFA")
+        private String abrfa = "";
 
         public VollinfoBean(){}
 
@@ -446,6 +452,14 @@ public class HsdbDao {
             this.productionCompany = productionCompany;
         }
 
+        public String getAbrfa() {
+            return abrfa;
+        }
+
+        public void setAbrfa(String abrfa) {
+            this.abrfa = abrfa;
+        }
+
         public List<String> getActorNames() {
             return getActors().stream().map(ActorBean::getName).filter(name -> !"".equals(name)).collect(Collectors.toList());
         }
@@ -496,6 +510,7 @@ public class HsdbDao {
                     ", publicationDt='" + publicationDt + '\'' +
                     ", duration='" + duration + '\'' +
                     ", productionCompany='" + productionCompany + '\'' +
+                    ", abrfa='" + abrfa + '\'' +
                     '}';
         }
     }
