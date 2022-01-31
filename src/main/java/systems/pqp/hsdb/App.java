@@ -9,8 +9,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import systems.pqp.hsdb.dao.AudiothekDao;
 import systems.pqp.hsdb.dao.HsdbDao;
 
@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutionException;
 
 public class App {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(App.class);
+    private static final Logger LOGGER = LogManager.getLogger(App.class);
     private static Options cliOptions;
 
     /**

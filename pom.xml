@@ -32,6 +32,12 @@
             <groupId>de.ard.sad.normdb.libraries</groupId>
             <artifactId>NormDBSimilarity</artifactId>
             <version>${normdb.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- MariaDB https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client -->
         <dependency>

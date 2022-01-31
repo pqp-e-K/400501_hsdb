@@ -1,7 +1,7 @@
 package systems.pqp.hsdb;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class DataHarmonizer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DataHarmonizer.class);
+    private static final Logger LOGGER = LogManager.getLogger(DataHarmonizer.class);
 
     /**
      * Prüft input date auf format und wandelt es in einheitliches Format um.

@@ -3,8 +3,8 @@ package systems.pqp.hsdb;
 import de.ard.sad.normdb.similarity.compare.generic.GenericSimilarity;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import de.ard.sad.normdb.similarity.model.generic.types.RadioPlayType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import systems.pqp.hsdb.dao.HsdbDao;
 
 import java.time.Instant;
@@ -24,7 +24,7 @@ import com.google.common.collect.Lists;
 public class SimilarityCheck {
 
     private Config config = Config.Config();
-    private static final Logger LOG = LoggerFactory.getLogger(SimilarityCheck.class.getName());
+    private static final Logger LOG = LogManager.getLogger(SimilarityCheck.class.getName());
 
     public SimilarityCheck(){}
 

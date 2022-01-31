@@ -9,8 +9,8 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import de.ard.sad.normdb.similarity.model.generic.GenericModel;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import de.ard.sad.normdb.similarity.model.generic.types.RadioPlayType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import systems.pqp.hsdb.Config;
 import systems.pqp.hsdb.DataHarmonizer;
 import systems.pqp.hsdb.DataHarmonizerException;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  */
 public class HsdbDao {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HsdbDao.class.getName());
+    private static final Logger LOG = LogManager.getLogger(HsdbDao.class.getName());
     private static final Config CONFIG = Config.Config();
 
     private static final String USER = CONFIG.getProperty(Config.HSDB_USER);

@@ -6,9 +6,10 @@ import com.google.gson.internal.LinkedTreeMap;
 import de.ard.sad.normdb.similarity.model.generic.GenericModel;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import de.ard.sad.normdb.similarity.model.generic.types.RadioPlayType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import systems.pqp.hsdb.*;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -23,7 +24,7 @@ public class AudiothekDao {
      *
      */
 
-    private static final Logger LOG = LoggerFactory.getLogger(AudiothekDao.class.getName());
+    private static final Logger LOG = LogManager.getLogger(AudiothekDao.class.getName());
     private static final Config CONFIG = Config.Config();
 
     static final int RADIO_PLAY_ID = Integer.parseInt(CONFIG.getProperty("api.category.id"));
