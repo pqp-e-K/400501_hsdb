@@ -224,10 +224,15 @@ public class HsdbDao {
         GenericObject radioPlay = new GenericObject(genericModel,id);
 
         try {
-            List<String> titles = new ArrayList<>(List.of(bean.getTitle()));
+            String title = bean.getTitle().trim();
+            if(title.startsWith("[")){
+                title = title.replaceFirst("\\[","").replaceFirst("\\]"," ").replaceFirst("  "," ");
+            }
+            List<String> titles = new ArrayList<>(List.of(title));
             if( !"".equals(bean.getSubTitle() )){
                 titles.add(bean.getSubTitle());
             }
+
             radioPlay.addDescriptionProperty(RadioPlayType.TITLE, titles);
             radioPlay.addDescriptionProperty(RadioPlayType.SHOW_TITLE, bean.getShowTitle());
             radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
