@@ -11,7 +11,7 @@ public class SimilarityBean implements Serializable {
     private String id;
     private String dukey;
     private String audiothekId;
-    private Float score;
+    private Float score = 0.0F;
     private String audiothekLink;
     private LocalDateTime validationDateTime;
     private boolean deleted;
