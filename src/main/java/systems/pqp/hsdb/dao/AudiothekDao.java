@@ -100,10 +100,6 @@ public class AudiothekDao {
         Map programSet = (LinkedTreeMap)embedded.get("mt:programSet");
         Map programSetLinks = (LinkedTreeMap)programSet.get("_links");
 
-        String showTitle = "";
-        if( programSet.containsKey("title")){
-            showTitle = (String)programSet.get("title");
-        }
 
         //String linkAudiothek = (String)(((LinkedTreeMap)programSetLinks.get("mt:sharing")).get("href"));
         String linkAudiothek = (String)(((LinkedTreeMap)links.get("mt:sharing")).get("href"));
@@ -123,7 +119,6 @@ public class AudiothekDao {
         GenericObject radioPlay = new GenericObject(genericModel,id);
 
         radioPlay.addDescriptionProperty(RadioPlayType.TITLE, title);
-        radioPlay.addDescriptionProperty(RadioPlayType.SHOW_TITLE, showTitle);
         radioPlay.addDescriptionProperty(RadioPlayType.BIO, description);
         radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, description);
         radioPlay.addDescriptionProperty(RadioPlayType.DURATION, duration);
@@ -136,8 +131,16 @@ public class AudiothekDao {
         radioPlay.addDescriptionProperty(RadioPlayType.BIO, description);
         radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, description);
         radioPlay.addDescriptionProperty(RadioPlayType.LINK_AUDIOTHEK, linkAudiothek);
-        radioPlay.addDescriptionProperty(RadioPlayType.LONG_TITLE, title);
 
+        if( programSet.containsKey("title")){
+            String programSetTitle = (String)programSet.get("title");
+            radioPlay.addDescriptionProperty(RadioPlayType.PROGRAM_SET_TITLE, programSetTitle);
+        }
+
+        if( programSet.containsKey("synopsis")){
+            String programSetDescription = (String)programSet.get("synopsis");
+            radioPlay.addDescriptionProperty(RadioPlayType.PROGRAM_SET_DESCRIPTION, programSetDescription);
+        }
 
         return radioPlay;
     }
