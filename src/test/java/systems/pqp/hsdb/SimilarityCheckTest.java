@@ -450,6 +450,24 @@ class SimilarityCheckTest {
     }
 
     @ParameterizedTest
+    @ValueSource(strings = {"95534096-1542630","92895184-1548810","92385884-1543062","92895184-1552617","90998666-1447653","95606184-1543083","78673562-1369295","78744320-1387972","96360142-1423653","96360142-1443196","86800914-1420533","89793002-1411608","86891918-1427603","60616750-4919175","89590686-1448611"})
+    void duKey_nichtVerlinken_20220203(String ids) {
+        String[] splittedIds = ids.split("-");
+        String duKey = splittedIds[1];
+        Map<String, GenericObject> databaseObjects =
+                new HsdbDao().getRadioPlays(
+                        "WHERE DUKEY = " + duKey
+                );
+
+        RadioPlaytypeSimilarity gs = new RadioPlaytypeSimilarity();
+
+        GenericObject apiObject = audiothekObjects.get(splittedIds[0]);
+
+        assertSimilarity("duKey_nichtVerlinken",
+                gs.calcSimilarity(databaseObjects.get(duKey), apiObject), 0.8f, false);
+    }
+
+    @ParameterizedTest
     //4996682 ist vermutlich noch nicht im HSPDB Dump ("94396158-4996682")
     @ValueSource(strings = {"96271614-4970483","91332794-4988367","89793344-4205980","85454902-4986671","91404194-1440603","92731810-4205631","95956576-4924994","95956552-4924992","67252498-4973380","90406454-4974332","90406454-4975621","96394444-1444110","78744726-4975756"})
     void duKey_verlinken(String ids) {
@@ -469,8 +487,26 @@ class SimilarityCheckTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"89793298-4605830","95692196-4922799"})
+    @ValueSource(strings = {"89793298-4605830","95692196-4922799","85393224-4974280"})
     void duKey_verlinken2(String ids) {
+        String[] splittedIds = ids.split("-");
+        String duKey = splittedIds[1];
+        Map<String, GenericObject> databaseObjects =
+                new HsdbDao().getRadioPlays(
+                        "WHERE DUKEY = " + duKey
+                );
+
+        RadioPlaytypeSimilarity gs = new RadioPlaytypeSimilarity();
+
+        GenericObject apiObject = audiothekObjects.get(splittedIds[0]);
+
+        assertSimilarity("duKey_nichtVerlinken",
+                gs.calcSimilarity(databaseObjects.get(duKey), apiObject), 0.8f, true);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"82634396-4958901","95115614-4995687","82636600-2984044","78746100-1470887","94662856-1411659","78746862-1540056","93761572-4949819","91714158-4992556","91453266-4996006","78996738-1529996","78745322-1516658","94989790-4995437","95730698-4997194"})
+    void duKey_verlinken20220203(String ids) {
         String[] splittedIds = ids.split("-");
         String duKey = splittedIds[1];
         Map<String, GenericObject> databaseObjects =
