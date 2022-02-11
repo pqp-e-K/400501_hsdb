@@ -45,6 +45,8 @@ public class SimilarityCheck {
      */
     public void mapSimilarities(Map<String, GenericObject> hsdbObjects, Map<String, GenericObject> audiothekObjects, int numThreads) throws ExecutionException, InterruptedException {
 
+        LOG.info("Prozessiere {} Audiothek-Objekte", audiothekObjects.size());
+
         List<List<String>> partitions = Lists.partition(new ArrayList<>(audiothekObjects.keySet()), audiothekObjects.keySet().size()/numThreads);
 
         ForkJoinPool threads = new ForkJoinPool();
@@ -98,7 +100,7 @@ public class SimilarityCheck {
                             }
                     );
                     processed.addAndGet(1);
-                    if( (processed.get() / toProcess) == 1 || (processed.get() / toProcess) >= logFrequency && (processed.get() / toProcess) % logFrequency == 0 ) {
+                    if (logStatus(processed.get(), toProcess, logFrequency)) {
                         if(foundSimilarities.isEmpty()){
                             LOG.info("Partition[{}]: Finished {}/{}. Keine Gemeinsamkeiten gefunden! Fahre fort.", audiothekIds.hashCode(), processed.get(), toProcess);
                         } else {
@@ -121,5 +123,10 @@ public class SimilarityCheck {
         dao.upsertMany(foundSimilarities);
         LOG.info("Partition[{}]: Update erfolgreich. Ende.", audiothekIds.hashCode());
         return similiaritiesInPartition.get() + foundSimilarities.size();
+    }
+
+    boolean logStatus(int processed, int toProcess, int logFrequency ){
+
+        return ( processed == 1 || (processed / toProcess * 100 ) % 10 == 0 );
     }
 }

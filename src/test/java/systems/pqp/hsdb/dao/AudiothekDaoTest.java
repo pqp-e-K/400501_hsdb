@@ -11,7 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.pqp.hsdb.ImportException;
 
-import java.io.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +36,7 @@ public class AudiothekDaoTest {
     public void checkLinks() throws IOException {
         Map apiResponse = loadJsonFromFile("api-examples/christa-wolf-94736562.json");
         GenericObject result = AudiothekDao.genericObjectFromJson(apiResponse);
-        Assert.assertEquals("https://audiothek.ardmediathek.de/items/94736562", result.getProperties(RadioPlayType.LINK_AUDIOTHEK).get(0).getDescriptions().get(0));
+        Assert.assertEquals("https://audiothek.ardmediathek.de/items/94736562", result.getProperties(RadioPlayType.LINK).get(0).getDescriptions().get(0));
     }
 
     @Test

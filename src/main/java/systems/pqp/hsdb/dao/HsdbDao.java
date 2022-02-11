@@ -250,7 +250,9 @@ public class HsdbDao {
             try {
                 radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(bean.getPublicationDt()));
             } catch (DataHarmonizerException e) {
-                LOG.warn(e.getMessage(), e);
+                if(LOG.isDebugEnabled()){
+                    LOG.debug(e.getMessage(), e);
+                }
             }
             radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
             radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, bean.getDescription());

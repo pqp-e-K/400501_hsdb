@@ -4,7 +4,10 @@ import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import systems.pqp.hsdb.dao.AudiothekDao;
 import systems.pqp.hsdb.dao.HsdbDao;
 
@@ -21,7 +24,7 @@ public class AppTest {
         Assert.assertTrue(cli.hasOption("c"));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void showHelpTest() {
         String[] args = new String[]{ "-help" };
         CommandLine cli = App.createCLI(args);
@@ -64,5 +67,13 @@ public class AppTest {
         HsdbDao hsdbDao = new HsdbDao();
         Map<String, GenericObject> hsdbObjects = hsdbDao.getRadioPlays();
         App.calculateSimilarities(audiothekObjects, hsdbObjects);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1,10,20,30,40,50,60,70,75})
+    void logStatus(int processed) {
+        SimilarityCheck check = new SimilarityCheck();
+
+        Assertions.assertTrue(check.logStatus(processed, 75, 10));
     }
 }

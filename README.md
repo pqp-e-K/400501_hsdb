@@ -2,11 +2,14 @@
 
 ## Modul für den Datenabgleich zwischen HSDB und ARD-Audiothek
 
-### Installation
-1. ```./install-mariadb-docker.sh```
-2. ```./hsdb-mariadb-docker-start.sh```
-3. Die vier HSDB-Dump-Files im Verzeichnis ```./HSP-DB-dump``` ablegen
-4. ```./import-hsdb-dump-to-mariadb.sh```
+### Installation / Update
+
+1. In HSP-DB-dump die SQL/Zip-Dateien ablegen
+2. scripts/update.sh ausführen
+
+Beim Update werden standardmäßig nur die Haupttabelle sowie 
+die hs_link_audiothek-Tabelle angelegt und befüllt.
+
 
 ### DB-Connect
 ```

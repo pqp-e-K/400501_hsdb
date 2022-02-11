@@ -71,6 +71,8 @@ public class AudiothekDao {
         ((ArrayList<LinkedTreeMap>)((LinkedTreeMap)apiResponse.get("_embedded")).get("mt:items")).forEach(
                 entry -> resultMap.put((String) entry.get("id"),(genericObjectFromJson(entry)))
         );
+        Map<String, GenericObject> results = DataExtractor.removeReadings(resultMap);
+        results.putAll(DataExtractor.createVirtualRadioPlayOnProgramSet(results));
 
         LOG.info("Fetch finished...Num Program-Sets: {}", resultMap.size());
 
@@ -194,8 +196,7 @@ public class AudiothekDao {
                 ZipEntry entry = entries.nextElement();
                 InputStream stream = zipFile.getInputStream(entry);
                 Map<String, GenericObject> results = genericObjectsFromJson(gson.fromJson(new InputStreamReader(stream), Map.class));
-                results = DATA_EXTRACTOR.removeReadings(results);
-                results.putAll(DATA_EXTRACTOR.createVirtualRadioPlayOnProgramSet(results));
+
                 return results;
             }
         }
