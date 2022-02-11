@@ -91,7 +91,7 @@ public class SimilarityCheck {
                                     similarityBean.setAudiothekId(audiothekId);
                                     similarityBean.setScore(similarity);
                                     similarityBean.setValidationDateTime(ldt);
-                                    String link = audiothekObjects.get(audiothekId).getProperties(RadioPlayType.LINK_AUDIOTHEK).get(0).getDescriptions().get(0);
+                                    String link = audiothekObjects.get(audiothekId).getProperties(RadioPlayType.LINK).get(0).getDescriptions().get(0);
                                     similarityBean.setAudiothekLink(link);
                                     foundSimilarities.add(similarityBean);
                                 }

@@ -68,8 +68,7 @@ public class App {
 
     private static void printHelp(){
         HelpFormatter helpFormatter = new HelpFormatter();
-                                                        // TODO @Holger: Wollen wir uns hier verewigen? :^)
-        helpFormatter.printHelp("HSPDB - ARD Audiothek Abgleich (c) pqp e.K. 2021", cliOptions);
+        helpFormatter.printHelp("HSPDB - ARD Audiothek Abgleich by pqp e.K. 2022", cliOptions);
     }
 
 

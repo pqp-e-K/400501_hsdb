@@ -31,6 +31,7 @@ public class AudiothekDao {
     static final String API_URL = CONFIG.getProperty("api.url");
     private static final String LIMIT = CONFIG.getProperty("api.limit","100000");
     private static final DataHarmonizer DATA_HARMONIZER = new DataHarmonizer();
+    private static final DataExtractor DATA_EXTRACTOR = new DataExtractor();
 
     public AudiothekDao(){}
 
@@ -85,11 +86,6 @@ public class AudiothekDao {
         String id = String.valueOf(embeddedObject.get("id"));
         String title = String.valueOf(embeddedObject.get("title"));
 
-        //Überflüssige Klammerung entfernen
-        if(title.indexOf("(") < title.indexOf(")")) {
-            title = title.replaceAll("\\(.*\\)", "").trim();
-        }
-
         String description = String.valueOf(embeddedObject.get("synopsis"));
         String duration = String.valueOf(embeddedObject.get("duration"));
         String publicationDt = String.valueOf(embeddedObject.get("publicationStartDateAndTime"));
@@ -119,8 +115,13 @@ public class AudiothekDao {
         GenericObject radioPlay = new GenericObject(genericModel,id);
 
         radioPlay.addDescriptionProperty(RadioPlayType.TITLE, title);
-        radioPlay.addDescriptionProperty(RadioPlayType.BIO, description);
-        radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, description);
+        //Überflüssige Klammerung entfernen
+        radioPlay.addDescriptionProperty(RadioPlayType.TITLE, DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title));
+        if(title.indexOf("(") < title.indexOf(")")) {
+            radioPlay.addDescriptionProperty(RadioPlayType.TITLE, title.replaceAll("\\(.*\\)", "").trim());
+        }
+        //radioPlay.addDescriptionProperty(RadioPlayType.BIO, description);
+        //radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, description);
         radioPlay.addDescriptionProperty(RadioPlayType.DURATION, duration);
         try {
             radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(publicationDt));
@@ -128,18 +129,28 @@ public class AudiothekDao {
             LOG.warn(e.getMessage(), e);
         }
         radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, publisher);
-        radioPlay.addDescriptionProperty(RadioPlayType.BIO, description);
+        //radioPlay.addDescriptionProperty(RadioPlayType.BIO, description);
         radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, description);
-        radioPlay.addDescriptionProperty(RadioPlayType.LINK_AUDIOTHEK, linkAudiothek);
+        radioPlay.addDescriptionProperty(RadioPlayType.LINK, linkAudiothek);
 
         if( programSet.containsKey("title")){
             String programSetTitle = (String)programSet.get("title");
-            radioPlay.addDescriptionProperty(RadioPlayType.PROGRAM_SET_TITLE, programSetTitle);
+            radioPlay.addDescriptionProperty(RadioPlayType.PROGRAMSET_TITLE, programSetTitle);
         }
 
         if( programSet.containsKey("synopsis")){
             String programSetDescription = (String)programSet.get("synopsis");
-            radioPlay.addDescriptionProperty(RadioPlayType.PROGRAM_SET_DESCRIPTION, programSetDescription);
+            radioPlay.addDescriptionProperty(RadioPlayType.PROGRAMSET_DESCRIPTION, programSetDescription);
+        }
+
+        if( programSetLinks.containsKey("mt:sharing")){
+            String programSetLink = (String)((LinkedTreeMap)programSetLinks.get("mt:sharing")).get("href");
+            radioPlay.addDescriptionProperty(RadioPlayType.PROGRAMSET_LINK, programSetLink);
+        }
+
+        if( programSet.containsKey("id")){
+            String programSetId = (String)programSet.get("id");
+            radioPlay.addDescriptionProperty(RadioPlayType.PROGRAMSET_ID, programSetId);
         }
 
         return radioPlay;
@@ -182,9 +193,13 @@ public class AudiothekDao {
                 Gson gson = new Gson();
                 ZipEntry entry = entries.nextElement();
                 InputStream stream = zipFile.getInputStream(entry);
-                return genericObjectsFromJson(gson.fromJson(new InputStreamReader(stream), Map.class));
+                Map<String, GenericObject> results = genericObjectsFromJson(gson.fromJson(new InputStreamReader(stream), Map.class));
+                results = DATA_EXTRACTOR.removeReadings(results);
+                results.putAll(DATA_EXTRACTOR.createVirtualRadioPlayOnProgramSet(results));
+                return results;
             }
         }
+
         return new HashMap<>();
     }
 

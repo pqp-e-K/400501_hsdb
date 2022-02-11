@@ -11,10 +11,7 @@ import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import de.ard.sad.normdb.similarity.model.generic.types.RadioPlayType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import systems.pqp.hsdb.Config;
-import systems.pqp.hsdb.DataHarmonizer;
-import systems.pqp.hsdb.DataHarmonizerException;
-import systems.pqp.hsdb.SimilarityBean;
+import systems.pqp.hsdb.*;
 
 import java.io.Serializable;
 import java.sql.*;
@@ -47,6 +44,7 @@ public class HsdbDao {
     private static final String MAPPING_TAB = CONFIG.getProperty(Config.HSDB_MAPPING_TABLE);
     private static final XmlMapper XML_MAPPER = new XmlMapper();
     private static final DataHarmonizer DATA_HARMONIZER = new DataHarmonizer();
+    private static final DataExtractor DATA_EXTRACTOR = new DataExtractor();
 
     private static final String UPSERT_CHECK_QUERY = String.format(
             "SELECT %s FROM %s.%s WHERE %s = ? AND %s = ?",
@@ -233,13 +231,17 @@ public class HsdbDao {
             if(title.startsWith("[")){
                 title = title.replaceFirst("\\[","").replaceFirst("\\]"," ").replaceFirst("  "," ");
             }
+            String titleWithoutSeasonOrEpisode = DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title);
             List<String> titles = new ArrayList<>(List.of(title));
             if( !"".equals(bean.getSubTitle() )){
                 titles.add(bean.getSubTitle());
+                titles.add(DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(bean.getSubTitle()));
             }
 
             radioPlay.addDescriptionProperty(RadioPlayType.TITLE, titles);
-            radioPlay.addDescriptionProperty(RadioPlayType.SHOW_TITLE, bean.getShowTitle());
+            radioPlay.addDescriptionProperty(RadioPlayType.TITLE, titleWithoutSeasonOrEpisode);
+
+            //radioPlay.addDescriptionProperty(RadioPlayType.SHOW_TITLE, bean.getShowTitle());
             radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
 
             Float duration = bean.getDurationInSeconds();
@@ -252,7 +254,7 @@ public class HsdbDao {
             }
             radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
             radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, bean.getDescription());
-            radioPlay.addDescriptionProperty(RadioPlayType.LONG_TITLE, bean.getLongTitle());
+            //radioPlay.addDescriptionProperty(RadioPlayType.LONG_TITLE, bean.getLongTitle());
             radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, null == bean.getProductionCompany() ? "" : bean.getProductionCompany());
             radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, null == bean.getAbrfa() ? "" : bean.getAbrfa());
             radioPlay.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, bean.getInvolvedNames());
