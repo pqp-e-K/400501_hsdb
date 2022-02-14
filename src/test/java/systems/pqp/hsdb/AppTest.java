@@ -76,4 +76,12 @@ public class AppTest {
 
         Assertions.assertTrue(check.logStatus(processed, 75, 10));
     }
+
+    @ParameterizedTest
+    @ValueSource(ints = {2,11,24,32,48,57,61,74})
+    void dontLogStatus(int processed) {
+        SimilarityCheck check = new SimilarityCheck();
+
+        Assertions.assertFalse(check.logStatus(processed, 75, 10));
+    }
 }

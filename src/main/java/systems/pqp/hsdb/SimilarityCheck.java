@@ -132,6 +132,12 @@ public class SimilarityCheck {
 
     boolean logStatus(int processed, int toProcess, int logFrequency ){
 
-        return ( processed <= 1 || (processed / toProcess * 100 ) % 10 == 0 );
+        if(LOG.isDebugEnabled()) {
+            LOG.debug("{} <= 1 == {}", processed, processed <= 1);
+            LOG.debug("(({} / {}) * 100 ) = {}", processed, toProcess, ((processed / (float) toProcess) * 100.0));
+        }
+
+
+        return ( processed <= 1 || ((processed / (float)toProcess) * 100.0 ) % logFrequency == 0 );
     }
 }
