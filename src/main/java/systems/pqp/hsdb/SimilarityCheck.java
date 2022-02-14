@@ -134,10 +134,9 @@ public class SimilarityCheck {
 
         if(LOG.isDebugEnabled()) {
             LOG.debug("{} <= 1 == {}", processed, processed <= 1);
-            LOG.debug("(({} / {}) * 100 ) = {}", processed, toProcess, ((processed / (float) toProcess) * 100.0));
+            LOG.debug("(({} / {}) * 100 ) = {}", processed, toProcess, Math.round((processed / (float) toProcess) * 100.0));
         }
 
-
-        return ( processed <= 1 || ((processed / (float)toProcess) * 100.0 ) % logFrequency == 0 );
+        return ( processed <= 1 || Math.round((processed / (float)toProcess) * 100.0 ) % logFrequency == 0 );
     }
 }
