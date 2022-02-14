@@ -127,6 +127,6 @@ public class SimilarityCheck {
 
     boolean logStatus(int processed, int toProcess, int logFrequency ){
 
-        return ( processed == 1 || (processed / toProcess * 100 ) % 10 == 0 );
+        return ( processed <= 1 || (processed / toProcess * 100 ) % 10 == 0 );
     }
 }
