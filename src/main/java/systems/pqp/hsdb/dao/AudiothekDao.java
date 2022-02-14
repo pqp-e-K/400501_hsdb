@@ -71,10 +71,12 @@ public class AudiothekDao {
         ((ArrayList<LinkedTreeMap>)((LinkedTreeMap)apiResponse.get("_embedded")).get("mt:items")).forEach(
                 entry -> resultMap.put((String) entry.get("id"),(genericObjectFromJson(entry)))
         );
+        LOG.info("Fetch finished...Num Program-Sets: {}", resultMap.size());
+
         Map<String, GenericObject> results = DataExtractor.removeReadings(resultMap);
         results.putAll(DataExtractor.createVirtualRadioPlayOnProgramSet(results));
 
-        LOG.info("Fetch finished...Num Program-Sets: {}", resultMap.size());
+        LOG.info("Num Program-Sets after removeReadings(): {}", resultMap.size());
 
         return resultMap;
     }
