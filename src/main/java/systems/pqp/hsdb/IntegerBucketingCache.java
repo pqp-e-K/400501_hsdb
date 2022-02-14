@@ -47,7 +47,8 @@ public class IntegerBucketingCache {
 
     public List<GenericObject> searchByNumeric(String searchValue, float variance){
         float searchFloat = Float.parseFloat(searchValue);
-        List<GenericObject> result = cache.get(null);
+        List<GenericObject> result = new ArrayList<>();
+        result.addAll(cache.get(null));
         Integer min= Math.round(searchFloat * (1.0f-variance));
         Integer max= Math.round(searchFloat * (1.0f+variance));
 
