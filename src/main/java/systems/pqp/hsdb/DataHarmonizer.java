@@ -38,7 +38,9 @@ public class DataHarmonizer {
         Pattern germanDate = Pattern.compile("[0-9]{2}\\.[0-9]{2}\\.[0-9]{4}", Pattern.CASE_INSENSITIVE);
         Matcher matcher = germanDate.matcher(date);
         if( matcher.matches() ){
-            LOGGER.debug("German-Date");
+            if(LOGGER.isDebugEnabled()) {
+                LOGGER.debug("German-Date");
+            }
             String[] parts = date.split("\\.");
             String day = parts[0];
             String month = parts[1];
@@ -49,7 +51,9 @@ public class DataHarmonizer {
         Pattern shortGermanDate = Pattern.compile("([0-9]{2}\\.)?[0-9]{4}", Pattern.CASE_INSENSITIVE);
         matcher = shortGermanDate.matcher(date);
         if( matcher.matches() ){
-            LOGGER.debug("Short German Date");
+            if(LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Short German Date");
+            }
             String[] parts = date.split("\\.");
             String day = "XX";
             String month;
@@ -68,9 +72,13 @@ public class DataHarmonizer {
         matcher = longBritishDate.matcher(date);
         List<String> res = matcher.results().map(MatchResult::group).collect(Collectors.toList());
         if( !res.isEmpty() ){
-            LOGGER.debug("British Date");
+            if(LOGGER.isDebugEnabled()) {
+                LOGGER.debug("British Date");
+            }
             date = res.get(0);
-            LOGGER.debug(date);
+            if(LOGGER.isDebugEnabled()) {
+                LOGGER.debug(date);
+            }
             String[] parts = date.split("-");
             if(parts.length == 1){
                parts = date.split("\\.");
