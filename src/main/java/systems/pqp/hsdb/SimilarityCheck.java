@@ -82,14 +82,12 @@ public class SimilarityCheck {
         AtomicInteger similiaritiesInPartition = new AtomicInteger(0);
         HsdbDao dao = new HsdbDao();
 
-        LOG.info("Partition[{}]: Starte {}/{}", audiothekIds.hashCode(), 1, toProcess);
-
         IntegerBucketingCache cache = new IntegerBucketingCache(hsdbObjects,RadioPlayType.DURATION);
 
         audiothekIds.forEach(
                 audiothekId -> {
                     List<GenericObject> hsdbBucket = cache.searchByNumeric(audiothekObjects.get(audiothekId).getProperties(RadioPlayType.DURATION).get(0).getDescriptions().get(0),0.2f);
-                    LOG.info("Partition[{}]: Verarbeite {}/{} mit {} HSDB Vergleichen", audiothekIds.hashCode(), processed.get(), toProcess,hsdbBucket.size());
+                    LOG.info("Partition[{}]: Starte {}/{} mit {} HSDB Vergleichen", audiothekIds.hashCode(), processed.get()+1, toProcess,hsdbBucket.size());
                     hsdbBucket.forEach(
                     //hsdbObjects.keySet().forEach(
                             hsdbGenericObject -> {
