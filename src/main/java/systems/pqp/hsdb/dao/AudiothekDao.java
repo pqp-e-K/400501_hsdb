@@ -88,7 +88,7 @@ public class AudiothekDao {
      */
     public static GenericObject genericObjectFromJson(Map embeddedObject){
         String id = String.valueOf(embeddedObject.get("id"));
-        String title = String.valueOf(embeddedObject.get("title"));
+        String title = String.valueOf(embeddedObject.get("title")).trim();
 
         String description = String.valueOf(embeddedObject.get("synopsis"));
         String duration = String.valueOf(embeddedObject.get("duration"));
@@ -118,12 +118,15 @@ public class AudiothekDao {
         GenericModel genericModel = new GenericModel(RadioPlayType.class);
         GenericObject radioPlay = new GenericObject(genericModel,id);
 
-        radioPlay.addDescriptionProperty(RadioPlayType.TITLE, title);
+        HashSet<String> titles = new HashSet<>();
+        titles.add(title);
+        titles.add(DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title));
         //Überflüssige Klammerung entfernen
-        radioPlay.addDescriptionProperty(RadioPlayType.TITLE, DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title));
+
         if(title.indexOf("(") < title.indexOf(")")) {
-            radioPlay.addDescriptionProperty(RadioPlayType.TITLE, title.replaceAll("\\(.*\\)", "").trim());
+            titles.add(title.replaceAll("\\(.*\\)", "").trim());
         }
+        radioPlay.addDescriptionProperty(RadioPlayType.TITLE, new ArrayList<String>(titles));
         //radioPlay.addDescriptionProperty(RadioPlayType.BIO, description);
         //radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, description);
         radioPlay.addDescriptionProperty(RadioPlayType.DURATION, duration);
