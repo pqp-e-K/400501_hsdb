@@ -32,11 +32,11 @@ public class DataExtractorTest {
         Assert.assertEquals("Hello World",dataExtractor.getTitleWithoutEpisodeOrSeason("Hello World (1/2)"));
         Assert.assertEquals("Der Tod",dataExtractor.getTitleWithoutEpisodeOrSeason("Staffel 2 Folge 1: Der Tod"));
         Assert.assertEquals("Caiman Club III: Justice | Neue Staffel des Polit-Thrillers",dataExtractor.getTitleWithoutEpisodeOrSeason("Caiman Club III: Justice (1/4) | Neue Staffel des Polit-Thrillers"));
-        Assert.assertEquals("CAIMAN CLUB Größtmögliche Zurückhaltung",dataExtractor.getTitleWithoutEpisodeOrSeason("CAIMAN CLUB - Größtmögliche Zurückhaltung (St.2 Flg.1) (1/4)"));
+        Assert.assertEquals("CAIMAN CLUB - Größtmögliche Zurückhaltung",dataExtractor.getTitleWithoutEpisodeOrSeason("CAIMAN CLUB - Größtmögliche Zurückhaltung (St.2 Flg.1) (1/4)"));
         Assert.assertEquals("Caiman Club Test",dataExtractor.getTitleWithoutEpisodeOrSeason("Caiman Club (1. Folge: Test)"));
-        Assert.assertEquals("Papa, Kevin hat gesagt Karrieregeil",dataExtractor.getTitleWithoutEpisodeOrSeason("Papa, Kevin hat gesagt … (3. Staffel: 1. Folge: Karrieregeil)"));
+        Assert.assertEquals("Papa, Kevin hat gesagt … Karrieregeil",dataExtractor.getTitleWithoutEpisodeOrSeason("Papa, Kevin hat gesagt … (3. Staffel: 1. Folge: Karrieregeil)"));
         Assert.assertEquals("Die Wahlverwandtschaften",dataExtractor.getTitleWithoutEpisodeOrSeason("Die Wahlverwandtschaften (1. Teil)"));
-        Assert.assertEquals("Johann Wolfgang von Goethe Die Wahlverwandtschaften | Roman",dataExtractor.getTitleWithoutEpisodeOrSeason("Johann Wolfgang von Goethe: Die Wahlverwandtschaften (1/2) | Roman"));
+        Assert.assertEquals("Johann Wolfgang von Goethe: Die Wahlverwandtschaften | Roman",dataExtractor.getTitleWithoutEpisodeOrSeason("Johann Wolfgang von Goethe: Die Wahlverwandtschaften (1/2) | Roman"));
         Assert.assertEquals("Die Wahlverwandtschaften | Roman",dataExtractor.getTitleWithoutEpisodeOrSeason("Die Wahlverwandtschaften (1/2) | Roman"));
         Assert.assertEquals("Papa, Kevin hat gesagt … Arabisch",dataExtractor.getTitleWithoutEpisodeOrSeason("Papa, Kevin hat gesagt … (3. Staffel: 10. Folge: Arabisch)"));
     }

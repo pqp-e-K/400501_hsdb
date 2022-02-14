@@ -82,14 +82,19 @@ public class SimilarityCheck {
         AtomicInteger similiaritiesInPartition = new AtomicInteger(0);
         HsdbDao dao = new HsdbDao();
 
+        IntegerBucketingCache cache = new IntegerBucketingCache(hsdbObjects,RadioPlayType.DURATION);
+
         audiothekIds.forEach(
                 audiothekId -> {
-                    hsdbObjects.keySet().forEach(
-                            hsdbKey -> {
-                                float similarity = similarityTest.calcSimilarity(hsdbObjects.get(hsdbKey), audiothekObjects.get(audiothekId));
+                    List<GenericObject> hsdbBucket = cache.searchByNumeric(audiothekObjects.get(audiothekId).getProperties(RadioPlayType.DURATION).get(0).getDescriptions().get(0),0.2f);
+                    LOG.info("Partition[{}]: Verarbeite {}/{} mit {} HSDB Vergleichen", audiothekIds.hashCode(), processed.get(), toProcess,hsdbBucket.size());
+                    hsdbBucket.forEach(
+                    //hsdbObjects.keySet().forEach(
+                            hsdbGenericObject -> {
+                                float similarity = similarityTest.calcSimilarity(hsdbGenericObject, audiothekObjects.get(audiothekId));
                                 if (Float.parseFloat(config.getProperty(Config.THRESHOLD)) <= similarity) {
                                     SimilarityBean similarityBean = new SimilarityBean();
-                                    similarityBean.setDukey(hsdbKey);
+                                    similarityBean.setDukey(hsdbGenericObject.getUniqIdwithinDomain());
                                     similarityBean.setAudiothekId(audiothekId);
                                     similarityBean.setScore(similarity);
                                     similarityBean.setValidationDateTime(ldt);

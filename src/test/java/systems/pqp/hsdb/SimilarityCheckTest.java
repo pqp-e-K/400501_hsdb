@@ -395,8 +395,12 @@ class SimilarityCheckTest {
 
         GenericObject apiObject = audiothekObjects.get(ardAudiothekId);
 
-        assertSimilarity("duKey1356987_nichtVerlinken",
-                gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, false);
+        if(apiObject != null) {
+            assertSimilarity("duKey1356987_nichtVerlinken",
+                    gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, false);
+        }else {
+            Assertions.assertNull(apiObject);
+        }
     }
 
     @ParameterizedTest
