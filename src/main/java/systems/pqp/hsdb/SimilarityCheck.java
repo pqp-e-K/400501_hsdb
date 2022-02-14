@@ -71,7 +71,6 @@ public class SimilarityCheck {
      * @return
      */
     public int mapPartition(List<String> audiothekIds, Map<String, GenericObject> hsdbObjects, Map<String, GenericObject> audiothekObjects){
-        LOG.info("Starte worker für Partition[{}]", audiothekIds.hashCode());
         final int logFrequency = 10;
         Instant instant = Instant.ofEpochMilli(System.currentTimeMillis());
         LocalDateTime ldt = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
@@ -81,6 +80,8 @@ public class SimilarityCheck {
         AtomicInteger processed = new AtomicInteger(0);
         AtomicInteger similiaritiesInPartition = new AtomicInteger(0);
         HsdbDao dao = new HsdbDao();
+
+        LOG.info("Partition[{}]: Starte {}/{}", audiothekIds.hashCode(), 1, toProcess);
 
         audiothekIds.forEach(
                 audiothekId -> {

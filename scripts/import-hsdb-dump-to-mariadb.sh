@@ -3,7 +3,7 @@
 # Importiert die Dumps in die Datenbank-Tabellen
 
 import() {
-	echo "$(date) import $1"
+	echo "$(date) INFO import $1"
 
 	ddl=$(cat ./create_database.sql)
 	ddl="${ddl}\n\n$(cat "$1")"
@@ -11,7 +11,7 @@ import() {
 	echo "$ddl" | docker exec -i hsdb-mariadb sh -c 'exec mysql -uroot -p"$MARIADB_ROOT_PASSWORD" $DATABASE --default-character-set=utf8mb4'
 
 	res=$?
-	echo "$(date) finished importing $1"
+	echo "$(date) INFO finished importing $1"
 	echo
 	return $res
 }
