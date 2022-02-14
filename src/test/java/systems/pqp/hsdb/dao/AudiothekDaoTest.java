@@ -5,8 +5,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import de.ard.sad.normdb.similarity.model.generic.types.RadioPlayType;
-import org.junit.Assert;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.pqp.hsdb.ImportException;
@@ -29,20 +31,20 @@ public class AudiothekDaoTest {
     @Test
     public void getRadioPlays() throws ImportException {
         Map<String, GenericObject> result = new AudiothekDao().getRadioPlays();
-        Assert.assertTrue("Ergebnismenge ist > 0",result.size() > 0);
+        Assertions.assertTrue(result.size() > 0);
     }
 
     @Test
     public void checkLinks() throws IOException {
         Map apiResponse = loadJsonFromFile("api-examples/christa-wolf-94736562.json");
         GenericObject result = AudiothekDao.genericObjectFromJson(apiResponse);
-        Assert.assertEquals("https://audiothek.ardmediathek.de/items/94736562", result.getProperties(RadioPlayType.LINK).get(0).getDescriptions().get(0));
+        Assertions.assertEquals("https://audiothek.ardmediathek.de/items/94736562", result.getProperties(RadioPlayType.LINK).get(0).getDescriptions().get(0));
     }
 
     @Test
     public void genericObjectsFromJson() throws IOException {
         Map<String, GenericObject> result = AudiothekDao.genericObjectsFromDisk("api-examples/api.json.zip");
-        Assert.assertTrue("Ergebnismenge ist > 100",result.size() > 100);
+        Assertions.assertTrue(result.size() > 100);
         //System.out.println(result);
     }
 
@@ -126,7 +128,7 @@ public class AudiothekDaoTest {
     @Test
     public void genericObjectFromDisk() throws IOException {
         Map<String, GenericObject> result = AudiothekDao.genericObjectsFromDisk("api-examples/api.json.zip");
-        Assert.assertTrue(result.size() > 0);
+        Assertions.assertTrue(result.size() > 0);
     }
 
     /**

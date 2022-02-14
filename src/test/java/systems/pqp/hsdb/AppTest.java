@@ -3,7 +3,7 @@ package systems.pqp.hsdb;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.ParseException;
-import org.junit.Assert;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,40 +21,40 @@ public class AppTest {
     public void createCLITest() {
         String[] args = new String[]{ "--config-file=path/to/file" };
         CommandLine cli = App.createCLI(args);
-        Assert.assertTrue(cli.hasOption("c"));
+        Assertions.assertTrue(cli.hasOption("c"));
     }
 
     @Test
     public void showHelpTest() {
         String[] args = new String[]{ "-help" };
         CommandLine cli = App.createCLI(args);
-        Assert.assertTrue(cli.hasOption("help"));
+        Assertions.assertTrue(cli.hasOption("help"));
     }
 
     @Test
     public void validateTest() throws ParseException {
         String[] args = new String[]{ "--config-file=path/to/file", "-validate" };
         CommandLine cli = App.createCLI(args);
-        Assert.assertTrue(cli.hasOption("c"));
-        Assert.assertTrue(cli.hasOption("validate"));
+        Assertions.assertTrue(cli.hasOption("c"));
+        Assertions.assertTrue(cli.hasOption("validate"));
     }
 
     @Test
     public void lokalDumpTest() throws ParseException {
         String[] args = new String[]{ "--config-file=path/to/file", "-l=pfad/zu/dump/api.json" };
         CommandLine cli = App.createCLI(args);
-        Assert.assertTrue(cli.hasOption("c"));
-        Assert.assertTrue(cli.hasOption("local-audiothek-dump-file"));
-        Assert.assertEquals("pfad/zu/dump/api.json", cli.getOptionValue("l"));
+        Assertions.assertTrue(cli.hasOption("c"));
+        Assertions.assertTrue(cli.hasOption("local-audiothek-dump-file"));
+        Assertions.assertEquals("pfad/zu/dump/api.json", cli.getOptionValue("l"));
     }
 
     @Test
     public void smallIntegrationTest() throws ParseException, ImportException, FileNotFoundException, ExecutionException, InterruptedException {
         String[] args = new String[]{ "--config-file=/Users/gabrielschneider/IdeaProjects/400501_hsdb/src/main/resources/application.properties", "-l=/Users/gabrielschneider/IdeaProjects/400501_hsdb/src/test/resources/api-examples/small-api.json" };
         CommandLine cli = App.createCLI(args);
-        Assert.assertTrue(cli.hasOption("c"));
-        Assert.assertTrue(cli.hasOption("local-audiothek-dump-file"));
-        Assert.assertEquals("/Users/gabrielschneider/IdeaProjects/400501_hsdb/src/test/resources/api-examples/small-api.json", cli.getOptionValue("l"));
+        Assertions.assertTrue(cli.hasOption("c"));
+        Assertions.assertTrue(cli.hasOption("local-audiothek-dump-file"));
+        Assertions.assertEquals("/Users/gabrielschneider/IdeaProjects/400501_hsdb/src/test/resources/api-examples/small-api.json", cli.getOptionValue("l"));
         App.runSimilarityCheck(cli);
     }
 

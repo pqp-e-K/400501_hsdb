@@ -2,8 +2,8 @@ package systems.pqp.hsdb.dao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 import systems.pqp.hsdb.SimilarityBean;
 
 import java.time.Instant;
@@ -40,18 +40,18 @@ public class HsdbDaoTest {
          */
         HsdbDao.VollinfoBean bean = new HsdbDao.VollinfoBean();
         bean.setDuration("10"); // 10 minutes
-        Assert.assertEquals("Only Minutes in Seconds", 600F, bean.getDurationInSeconds(),0F);
+        Assertions.assertEquals(600F, bean.getDurationInSeconds(),0F);
         bean.setDuration("5'40"); // 5 minutes 40 seconds -> 340s
-        Assert.assertEquals("Minutes + Seconds", 340F, bean.getDurationInSeconds(),0F);
+        Assertions.assertEquals(340F, bean.getDurationInSeconds(),0F);
         bean.setDuration("Ca. 45"); // ca 45 minutes
-        Assert.assertEquals("Weird duration", 2700F, bean.getDurationInSeconds(),0F);
+        Assertions.assertEquals(2700F, bean.getDurationInSeconds(),0F);
     }
 
     @Test
     public void beanFromXmlString() throws JsonProcessingException {
         HsdbDao hsdbDao = new HsdbDao();
         HsdbDao.VollinfoBean bean = hsdbDao.beanFromXmlString(xml);
-        Assert.assertNotNull(bean);
+        Assertions.assertNotNull(bean);
         System.out.println(bean);
     }
 
@@ -59,8 +59,8 @@ public class HsdbDaoTest {
     public void getRadioPlays() {
         HsdbDao hsdbDao = new HsdbDao();
         Map<String,GenericObject> result = hsdbDao.getRadioPlays();
-        Assert.assertNotNull(result);
-        Assert.assertTrue(result.size() > 0);
+        Assertions.assertNotNull(result);
+        Assertions.assertTrue(result.size() > 0);
     }
 
     @Test
@@ -71,7 +71,7 @@ public class HsdbDaoTest {
         HsdbDao.VollinfoBean bean = hsdbDao.beanFromXmlString(xml);
 
         GenericObject radioPlay = hsdbDao.genericObjectFromBean(id, bean);
-        Assert.assertNotNull(radioPlay);
+        Assertions.assertNotNull(radioPlay);
         System.out.println(radioPlay);
     }
 

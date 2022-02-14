@@ -76,13 +76,6 @@
             <version>${log4j.version}</version>
         </dependency>
         <!-- Unit Test -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -96,6 +89,8 @@
             <version>${jupiter.version}</version>
             <scope>test</scope>
         </dependency>
+
+
     </dependencies>
 
 </project>
