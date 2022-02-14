@@ -229,17 +229,13 @@ public class HsdbDao {
         try {
             String title = bean.getTitle().trim();
             if(title.startsWith("[")){
-                title = title.replaceFirst("\\[","").replaceFirst("\\]"," ").replaceFirst("  "," ");
+                title = title.replaceFirst("\\[","").replaceFirst("\\]"," ").replaceFirst("  "," ").trim();
             }
             String titleWithoutSeasonOrEpisode = DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title);
-            List<String> titles = new ArrayList<>(List.of(title));
-            if( !"".equals(bean.getSubTitle() )){
-                titles.add(bean.getSubTitle());
-                titles.add(DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(bean.getSubTitle()));
-            }
-
-            radioPlay.addDescriptionProperty(RadioPlayType.TITLE, titles);
-            radioPlay.addDescriptionProperty(RadioPlayType.TITLE, titleWithoutSeasonOrEpisode);
+            Set<String> titles = new HashSet<>();
+            titles.add(title);
+            titles.add(titleWithoutSeasonOrEpisode);
+            radioPlay.addDescriptionProperty(RadioPlayType.TITLE, new ArrayList<String>(titles));
 
             //radioPlay.addDescriptionProperty(RadioPlayType.SHOW_TITLE, bean.getShowTitle());
             radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
