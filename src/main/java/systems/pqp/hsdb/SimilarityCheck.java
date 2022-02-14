@@ -71,6 +71,7 @@ public class SimilarityCheck {
      * @return
      */
     public int mapPartition(List<String> audiothekIds, Map<String, GenericObject> hsdbObjects, Map<String, GenericObject> audiothekObjects){
+        LOG.info("Starte worker für Partition[{}]", audiothekIds.hashCode());
         final int logFrequency = 10;
         Instant instant = Instant.ofEpochMilli(System.currentTimeMillis());
         LocalDateTime ldt = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
@@ -83,14 +84,19 @@ public class SimilarityCheck {
 
         LOG.info("Partition[{}]: Starte {}/{}", audiothekIds.hashCode(), 1, toProcess);
 
+        IntegerBucketingCache cache = new IntegerBucketingCache(hsdbObjects,RadioPlayType.DURATION);
+
         audiothekIds.forEach(
                 audiothekId -> {
-                    hsdbObjects.keySet().forEach(
-                            hsdbKey -> {
-                                float similarity = similarityTest.calcSimilarity(hsdbObjects.get(hsdbKey), audiothekObjects.get(audiothekId));
+                    List<GenericObject> hsdbBucket = cache.searchByNumeric(audiothekObjects.get(audiothekId).getProperties(RadioPlayType.DURATION).get(0).getDescriptions().get(0),0.2f);
+                    LOG.info("Partition[{}]: Verarbeite {}/{} mit {} HSDB Vergleichen", audiothekIds.hashCode(), processed.get(), toProcess,hsdbBucket.size());
+                    hsdbBucket.forEach(
+                    //hsdbObjects.keySet().forEach(
+                            hsdbGenericObject -> {
+                                float similarity = similarityTest.calcSimilarity(hsdbGenericObject, audiothekObjects.get(audiothekId));
                                 if (Float.parseFloat(config.getProperty(Config.THRESHOLD)) <= similarity) {
                                     SimilarityBean similarityBean = new SimilarityBean();
-                                    similarityBean.setDukey(hsdbKey);
+                                    similarityBean.setDukey(hsdbGenericObject.getUniqIdwithinDomain());
                                     similarityBean.setAudiothekId(audiothekId);
                                     similarityBean.setScore(similarity);
                                     similarityBean.setValidationDateTime(ldt);

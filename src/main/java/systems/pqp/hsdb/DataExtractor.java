@@ -78,14 +78,16 @@ public class DataExtractor {
         GenericModel parentModel = new GenericModel(RadioPlayType.class);
         //Suche alle zusammengehörigen Hörspiele
         for(GenericObject radioPlay:radioPlays.values()) {
-            parentModel = radioPlay.getParentModel();
-            String programSetId = radioPlay.getProperties(RadioPlayType.PROGRAMSET_LINK).get(0).getDescriptions().get(0);
-            List<GenericObject> tmp = programSets.get(programSetId);
-            if(tmp == null) {
-                tmp = new ArrayList<GenericObject>();
+            if(radioPlay.getProperties(RadioPlayType.PROGRAMSET_LINK).size()>0) {
+                parentModel = radioPlay.getParentModel();
+                String programSetId = radioPlay.getProperties(RadioPlayType.PROGRAMSET_ID).get(0).getDescriptions().get(0);
+                List<GenericObject> tmp = programSets.get(programSetId);
+                if (tmp == null) {
+                    tmp = new ArrayList<>();
+                }
+                tmp.add(radioPlay);
+                programSets.put(programSetId, tmp);
             }
-            tmp.add(radioPlay);
-            programSets.put(programSetId,tmp);
         }
 
         //erstelle virtuelle Sendungen
@@ -95,9 +97,9 @@ public class DataExtractor {
             float duration = 0f;
             for(GenericObject programSetRadioPlay:programSetRadioPlays) {
                 //Titel
-                for(GenericObjectProperty p:programSetRadioPlay.getProperties(RadioPlayType.TITLE)) {
+                /*for(GenericObjectProperty p:programSetRadioPlay.getProperties(RadioPlayType.TITLE)) {
                     virtualRadioPlay.addDescriptionProperty(RadioPlayType.TITLE,p.getDescriptions());
-                }
+                }*/
                 for(GenericObjectProperty p:programSetRadioPlay.getProperties(RadioPlayType.PROGRAMSET_TITLE)) {
                     virtualRadioPlay.addDescriptionProperty(RadioPlayType.TITLE,p.getDescriptions());
                     virtualRadioPlay.addDescriptionProperty(RadioPlayType.PROGRAMSET_TITLE,p.getDescriptions());
@@ -119,9 +121,9 @@ public class DataExtractor {
                 }
 
                 //DESCRIPTION
-                for(GenericObjectProperty p:programSetRadioPlay.getProperties(RadioPlayType.DESCRIPTION)) {
+                /*for(GenericObjectProperty p:programSetRadioPlay.getProperties(RadioPlayType.DESCRIPTION)) {
                     virtualRadioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION,p.getDescriptions());
-                }
+                }*/
                 for(GenericObjectProperty p:programSetRadioPlay.getProperties(RadioPlayType.PROGRAMSET_DESCRIPTION)) {
                     virtualRadioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION,p.getDescriptions());
                     virtualRadioPlay.addDescriptionProperty(RadioPlayType.PROGRAMSET_DESCRIPTION,p.getDescriptions());
