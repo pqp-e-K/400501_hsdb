@@ -33,12 +33,16 @@ public class DataExtractorTest {
         Assertions.assertEquals("Hello World",dataExtractor.getTitleWithoutEpisodeOrSeason("Hello World (1/2)"));
         Assertions.assertEquals("Der Tod",dataExtractor.getTitleWithoutEpisodeOrSeason("Staffel 2 Folge 1: Der Tod"));
         Assertions.assertEquals("Caiman Club III: Justice | Neue Staffel des Polit-Thrillers",dataExtractor.getTitleWithoutEpisodeOrSeason("Caiman Club III: Justice (1/4) | Neue Staffel des Polit-Thrillers"));
-        Assertions.assertEquals("CAIMAN CLUB Größtmögliche Zurückhaltung",dataExtractor.getTitleWithoutEpisodeOrSeason("CAIMAN CLUB - Größtmögliche Zurückhaltung (St.2 Flg.1) (1/4)"));
+        Assertions.assertEquals("CAIMAN CLUB - Größtmögliche Zurückhaltung",dataExtractor.getTitleWithoutEpisodeOrSeason("CAIMAN CLUB - Größtmögliche Zurückhaltung (St.2 Flg.1) (1/4)"));
         Assertions.assertEquals("Caiman Club Test",dataExtractor.getTitleWithoutEpisodeOrSeason("Caiman Club (1. Folge: Test)"));
-        Assertions.assertEquals("Papa, Kevin hat gesagt Karrieregeil",dataExtractor.getTitleWithoutEpisodeOrSeason("Papa, Kevin hat gesagt … (3. Staffel: 1. Folge: Karrieregeil)"));
+        Assertions.assertEquals("Papa, Kevin hat gesagt … Karrieregeil",dataExtractor.getTitleWithoutEpisodeOrSeason("Papa, Kevin hat gesagt … (3. Staffel: 1. Folge: Karrieregeil)"));
         Assertions.assertEquals("Die Wahlverwandtschaften",dataExtractor.getTitleWithoutEpisodeOrSeason("Die Wahlverwandtschaften (1. Teil)"));
-        Assertions.assertEquals("Johann Wolfgang von Goethe Die Wahlverwandtschaften | Roman",dataExtractor.getTitleWithoutEpisodeOrSeason("Johann Wolfgang von Goethe: Die Wahlverwandtschaften (1/2) | Roman"));
+        Assertions.assertEquals("Johann Wolfgang von Goethe: Die Wahlverwandtschaften | Roman",dataExtractor.getTitleWithoutEpisodeOrSeason("Johann Wolfgang von Goethe: Die Wahlverwandtschaften (1/2) | Roman"));
         Assertions.assertEquals("Die Wahlverwandtschaften | Roman",dataExtractor.getTitleWithoutEpisodeOrSeason("Die Wahlverwandtschaften (1/2) | Roman"));
         Assertions.assertEquals("Papa, Kevin hat gesagt … Arabisch",dataExtractor.getTitleWithoutEpisodeOrSeason("Papa, Kevin hat gesagt … (3. Staffel: 10. Folge: Arabisch)"));
+
+        Assertions.assertEquals("Madame Bovary",dataExtractor.getTitleWithoutEpisodeOrSeason("Madame Bovary, Folge 7"));
+
+
     }
 }

@@ -19,6 +19,8 @@ public class RadioPlaytypeSimilarity extends GenericSimilarity {
                 audiothekObject.getProperties(RadioPlayType.PERSON_INVOLVED).clear();
             for (GenericObjectProperty genericObjectProperty : hspdbPersonInvolved) {
                 String hspdbPersonName = genericObjectProperty.getDescriptions().get(0);
+                if(hspdbPersonName == null || hspdbPersonName.trim().length()==0)
+                    continue;
 
                 //Wenn Name in Titel
                 for (GenericObjectProperty audiothekGenericObjectProperty : audiothekObject.getProperties(RadioPlayType.TITLE)) {
