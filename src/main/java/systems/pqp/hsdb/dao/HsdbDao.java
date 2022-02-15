@@ -8,7 +8,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText;
 import de.ard.sad.normdb.similarity.model.generic.GenericModel;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
-import de.ard.sad.normdb.similarity.model.generic.types.RadioPlayType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import systems.pqp.hsdb.*;
@@ -233,8 +232,8 @@ public class HsdbDao {
             }
             String titleWithoutSeasonOrEpisode = DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title);
             Set<String> titles = new HashSet<>();
-            //titles.add(title);
-            titles.add(titleWithoutSeasonOrEpisode);
+            titles.add(title);
+            //titles.add(titleWithoutSeasonOrEpisode);
             radioPlay.addDescriptionProperty(RadioPlayType.TITLE, new ArrayList<String>(titles));
 
             String episode = DATA_EXTRACTOR.getEpisodeFromTitle(title);

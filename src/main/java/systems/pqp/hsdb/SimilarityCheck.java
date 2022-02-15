@@ -1,7 +1,6 @@
 package systems.pqp.hsdb;
 
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
-import de.ard.sad.normdb.similarity.model.generic.types.RadioPlayType;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

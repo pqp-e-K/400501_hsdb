@@ -42,7 +42,6 @@ public class DataExtractorTest {
         Assertions.assertEquals("Papa, Kevin hat gesagt … Arabisch",dataExtractor.getTitleWithoutEpisodeOrSeason("Papa, Kevin hat gesagt … (3. Staffel: 10. Folge: Arabisch)"));
 
         Assertions.assertEquals("Madame Bovary",dataExtractor.getTitleWithoutEpisodeOrSeason("Madame Bovary, Folge 7"));
-
-
+        Assertions.assertEquals("Alice - Kulissen",dataExtractor.getTitleWithoutEpisodeOrSeason("Folge 4/8: Alice - Kulissen"));
     }
 }

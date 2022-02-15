@@ -3,7 +3,6 @@ package systems.pqp.hsdb;
 import de.ard.sad.normdb.similarity.model.generic.GenericModel;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import de.ard.sad.normdb.similarity.model.generic.GenericObjectProperty;
-import de.ard.sad.normdb.similarity.model.generic.types.RadioPlayType;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -11,7 +10,7 @@ import java.util.regex.Pattern;
 
 public class DataExtractor {
 
-    String episodeRegexSearch = "\\s*Folge\\s*:?\\s*(\\d+).*" +
+    static final String episodeRegexSearch = "\\s*Folge\\s*:?\\s*(\\d+).*" +
             "|\\s*Flg\\.?\\s*:?\\s*(\\d+).*"+
             "|\\s*Teil\\.?\\s*:?\\s*(\\d+).*"+
             "|\\s*\\(\\s*(\\d+)\\s*\\).*"+
@@ -19,7 +18,7 @@ public class DataExtractor {
             "|(\\d+)\\s*\\.\\s*Folge.*"+
             "|(\\d+)+\\s*\\.\\s*Teil.*";
 
-    String episodeRegexRemove = "[,;.]*\\s*Folge\\s*:?\\s*(\\d+)\\s*:?\\s*" +
+    static final String episodeRegexRemove = "[,;.]*\\s*Folge\\s*:?\\s*(\\d+)(\\/\\d+)*\\s*:?\\s*" +
             "|[,;.]*\\s*Flg\\.?\\s*:?\\s*(\\d+)"+
             "|[,;.]*\\s*Teil\\.?\\s*:?\\s*(\\d+)"+
             "|[,;.]*\\s*\\(\\s*(\\d+)\\s*\\)"+
@@ -27,18 +26,18 @@ public class DataExtractor {
             "|(\\d+)+\\s*\\.\\s*Folge\\s*:?\\s*"+
             "|(\\d+)+\\s*\\.\\s*Teil\\s*:?\\s*";
 
-    String seasonRegexSearch = "\\s*Staffel\\s*:?\\s*(\\d+).*" +
+    static final String seasonRegexSearch = "\\s*Staffel\\s*:?\\s*(\\d+).*" +
             "|\\s*St\\.?\\s*:?\\s*(\\d+).*"+
             "|(\\d+)+\\s*\\.\\s*Staffel.*";
 
-    String seasonRegexRemove = "\\s*Staffel\\s*:?\\s*(\\d+)" +
+    static final String seasonRegexRemove = "\\s*Staffel\\s*:?\\s*(\\d+)" +
             "|\\s*St\\.?\\s*:?\\s*(\\d+)"+
             "|(\\d+)+\\s*\\.\\s*Staffel\\s*:?\\s*";
 
-    Pattern episodePattern = Pattern.compile(episodeRegexSearch.toLowerCase());
-    Pattern seasonPattern = Pattern.compile(seasonRegexSearch.toLowerCase());
+    static final Pattern episodePattern = Pattern.compile(episodeRegexSearch.toLowerCase());
+    static final Pattern seasonPattern = Pattern.compile(seasonRegexSearch.toLowerCase());
 
-    public String getEpisodeFromTitle(String title) {
+    public static String getEpisodeFromTitle(String title) {
         Matcher matcher = episodePattern.matcher(title.toLowerCase());
         while (matcher.find()) {
             for(int group=1;group<=matcher.groupCount();group++) {
@@ -50,7 +49,7 @@ public class DataExtractor {
         return null;
     }
 
-    public String getSeasonFromTitle(String title) {
+    public static String getSeasonFromTitle(String title) {
         Matcher matcher = episodePattern.matcher(title.toLowerCase());
         while (matcher.find()) {
             for(int group=1;group<=matcher.groupCount();group++) {
@@ -62,7 +61,7 @@ public class DataExtractor {
         return null;
     }
 
-    public String getTitleWithoutEpisodeOrSeason(String title) {
+    public static String getTitleWithoutEpisodeOrSeason(String title) {
         String result = title.replaceAll(seasonRegexRemove," ");
         result = result.replaceAll(episodeRegexRemove," ");
         result = result.replaceAll("\\(\\s*\\)", " ");

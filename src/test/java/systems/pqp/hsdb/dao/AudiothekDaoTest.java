@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
-import de.ard.sad.normdb.similarity.model.generic.types.RadioPlayType;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -12,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.pqp.hsdb.ImportException;
+import systems.pqp.hsdb.RadioPlayType;
 
 import java.io.FileWriter;
 import java.io.IOException;

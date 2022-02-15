@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 import de.ard.sad.normdb.similarity.model.generic.GenericModel;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
-import de.ard.sad.normdb.similarity.model.generic.types.RadioPlayType;
 import systems.pqp.hsdb.*;
 
 import org.apache.logging.log4j.LogManager;
@@ -79,6 +78,7 @@ public class AudiothekDao {
         LOG.info("Num Program-Sets after removeReadings(): {}", resultMap.size());
 
         return results;
+        //return DataExtractor.createVirtualRadioPlayOnProgramSet(results);
     }
 
     /**
@@ -119,13 +119,13 @@ public class AudiothekDao {
         GenericObject radioPlay = new GenericObject(genericModel,id);
 
         HashSet<String> titles = new HashSet<>();
-        //titles.add(title);
-        titles.add(DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title));
+        titles.add(title);
+        //titles.add(DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title));
         //Überflüssige Klammerung entfernen
 
-        if(title.indexOf("(") < title.indexOf(")")) {
+        /*if(title.indexOf("(") < title.indexOf(")")) {
             titles.add(title.replaceAll("\\(.*\\)", "").replaceAll("\\s+", " ").trim());
-        }
+        }*/
         radioPlay.addDescriptionProperty(RadioPlayType.TITLE, new ArrayList<String>(titles));
 
 
