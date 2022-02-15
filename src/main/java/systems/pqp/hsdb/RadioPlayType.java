@@ -7,7 +7,6 @@ import de.ard.sad.normdb.similarity.compare.basic.string.FuzzyStringVariantSimil
 import de.ard.sad.normdb.similarity.compare.basic.string.ScaledLevensteinWithPartTest;
 import de.ard.sad.normdb.similarity.compare.ndb.institution.BroadcastingCompanySimilarity;
 import de.ard.sad.normdb.similarity.compare.ndb.name.InstitutionNameSimilarity;
-import de.ard.sad.normdb.similarity.compare.ndb.name.PersonNameSimilarity;
 import de.ard.sad.normdb.similarity.model.generic.GenricObjectType;
 import de.ard.sad.normdb.similarity.model.generic.types.BasicType;
 
@@ -24,7 +23,7 @@ public class RadioPlayType extends BasicType {
     public static final GenricObjectType PUBLICATION_DT = new GenricObjectType("string.publication_dt", 0.9f, 0.0f, false, true, false,0.9f, new FuzzyDateSimilarity());
     public static final GenricObjectType PUBLISHER = new GenricObjectType("string.publisher", 1.0f, 0.0f, false, true, true, new BroadcastingCompanySimilarity());
     public static final GenricObjectType LINK = new GenricObjectType("string.link", 1.0f, 0.0f, false, false, false, new EqualSimilarity());
-    public static final GenricObjectType PERSON_INVOLVED = new GenricObjectType("string.person_name.involved", 1.0f, 0.0f, false, true, true, new PersonNameSimilarity());
+    public static final GenricObjectType PERSON_INVOLVED = new GenricObjectType("string.person_name.involved", 1.0f, 0.0f, false, true, true, new EqualSimilarity());
     public static final GenricObjectType PERSON_ROLE = new GenricObjectType("string.person_name.role", 1.0f, 0.0f, false, false, false, new EqualSimilarity());
 
     public static final GenricObjectType SEASON = new GenricObjectType("number.season", 1.0f, 0.0f, false, false, true,0.9f,false,20f, new EqualSimilarity());
