@@ -229,7 +229,7 @@ public class HsdbDao {
         try {
             String title = bean.getTitle().replaceAll("\\s+", " ").trim();
             if(title.startsWith("[")){
-                title = title.replaceFirst("\\[","").replaceFirst("\\]"," ").replaceFirst("  "," ").trim();
+                title = title.replaceFirst("\\[","").replaceFirst("\\]"," ").replaceAll("\\s+", " ").trim();
             }
             String titleWithoutSeasonOrEpisode = DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title);
             Set<String> titles = new HashSet<>();
