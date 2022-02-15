@@ -78,7 +78,7 @@ public class AudiothekDao {
 
         LOG.info("Num Program-Sets after removeReadings(): {}", resultMap.size());
 
-        return resultMap;
+        return results;
     }
 
     /**
@@ -88,7 +88,7 @@ public class AudiothekDao {
      */
     public static GenericObject genericObjectFromJson(Map embeddedObject){
         String id = String.valueOf(embeddedObject.get("id"));
-        String title = String.valueOf(embeddedObject.get("title")).trim();
+        String title = String.valueOf(embeddedObject.get("title")).replaceAll("\\s+", " ").trim();
 
         String description = String.valueOf(embeddedObject.get("synopsis"));
         String duration = String.valueOf(embeddedObject.get("duration"));
@@ -119,14 +119,21 @@ public class AudiothekDao {
         GenericObject radioPlay = new GenericObject(genericModel,id);
 
         HashSet<String> titles = new HashSet<>();
-        titles.add(title);
+        //titles.add(title);
         titles.add(DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title));
         //Überflüssige Klammerung entfernen
 
         if(title.indexOf("(") < title.indexOf(")")) {
-            titles.add(title.replaceAll("\\(.*\\)", "").trim());
+            titles.add(title.replaceAll("\\(.*\\)", "").replaceAll("\\s+", " ").trim());
         }
         radioPlay.addDescriptionProperty(RadioPlayType.TITLE, new ArrayList<String>(titles));
+
+
+        String episode = DATA_EXTRACTOR.getEpisodeFromTitle(title);
+        if(episode != null) {
+            radioPlay.addDescriptionProperty(RadioPlayType.EPISODE, episode);
+        }
+
         //radioPlay.addDescriptionProperty(RadioPlayType.BIO, description);
         //radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, description);
         radioPlay.addDescriptionProperty(RadioPlayType.DURATION, duration);

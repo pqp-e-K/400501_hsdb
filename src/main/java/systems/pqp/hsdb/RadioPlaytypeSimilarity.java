@@ -76,7 +76,7 @@ public class RadioPlaytypeSimilarity extends GenericSimilarity {
         }*/
 
         //Episode anreichern
-        for (GenericObjectProperty genericObjectProperty : audiothekObject.getProperties(RadioPlayType.TITLE)) {
+        /*for (GenericObjectProperty genericObjectProperty : audiothekObject.getProperties(RadioPlayType.TITLE)) {
             for(String title:genericObjectProperty.getDescriptions()) {
                 String episode = dataExtractor.getEpisodeFromTitle(title);
                 if(episode != null)
@@ -90,7 +90,7 @@ public class RadioPlaytypeSimilarity extends GenericSimilarity {
                 if(episode != null)
                     hsdbObject.addDescriptionProperty(RadioPlayType.EPISODE,episode);
             }
-        }
+        }*/
 
         try {
             return super.calcSimilarity(hsdbObject, audiothekObject);

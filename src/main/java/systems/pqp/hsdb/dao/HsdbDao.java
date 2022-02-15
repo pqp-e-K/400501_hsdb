@@ -227,15 +227,20 @@ public class HsdbDao {
         GenericObject radioPlay = new GenericObject(genericModel,id);
 
         try {
-            String title = bean.getTitle().trim();
+            String title = bean.getTitle().replaceAll("\\s+", " ").trim();
             if(title.startsWith("[")){
                 title = title.replaceFirst("\\[","").replaceFirst("\\]"," ").replaceFirst("  "," ").trim();
             }
             String titleWithoutSeasonOrEpisode = DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title);
             Set<String> titles = new HashSet<>();
-            titles.add(title);
+            //titles.add(title);
             titles.add(titleWithoutSeasonOrEpisode);
             radioPlay.addDescriptionProperty(RadioPlayType.TITLE, new ArrayList<String>(titles));
+
+            String episode = DATA_EXTRACTOR.getEpisodeFromTitle(title);
+            if(episode != null) {
+                radioPlay.addDescriptionProperty(RadioPlayType.EPISODE, episode);
+            }
 
             //radioPlay.addDescriptionProperty(RadioPlayType.SHOW_TITLE, bean.getShowTitle());
             radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
