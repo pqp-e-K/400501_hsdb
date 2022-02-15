@@ -50,11 +50,11 @@ public class AppTest {
 
     @Test
     public void smallIntegrationTest() throws ParseException, ImportException, FileNotFoundException, ExecutionException, InterruptedException {
-        String[] args = new String[]{ "--config-file=/Users/gabrielschneider/IdeaProjects/400501_hsdb/src/main/resources/application.properties", "-l=/Users/gabrielschneider/IdeaProjects/400501_hsdb/src/test/resources/api-examples/small-api.json" };
+        String[] args = new String[]{ "--config-file=/Users/gabrielschneider/IdeaProjects/400501_hsdb/src/main/resources/application.properties", "-l=/Users/gabrielschneider/IdeaProjects/400501_hsdb/src/test/resources/api-examples/mini-test.json" };
         CommandLine cli = App.createCLI(args);
         Assertions.assertTrue(cli.hasOption("c"));
         Assertions.assertTrue(cli.hasOption("local-audiothek-dump-file"));
-        Assertions.assertEquals("/Users/gabrielschneider/IdeaProjects/400501_hsdb/src/test/resources/api-examples/small-api.json", cli.getOptionValue("l"));
+        Assertions.assertEquals("/Users/gabrielschneider/IdeaProjects/400501_hsdb/src/test/resources/api-examples/mini-test.json", cli.getOptionValue("l"));
         App.runSimilarityCheck(cli);
     }
 
@@ -69,27 +69,4 @@ public class AppTest {
         App.calculateSimilarities(audiothekObjects, hsdbObjects);
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {1,10,20,30,40,50,60,70,75})
-    void logStatus(int processed) {
-        SimilarityCheck check = new SimilarityCheck();
-
-        Assertions.assertTrue(check.logStatus(processed, 75, 10));
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {1,31,159,318})
-    void logStatus2(int processed) {
-        SimilarityCheck check = new SimilarityCheck();
-
-        Assertions.assertTrue(check.logStatus(processed, 318, 10));
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {2,11,24,32,48,57,61,74})
-    void dontLogStatus(int processed) {
-        SimilarityCheck check = new SimilarityCheck();
-
-        Assertions.assertFalse(check.logStatus(processed, 75, 10));
-    }
 }

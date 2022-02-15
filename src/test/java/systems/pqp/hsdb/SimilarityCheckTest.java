@@ -12,8 +12,6 @@ import systems.pqp.hsdb.dao.HsdbDao;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 class SimilarityCheckTest {
@@ -169,18 +167,6 @@ class SimilarityCheckTest {
                 gs.calcSimilarity(databaseObjects.get("4987635"), apiObject), compareValue, true);
     }
 
-    @Test
-    void mapPartitionMatch() throws IOException {
-        Map<String, GenericObject> databaseObjects =
-                new HsdbDao().getRadioPlays(
-                        "WHERE DUKEY = 4987635"
-                );
-        Map<String, GenericObject> apiObjects = new HashMap<>();
-        apiObjects.put("86736440", audiothekObjects.get("86736440"));
-
-        Assertions.assertEquals(1, similarityCheck.mapPartition(new ArrayList<>(apiObjects.keySet()), databaseObjects, apiObjects));
-    }
-
     /**
      * Hörspiel, in ARD-Audiothek schlechte Datenlage
      * De Rerum Natura
@@ -300,19 +286,6 @@ class SimilarityCheckTest {
         assertSimilarity("Hörspieltitel gleich, aber nicht identischer Datensatz",
                 gs.calcSimilarity(databaseObjects.get("1443307"), apiObject), compareValue, false);
     }
-
-    @Test
-    void mapPartitionsNoMatch() throws IOException {
-        Map<String, GenericObject> databaseObjects =
-                new HsdbDao().getRadioPlays(
-                        "WHERE DUKEY = 1443307"
-                );
-        Map<String, GenericObject> apiObjects = new HashMap<>();
-        apiObjects.put("86800910", audiothekObjects.get("86800910"));
-
-        Assertions.assertEquals(0, similarityCheck.mapPartition(new ArrayList<>(apiObjects.keySet()), databaseObjects, apiObjects));
-    }
-
     /**
      * Mehrteiler, in HSPDB zwei Fassungen (6 und 8 Teile), in ARD-Audiothek nur gekürzte Fassung (6 Teile) vorhanden
      * a)	https://hoerspiele.dra.de/vollinfo.php?dukey=1423911&vi=14&SID
