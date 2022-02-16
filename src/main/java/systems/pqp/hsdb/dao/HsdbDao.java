@@ -236,13 +236,18 @@ public class HsdbDao {
             //titles.add(titleWithoutSeasonOrEpisode);
             radioPlay.addDescriptionProperty(RadioPlayType.TITLE, new ArrayList<String>(titles));
 
-            String episode = DATA_EXTRACTOR.getEpisodeFromTitle(title);
+            Integer episode = DATA_EXTRACTOR.getEpisodeFromTitle(title);
             if(episode != null) {
-                radioPlay.addDescriptionProperty(RadioPlayType.EPISODE, episode);
+                radioPlay.addDescriptionProperty(RadioPlayType.EPISODE, String.valueOf(episode));
+            }
+
+            Integer season = DATA_EXTRACTOR.getSeasonFromTitle(title);
+            if(season != null) {
+                radioPlay.addDescriptionProperty(RadioPlayType.SEASON, String.valueOf(season));
             }
 
             //radioPlay.addDescriptionProperty(RadioPlayType.SHOW_TITLE, bean.getShowTitle());
-            radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
+            //radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
 
             Float duration = bean.getDurationInSeconds();
             if(duration>0.0f)   //Dauer nur hinzufügen, sofern Angabe existiert
@@ -254,7 +259,7 @@ public class HsdbDao {
                     LOG.debug(e.getMessage(), e);
                 }
             }
-            radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
+            //radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
             radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, bean.getDescription());
             //radioPlay.addDescriptionProperty(RadioPlayType.LONG_TITLE, bean.getLongTitle());
             radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, null == bean.getProductionCompany() ? "" : bean.getProductionCompany());

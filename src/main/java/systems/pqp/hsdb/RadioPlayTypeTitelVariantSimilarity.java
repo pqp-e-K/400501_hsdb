@@ -26,12 +26,22 @@ public class RadioPlayTypeTitelVariantSimilarity extends FuzzyStringVariantSimil
         super(basicSimAlgorithm, output, extractLeftSidedPart, compareVariantsAgainstEachOther);
     }
 
+    public Set<String> generateStringVariantsExtended(String text) {
+        String tileWithoutEpisodeOrSeason = DataExtractor.getTitleWithoutEpisodeOrSeason(text);
+        Set<String> results = new HashSet<>();
+        results.add(tileWithoutEpisodeOrSeason);
+        results.addAll(super.generateStringVariantsExtended(tileWithoutEpisodeOrSeason));
+        return results;
+    }
+
 
     //Varianten eines Strings erzeugen
-    public List<String> generateStringVariants(String text) {
-        Set<String> results = new HashSet<>(super.generateStringVariants(text));
-        results.addAll(super.generateStringVariants(DataExtractor.getTitleWithoutEpisodeOrSeason(text)));
-        results.addAll(super.generateStringVariants(text.replaceAll("\\(.*\\)", "").replaceAll("\\s+", " ").trim()));
+    public Set<String> generateStringVariants(String text) {
+        String tileWithoutEpisodeOrSeason = DataExtractor.getTitleWithoutEpisodeOrSeason(text);
+        Set<String> results = new HashSet<>();
+        //Set<String> results = new HashSet<>(super.generateStringVariants(text));
+        results.add(tileWithoutEpisodeOrSeason);
+        results.addAll(super.generateStringVariants(tileWithoutEpisodeOrSeason));
 
         if (text != null) {
             Matcher m = p.matcher(text);
@@ -44,10 +54,11 @@ public class RadioPlayTypeTitelVariantSimilarity extends FuzzyStringVariantSimil
             }
         }
 
-        return new ArrayList<String>(results);
+        return results;
     }
 
     protected float calcSimilarityIntern(String pattern, String target) {
+        System.out.println("Filter Compare: "+pattern+" || "+target);
         //return super.calcSimilarityIntern(pattern, target);
         if(pattern != null && target != null) {
             int patternLength= pattern.length();
@@ -56,13 +67,42 @@ public class RadioPlayTypeTitelVariantSimilarity extends FuzzyStringVariantSimil
             float maxLength = Math.max(patternLength,targetLength);
 
             if(minLength/maxLength < 0.5f) {
-                //System.out.println(minLength+"/"+maxLength+" Filter Compare: "+pattern+" || "+target);
-                return 0.0f;
+                if(checkContains(pattern, target)) {
+                    System.out.println("Filter Compare containe0=true");
+                    return 0.9f;
+                }else
+                    return 0.0f;
             }else {
-                return super.calcSimilarityIntern(pattern, target);
+                float result = super.calcSimilarityIntern(pattern, target);
+                if(result<0.99f) {
+                    if(checkContains(pattern, target)) {
+                        System.out.println("Filter Compare containe=true");
+                        return 0.9f;
+                    }
+                }
+                return result;
             }
         }else {
-            return super.calcSimilarityIntern(pattern, target);
+            float result = super.calcSimilarityIntern(pattern, target);
+            if(result<0.99f) {
+                if(checkContains(pattern, target)) {
+                    System.out.println("Filter Compare containe2=true");
+                    return 0.9f;
+                }
+            }
+            return result;
+        }
+    }
+
+    private boolean checkContains(String pattern, String target){
+        if(pattern != null
+                && target != null
+                && pattern.split(" ").length>2
+                && target.split(" ").length>2
+                && (pattern.contains(target) || target.contains(pattern))) {
+            return true;
+        }else {
+            return false;
         }
     }
 }

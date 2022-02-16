@@ -37,24 +37,24 @@ public class DataExtractor {
     static final Pattern episodePattern = Pattern.compile(episodeRegexSearch.toLowerCase());
     static final Pattern seasonPattern = Pattern.compile(seasonRegexSearch.toLowerCase());
 
-    public static String getEpisodeFromTitle(String title) {
+    public static Integer getEpisodeFromTitle(String title) {
         Matcher matcher = episodePattern.matcher(title.toLowerCase());
         while (matcher.find()) {
             for(int group=1;group<=matcher.groupCount();group++) {
                 if(matcher.group(group) != null) {
-                    return matcher.group(group);
+                    return Integer.valueOf(matcher.group(group));
                 }
             }
         }
         return null;
     }
 
-    public static String getSeasonFromTitle(String title) {
-        Matcher matcher = episodePattern.matcher(title.toLowerCase());
+    public static Integer getSeasonFromTitle(String title) {
+        Matcher matcher = seasonPattern.matcher(title.toLowerCase());
         while (matcher.find()) {
             for(int group=1;group<=matcher.groupCount();group++) {
                 if(matcher.group(group) != null) {
-                    return matcher.group(group);
+                    return Integer.valueOf(matcher.group(group));
                 }
             }
         }
@@ -65,8 +65,10 @@ public class DataExtractor {
         String result = title.replaceAll(seasonRegexRemove," ");
         result = result.replaceAll(episodeRegexRemove," ");
         result = result.replaceAll("\\(\\s*\\)", " ");
-        result = result.replaceAll("\\(|\\)", " ");
-        result = result.replaceAll("\\s+:\\s+"," ");
+        result = result.replaceAll("\\(\\s+", "(");
+        result = result.replaceAll("\\s+\\)", "(");
+    //    result = result.replaceAll("\\(|\\)", " ");
+      //  result = result.replaceAll("\\s+:\\s+"," ");
         return result.replaceAll("\\s+", " ").trim();
     }
 

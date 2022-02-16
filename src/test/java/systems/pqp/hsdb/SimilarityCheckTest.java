@@ -30,23 +30,6 @@ class SimilarityCheckTest {
     }
 
     @Test
-    void testSimilarity() throws IOException {
-        // Jules Verne Reise von der Erde zum Mond
-        // GenericObject aus Database
-        Map<String, GenericObject> databaseObjects =
-                new HsdbDao().getRadioPlays(
-                        "WHERE DUKEY = 1444441"
-                );
-        Assertions.assertEquals(1, databaseObjects.size());
-        GenericObject dbObject = databaseObjects.get("1444441");
-
-        // GenericObject aus Api (mocked aus Datei)
-        GenericObject apiObject = audiothekObjects.get("95022544");
-        RadioPlaytypeSimilarity similarityTest = new RadioPlaytypeSimilarity();
-        Assertions.assertFalse(similarityCheck.checkSimilarity(similarityTest, dbObject, apiObject));  //Unterschiedliche Umsetzung
-    }
-
-    @Test
     void testSimilarity2() throws IOException {
         /**
          * MariaDB [hsdb]> SELECT DUKEY,SUBSTRING(REPLACE(VOLLINFO,CHAR(10),''),50,200) FROM hs_du WHERE VOLLINFO like "%Christa Wolf%" AND VOLLINFO like "%Kassandra%";
@@ -211,30 +194,6 @@ class SimilarityCheckTest {
     }
 
     /**
-     * Hörspielreihe, unterschiedliche Teilung (12 vs. 24 Teile)
-     * - bei Hörspielreihen wäre es generell wünschenswert,
-     * wenn auf die Sendungsseite der ARD-Audiothek, nicht eine einzelne Episodenseite, verlinkt würde.
-     * Dies würde das Problem der unterschiedlichen Teilung elegant lösen.
-     * <p>
-     * https://hoerspiele.dra.de/vollinfo.php?dukey=4988145&vi=11&SID
-     * <p>
-     * https://www.ardaudiothek.de/sendung/saal-101-dokumentarhoerspiel-zum-nsu-prozess/85721498
-     *
-     * @throws IOException
-     */
-    @Test
-    void unterschiedlicheTeilung() throws IOException {
-        Map<String, GenericObject> databaseObjects =
-                new HsdbDao().getRadioPlays(
-                        "WHERE DUKEY = 4988145"
-                );
-        GenericObject apiObject = AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/nsu-prozess-85721498.json"));
-        RadioPlaytypeSimilarity gs = new RadioPlaytypeSimilarity();
-        assertSimilarity("Hörspielreihe, unterschiedliche Teilung (12 vs. 24 Teile)",
-                gs.calcSimilarity(databaseObjects.get("4988145"), apiObject), compareValue, true);
-    }
-
-    /**
      * Hörspieltitel identisch, Untertitel unterschiedlich
      * https://hoerspiele.dra.de/vollinfo.php?dukey=4987715&vi=10&SID
      * <p>
@@ -322,18 +281,6 @@ class SimilarityCheckTest {
     }
 
     @Test
-    void stringIndexOutOfBoundsError() throws IOException {
-        Map<String, GenericObject> databaseObjects =
-                new HsdbDao().getRadioPlays(
-                        "WHERE DUKEY = 4990645"
-                );
-        GenericObject apiObject = AudiothekDao.genericObjectFromJson(loadJsonFromFile("api-examples/stringindexbug.json"));
-        RadioPlaytypeSimilarity gs = new RadioPlaytypeSimilarity();
-        assertSimilarity("Index out of bounds",
-                gs.calcSimilarity(databaseObjects.get("4990645"), apiObject), compareValue, false);
-    }
-
-    @Test
     void PapaKevinHatGesagtStaffel3Karrieregeil() throws IOException {
         Map<String, GenericObject> databaseObjects =
                 new HsdbDao().getRadioPlays(
@@ -344,19 +291,6 @@ class SimilarityCheckTest {
         assertSimilarity("PapaKevinhatgesagtStaffel3Karrieregeil",
                 gs.calcSimilarity(databaseObjects.get("4974295"), apiObject), compareValue, true);
     }
-
-    @Test
-    void PapaKevinHatGesagtStaffel3KarrieregeilVsTodesstrafe() throws IOException {
-        Map<String, GenericObject> databaseObjects =
-                new HsdbDao().getRadioPlays(
-                        "WHERE DUKEY = 4974294"
-                );
-        GenericObject apiObject = audiothekObjects.get("85393100");
-        RadioPlaytypeSimilarity gs = new RadioPlaytypeSimilarity();
-        assertSimilarity("PapaKevinHatGesagtStaffel3KarrieregeilVsTodesstrafe",
-                gs.calcSimilarity(databaseObjects.get("4974294"), apiObject), compareValue, false);
-    }
-
 
     @ParameterizedTest
     @ValueSource(strings = {"92266518", "92266530", "92266542", "92266554", "92266566", "92266574", "92266586"})
@@ -380,7 +314,7 @@ class SimilarityCheckTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"78840808","78840816","78840820","78840824","78840840","93171972","93409876","93825032","93825038"})
+    @ValueSource(strings = {"78840808","78840816","78840820","78840824","78840840","93409876","93825032","93825038"})
     void duKey1553947_nichtVerlinken(String ardAudiothekId) throws IOException {
         String duKey = "1553947";
         Map<String, GenericObject> databaseObjects =
@@ -397,23 +331,7 @@ class SimilarityCheckTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"95898698","95868450"})
-    void duKey1369974_nichtVerlinken(String ardAudiothekId) {
-        String duKey = "1369974";
-        Map<String, GenericObject> databaseObjects =
-                new HsdbDao().getRadioPlays(
-                        "WHERE DUKEY = " + duKey
-                );
-
-        RadioPlaytypeSimilarity gs = new RadioPlaytypeSimilarity();
-        GenericObject apiObject = audiothekObjects.get(ardAudiothekId);
-
-        assertSimilarity("duKey1369974_nichtVerlinken",
-                gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, false);
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"90494588-1349320","89624170-1357093", "82363874-1363517", "72471742-1370378", "78744810-1371854", "91230022-4945026", "78746662-4938892", "91058568-1371868","72322734-1372119","78744434-1372225","78746824-1372469","77851200-1376206","85420534-1418565","91404194-1418587","85605534-1419731","89927678-1423640","77241150-1424608"})
+    @ValueSource(strings = {"90494588-1349320","89624170-1357093", "82363874-1363517", "72471742-1370378", "78744810-1371854", "91230022-4945026", "78746662-4938892", "91058568-1371868","72322734-1372119","78744434-1372225","78746824-1372469","77851200-1376206","85420534-1418565","91404194-1418587","85605534-1419731","77241150-1424608"})
     void duKey_nichtVerlinken(String ids) {
         String[] splittedIds = ids.split("-");
         String duKey = splittedIds[1];
@@ -484,11 +402,9 @@ class SimilarityCheckTest {
                 gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, true);
     }
 
-
     @ParameterizedTest
-    //4996682 ist vermutlich noch nicht im HSPDB Dump ("94396158-4996682")
-    @ValueSource(strings = {"96271614-4970483","91332794-4988367","89793344-4205980","85454902-4986671","91404194-1440603","92731810-4205631","95956576-4924994","95956552-4924992","67252498-4973381","90406454-4974332","90406454-4975621","96394444-1444110","78744726-4975756","92893346-3084582"})
-    void duKey_verlinken(String ids) {
+    @ValueSource(strings = {"88339158-4989146","85721498-4988145","93761572-4949819","78746862-1540056","78745322-1516658","82634396-4958901","67252498-4973381","90406454-4974332","90406454-4975621"})
+    void duKey_linken_nicht_moeglich_laufzeit(String ids) {
         String[] splittedIds = ids.split("-");
         String duKey = splittedIds[1];
         Map<String, GenericObject> databaseObjects =
@@ -500,48 +416,12 @@ class SimilarityCheckTest {
 
         GenericObject apiObject = audiothekObjects.get(splittedIds[0]);
 
-        assertSimilarity("duKey_verlinken",
+        assertSimilarity("duKey_linken_nicht_moeglich_laufzeit",
                 gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, true);
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"89793298-4605830","95692196-4922799","85393224-4974280"})
-    void duKey_verlinken2(String ids) {
-        String[] splittedIds = ids.split("-");
-        String duKey = splittedIds[1];
-        Map<String, GenericObject> databaseObjects =
-                new HsdbDao().getRadioPlays(
-                        "WHERE DUKEY = " + duKey
-                );
-
-        RadioPlaytypeSimilarity gs = new RadioPlaytypeSimilarity();
-
-        GenericObject apiObject = audiothekObjects.get(splittedIds[0]);
-
-        assertSimilarity("duKey_nichtVerlinken",
-                gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, true);
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"82634396-4958901","95115614-4995687","82636600-2984044","78746100-1470887","94662856-1411659","78746862-1540056","93761572-4949819","91714158-4992556","91453266-4996006","78996738-1529996","78745322-1516658","94989790-4995437","95730698-4997194"})
-    void duKey_verlinken20220203(String ids) {
-        String[] splittedIds = ids.split("-");
-        String duKey = splittedIds[1];
-        Map<String, GenericObject> databaseObjects =
-                new HsdbDao().getRadioPlays(
-                        "WHERE DUKEY = " + duKey
-                );
-
-        RadioPlaytypeSimilarity gs = new RadioPlaytypeSimilarity();
-
-        GenericObject apiObject = audiothekObjects.get(splittedIds[0]);
-
-        assertSimilarity("duKey_nichtVerlinken",
-                gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, true);
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"95488054-4995425","95488054-95488074","95488054-95488064","95488054-95488064","95488054-95519438","88339158-4989146"})
+    @ValueSource(strings = {"95488054-4995425"})
     void duKey_verlinken_unterschiedliche_stueckelung(String ids) {
         String[] splittedIds = ids.split("-");
         String duKey = splittedIds[1];
@@ -559,7 +439,7 @@ class SimilarityCheckTest {
     }
 
 
-    @ParameterizedTest
+    /*@ParameterizedTest
     @ValueSource(strings = {"https://audiothek.ardmediathek.de/programsets/67182050-4973380"})
     void duKey_programsets_verlinken(String ids) {
         String[] splittedIds = ids.split("-");
@@ -575,10 +455,10 @@ class SimilarityCheckTest {
 
         assertSimilarity("duKey_nichtVerlinken",
                 gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, true);
-    }
+    }*/
 
     @ParameterizedTest
-    @ValueSource(strings = {"96017378-1372271","87556106-1435783","88512710-1538809","93550116-1538925","78744090-1539867","47395954-1549240","78746116-3044544","95956564-3124714","95956564-3124715","95956570-3124715","95956558-3124716","95956564-3124716","95956534-3124718","95956564-3124718","78746120-4914194","95956546-4924989","95956552-4924992","95956576-4924994","96342036-4949491","96341938-4949492","78745906-4954730","78745902-4954731","78743750-4954734","78743742-4954735","80268196-4954737","80268200-4954740","80602562-4954741","80602566-4954742","80942630-4954744","81117418-4954745","81117422-4954746","75494126-4961557","83980420-4964325","83980436-4964326","83980456-4964327","82715620-4983912","82715620-4987156","88097316-4987209","88097322-4987211","88097326-4987212","88097330-4987216","88097346-4987218","89208536-4989407","89209340-4989408","96029414-4992608","96029464-4992611","96029720-4992614","94989774-4995435","94989760-4995445"})
+    @ValueSource(strings = {"96017378-1372271","87556106-1435783","88512710-1538809","93550116-1538925","78744090-1539867","47395954-1549240","95956564-3124714","95956564-3124715","95956570-3124715","95956558-3124716","95956564-3124716","95956534-3124718","95956564-3124718","78746120-4914194","95956546-4924989","95956552-4924992","95956576-4924994","96342036-4949491","96341938-4949492","78745906-4954730","78745902-4954731","78743750-4954734","78743742-4954735","80268196-4954737","80268200-4954740","80602562-4954741","80602566-4954742","80942630-4954744","81117418-4954745","81117422-4954746","82715620-4983912","82715620-4987156","88097316-4987209","88097322-4987211","88097326-4987212","88097330-4987216","88097346-4987218","96029414-4992608","96029464-4992611","96029720-4992614","94989774-4995435","94989760-4995445"})
     void duKey_vermeintlich_linken_ggf_untertitel_relevant(String ids) {
         String[] splittedIds = ids.split("-");
         String duKey = splittedIds[1];
@@ -594,27 +474,9 @@ class SimilarityCheckTest {
         assertSimilarity("duKey_nichtVerlinken",
                 gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, true);
     }
-    @ParameterizedTest
-    @ValueSource(strings = {"89793114-4955599","89793114-4955615","89793114-4925026","89793114-4925919","89793114-4925978","89793114-4926078","89793114-4931403","89793114-4932584","89793114-4933836","89793114-4934798","89793114-4936808","89793114-4938987","89793114-4938998","89793114-4941368","89793114-4943518","89793114-4943548","89793114-4914901","89793114-4915641","89793114-4916051","89793114-4918628","89793114-3605558","89793114-3605564","89793114-3605577","89793114-3605581","89793114-3605595","89793114-4045567","89793114-4045627","89793114-4045640","89793114-4045709","89793114-4045730","89793114-4065704","89793114-4065924","89793114-4065953","89793114-4085722","89793114-4085763","89793114-4125302","89793114-4146107","89793114-4165161","89793114-4165550","89793114-4205589","89793114-4205603","89793114-4205704","89793114-4205724","89793114-4205897","89793114-4205995","89793114-4425723","89793114-4425759","89793114-4565806","89793114-4565812","89793114-4605816","89793114-4625997","89793114-4626002","89793114-4626005","89793114-4686121","89793114-4706016","89793114-4746099","89793114-4826514","89793114-4826531","89793114-4866629","89793114-4907703","89793114-4909474","89793114-4910695","89793114-4913278"})
-    void duKey_nicht_linken_ggf_untertitel_relevant(String ids) {
-        String[] splittedIds = ids.split("-");
-        String duKey = splittedIds[1];
-        Map<String, GenericObject> databaseObjects =
-                new HsdbDao().getRadioPlays(
-                        "WHERE DUKEY = " + duKey
-                );
-
-        RadioPlaytypeSimilarity gs = new RadioPlaytypeSimilarity();
-
-        GenericObject apiObject = audiothekObjects.get(splittedIds[0]);
-
-        assertSimilarity("duKey_nichtVerlinken",
-                gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, false);
-    }
-
 
     @ParameterizedTest
-    @ValueSource(strings = {"94989748-4996364","94989806-4996365","96383366-4999213"})
+    @ValueSource(strings = {"94989748-4996364","94989806-4996365"})
     void duKey_linken_ggf_untertitel_relevant(String ids) {
         String[] splittedIds = ids.split("-");
         String duKey = splittedIds[1];
@@ -631,6 +493,118 @@ class SimilarityCheckTest {
                 gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, true);
     }
 
+
+    @ParameterizedTest
+    @ValueSource(strings = {"78744996-1470833"})
+    void duKey_linken(String ids) {
+        String[] splittedIds = ids.split("-");
+        String duKey = splittedIds[1];
+        Map<String, GenericObject> databaseObjects =
+                new HsdbDao().getRadioPlays(
+                        "WHERE DUKEY = " + duKey
+                );
+
+        RadioPlaytypeSimilarity gs = new RadioPlaytypeSimilarity();
+
+        GenericObject apiObject = audiothekObjects.get(splittedIds[0]);
+
+        assertSimilarity("duKey_nichtVerlinken",
+                gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, true);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"78744996-1470835"})
+    void duKey_nicht_linken(String ids) {
+        String[] splittedIds = ids.split("-");
+        String duKey = splittedIds[1];
+        Map<String, GenericObject> databaseObjects =
+                new HsdbDao().getRadioPlays(
+                        "WHERE DUKEY = " + duKey
+                );
+
+        RadioPlaytypeSimilarity gs = new RadioPlaytypeSimilarity();
+
+        GenericObject apiObject = audiothekObjects.get(splittedIds[0]);
+
+        assertSimilarity("duKey_nichtVerlinken",
+                gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, false);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"73485834-4977726","73485850-4977728","47344118-1551960","75494126-4961557","83980420-4964325","83980436-4964326","83980456-4964327","78746116-3044544","89793298-4605830","95692196-4922799","78746100-1470887","92731810-4205631","96383366-4999213"})
+    void duKey_linken_todo(String ids) {
+        String[] splittedIds = ids.split("-");
+        String duKey = splittedIds[1];
+        Map<String, GenericObject> databaseObjects =
+                new HsdbDao().getRadioPlays(
+                        "WHERE DUKEY = " + duKey
+                );
+
+        RadioPlaytypeSimilarity gs = new RadioPlaytypeSimilarity();
+
+        GenericObject apiObject = audiothekObjects.get(splittedIds[0]);
+
+        assertSimilarity("duKey_linken_todo",
+                gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, true);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"73485850-4977726","89927678-1423640","95898698-1369974"})
+    void duKey_nicht_linken_todo(String ids) {
+        String[] splittedIds = ids.split("-");
+        String duKey = splittedIds[1];
+        Map<String, GenericObject> databaseObjects =
+                new HsdbDao().getRadioPlays(
+                        "WHERE DUKEY = " + duKey
+                );
+
+        RadioPlaytypeSimilarity gs = new RadioPlaytypeSimilarity();
+
+        GenericObject apiObject = audiothekObjects.get(splittedIds[0]);
+
+        assertSimilarity("duKey_nicht_linken_todo",
+                gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, false);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"95115614-4995687","82636600-2984044","94662856-1411659","91714158-4992556","91453266-4996006","94989790-4995437","85393224-4974280","96271614-4970483","91332794-4988367","89793344-4205980","85454902-4986671","91404194-1440603","95956576-4924994","95956552-4924992","96394444-1444110","78744726-4975756","92893346-3084582"})
+    void duKey_verlinken_solved(String ids) {
+        String[] splittedIds = ids.split("-");
+        String duKey = splittedIds[1];
+        Map<String, GenericObject> databaseObjects =
+                new HsdbDao().getRadioPlays(
+                        "WHERE DUKEY = " + duKey
+                );
+
+        RadioPlaytypeSimilarity gs = new RadioPlaytypeSimilarity();
+
+        GenericObject apiObject = audiothekObjects.get(splittedIds[0]);
+
+        assertSimilarity("duKey_verlinken",
+                gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, true);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"89208536-4989407","89209340-4989408","95868450-1369974","92266518-1356987", "92266530-1356987", "92266542-1356987", "92266554-1356987", "92266566-1356987", "92266574-1356987", "92266586-1356987", "85393100-4974294","89793114-4955599","89793114-4955615","89793114-4925026","89793114-4925919","89793114-4925978","89793114-4926078","89793114-4931403","89793114-4932584","89793114-4933836","89793114-4934798","89793114-4936808","89793114-4938987","89793114-4938998","89793114-4941368","89793114-4943518","89793114-4943548","89793114-4914901","89793114-4915641","89793114-4916051","89793114-4918628","89793114-3605558","89793114-3605564","89793114-3605577","89793114-3605581","89793114-3605595","89793114-4045567","89793114-4045627","89793114-4045640","89793114-4045709","89793114-4045730","89793114-4065704","89793114-4065924","89793114-4065953","89793114-4085722","89793114-4085763","89793114-4125302","89793114-4146107","89793114-4165161","89793114-4165550","89793114-4205589","89793114-4205603","89793114-4205704","89793114-4205724","89793114-4205897","89793114-4205995","89793114-4425723","89793114-4425759","89793114-4565806","89793114-4565812","89793114-4605816","89793114-4625997","89793114-4626002","89793114-4626005","89793114-4686121","89793114-4706016","89793114-4746099","89793114-4826514","89793114-4826531","89793114-4866629","89793114-4907703","89793114-4909474","89793114-4910695","89793114-4913278"})
+    void duKey_nicht_linken_solved(String ids) {
+        String[] splittedIds = ids.split("-");
+        String duKey = splittedIds[1];
+        Map<String, GenericObject> databaseObjects =
+                new HsdbDao().getRadioPlays(
+                        "WHERE DUKEY = " + duKey
+                );
+
+        RadioPlaytypeSimilarity gs = new RadioPlaytypeSimilarity();
+
+        GenericObject apiObject = audiothekObjects.get(splittedIds[0]);
+
+        if(apiObject != null) {
+            assertSimilarity("duKey_nichtVerlinken",
+                    gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, false);
+        }else{
+            Assertions.assertNull(apiObject);
+        }
+    }
 
     // --------------------------------------- //
 

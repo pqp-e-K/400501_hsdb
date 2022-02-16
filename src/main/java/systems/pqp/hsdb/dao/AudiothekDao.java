@@ -129,9 +129,14 @@ public class AudiothekDao {
         radioPlay.addDescriptionProperty(RadioPlayType.TITLE, new ArrayList<String>(titles));
 
 
-        String episode = DATA_EXTRACTOR.getEpisodeFromTitle(title);
+        Integer episode = DATA_EXTRACTOR.getEpisodeFromTitle(title);
         if(episode != null) {
-            radioPlay.addDescriptionProperty(RadioPlayType.EPISODE, episode);
+            radioPlay.addDescriptionProperty(RadioPlayType.EPISODE, String.valueOf(episode));
+        }
+
+        Integer season = DATA_EXTRACTOR.getSeasonFromTitle(title);
+        if(season != null) {
+            radioPlay.addDescriptionProperty(RadioPlayType.SEASON, String.valueOf(season));
         }
 
         //radioPlay.addDescriptionProperty(RadioPlayType.BIO, description);
