@@ -87,7 +87,7 @@ public class SimilarityCheck {
         try {
             threads.submit(
                     () -> audiothekObjects.values().parallelStream().forEach(
-                            audiothekObject -> map(audiothekObject.getInternalId(), audiothekObject, cache)
+                            audiothekObject -> map(audiothekObject.getUniqIdwithinDomain(), audiothekObject, cache)
                     )
             ).get();
         } finally {
