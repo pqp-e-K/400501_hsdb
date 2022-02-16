@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-query="SELECT a.dukey, a.audiothek_id, a.audiothek_link, a.score, b.sorttit,b.sortaut,b.sortrfa,b.sortdat
+query="SELECT a.dukey, a.audiothek_id, a.audiothek_link, a.score, replace(b.sorttit,'\"','') as sorttit,replace(b.sortaut,'\"','') as sortaut, replace(b.sortrfa,'\"','') as sortrfa,b.sortdat
 from hsdb.hs_link_audiothek a join hsdb.hs_du b on a.dukey = b.dukey
 order by a.dukey ASC"
 
