@@ -512,8 +512,10 @@ class SimilarityCheckTest {
                 gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, true);
     }
 
+
+
     @ParameterizedTest
-    @ValueSource(strings = {"78744996-1470835"})
+    @ValueSource(strings = {"86601692-1377490","88208696-1377490","89281614-1377490","90417498-1377490","91996704-1377490","92773166-1377490","93639958-1377490","78744996-1470835"})
     void duKey_nicht_linken(String ids) {
         String[] splittedIds = ids.split("-");
         String duKey = splittedIds[1];
@@ -530,8 +532,10 @@ class SimilarityCheckTest {
                 gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, false);
     }
 
+
+
     @ParameterizedTest
-    @ValueSource(strings = {"73485834-4977726","73485850-4977728","47344118-1551960","75494126-4961557","83980420-4964325","83980436-4964326","83980456-4964327","78746116-3044544","89793298-4605830","95692196-4922799","78746100-1470887","92731810-4205631","96383366-4999213"})
+    @ValueSource(strings = {"59258338-4955555","78744280-1530001","73485834-4977726","73485850-4977728","47344118-1551960","75494126-4961557","83980420-4964325","83980436-4964326","83980456-4964327","78746116-3044544","89793298-4605830","95692196-4922799","78746100-1470887","92731810-4205631","96383366-4999213"})
     void duKey_linken_todo(String ids) {
         String[] splittedIds = ids.split("-");
         String duKey = splittedIds[1];
@@ -548,8 +552,10 @@ class SimilarityCheckTest {
                 gs.calcSimilarity(databaseObjects.get(duKey), apiObject), compareValue, true);
     }
 
+
+
     @ParameterizedTest
-    @ValueSource(strings = {"73485850-4977726","89927678-1423640","95898698-1369974"})
+    @ValueSource(strings = {"59258338-4995660","78744280-1529970","78744280-1529996","78744280-1529997","78744280-1529998","78744280-1529999","78744280-1530000","78744280-1530001","85392912-1377490","78742910-1470833","78742910-1470836","73485850-4977726","89927678-1423640","95898698-1369974"})
     void duKey_nicht_linken_todo(String ids) {
         String[] splittedIds = ids.split("-");
         String duKey = splittedIds[1];

@@ -16,7 +16,8 @@ public class DataExtractor {
             "|\\s*\\(\\s*(\\d+)\\s*\\).*"+
             "|\\s*\\(\\s*(\\d+)\\s*/\\s*\\d+\\s*\\).*"+
             "|(\\d+)\\s*\\.\\s*Folge.*"+
-            "|(\\d+)+\\s*\\.\\s*Teil.*";
+            "|(\\d+)+\\s*\\.\\s*Teil.*"+
+            "|(\\d+)\\s*\\.\\s*Fall.*";
 
     static final String episodeRegexRemove = "[,;.]*\\s*Folge\\s*:?\\s*(\\d+)(\\/\\d+)*\\s*:?\\s*" +
             "|[,;.]*\\s*Flg\\.?\\s*:?\\s*(\\d+)"+

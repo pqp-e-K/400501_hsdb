@@ -10,15 +10,15 @@ public class DataExtractorTest {
     DataExtractor dataExtractor = new DataExtractor();
 
     @ParameterizedTest
-    @ValueSource(strings = {"Folge 1","folge 1", "Teil 1", "Hello World Folge 1", "Hello-Folge 1", "World (1)", "World ( 1 )", "Hello World (1/2)", "Staffel 2 Folge 1: Der Tod","Caiman Club III: Justice (1/4) | Neue Staffel des Polit-Thrillers","CAIMAN CLUB - Größtmögliche Zurückhaltung (St.2 Flg.1) (1/4)","Caiman Club (1. Folge: Test)","Papa, Kevin hat gesagt … (3. Staffel: 1. Folge: Karrieregeil)","Die Wahlverwandtschaften (1. Teil)","Johann Wolfgang von Goethe: Die Wahlverwandtschaften (1/2) | Roman","Die Wahlverwandtschaften (1/2) | Roman"}) // six numbers
+    @ValueSource(strings = {"Folge 1","folge 1", "Teil 1", "Hello World Folge 1", "Hello-Folge 1", "World (1)", "World ( 1 )", "Hello World (1/2)", "Staffel 2 Folge 1: Der Tod","Caiman Club III: Justice (1/4) | Neue Staffel des Polit-Thrillers","CAIMAN CLUB - Größtmögliche Zurückhaltung (St.2 Flg.1) (1/4)","Caiman Club (1. Folge: Test)","Papa, Kevin hat gesagt … (3. Staffel: 1. Folge: Karrieregeil)","Die Wahlverwandtschaften (1. Teil)","Johann Wolfgang von Goethe: Die Wahlverwandtschaften (1/2) | Roman","Die Wahlverwandtschaften (1/2) | Roman","Professor van Dusen ermittelt (1. Fall: Professor van Dusen treibt den Teufel aus)"}) // six numbers
     public void episode1(String title) {
-        Assertions.assertEquals("1",dataExtractor.getEpisodeFromTitle(title));
+        Assertions.assertEquals(1,dataExtractor.getEpisodeFromTitle(title));
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"Folge 21","folge 21", "Teil 21", "Hello World Folge 21", "Hello-Folge 21", "World (21)", "World ( 21 )", "Hello World (21/2)", "Staffel 2 Folge 21: Der Tod","Caiman Club III: Justice (21/4) | Neue Staffel des Polit-Thrillers","CAIMAN CLUB - Größtmögliche Zurückhaltung (St.2 Flg.21) (21/4)","Caiman Club (21. Folge: Test)","Papa, Kevin hat gesagt … (3. Staffel: 21. Folge: Karrieregeil)","Die Wahlverwandtschaften (21. Teil)","Johann Wolfgang von Goethe: Die Wahlverwandtschaften (21/22) | Roman","Die Wahlverwandtschaften (21/22) | Roman"}) // six numbers
+    @ValueSource(strings = {"Folge 21","folge 21", "Teil 21", "Hello World Folge 21", "Hello-Folge 21", "World (21)", "World ( 21 )", "Hello World (21/2)", "Staffel 2 Folge 21: Der Tod","Caiman Club III: Justice (21/4) | Neue Staffel des Polit-Thrillers","CAIMAN CLUB - Größtmögliche Zurückhaltung (St.2 Flg.21) (21/4)","Caiman Club (21. Folge: Test)","Papa, Kevin hat gesagt … (3. Staffel: 21. Folge: Karrieregeil)","Die Wahlverwandtschaften (21. Teil)","Johann Wolfgang von Goethe: Die Wahlverwandtschaften (21/22) | Roman","Die Wahlverwandtschaften (21/22) | Roman","Professor van Dusen ermittelt (21. Fall: Professor van Dusen treibt den Teufel aus)"}) // six numbers
     public void episode21(String title) {
-        Assertions.assertEquals("21",dataExtractor.getEpisodeFromTitle(title));
+        Assertions.assertEquals(21,dataExtractor.getEpisodeFromTitle(title));
     }
 
     @Test
