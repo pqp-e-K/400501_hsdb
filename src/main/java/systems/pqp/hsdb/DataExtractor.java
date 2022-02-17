@@ -152,6 +152,19 @@ public class DataExtractor {
         return results;
     }
 
+    private static boolean checkFilter(String text) {
+        text = text.toLowerCase();
+        if(text.contains("lesung") ||
+                text.contains("es liest")||
+                text.contains("es lesen")||
+                text.contains("gelesen von")){
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+
     public static Map<String, GenericObject> removeReadings(Map<String, GenericObject> map) {
         HashSet<String> removeList = new HashSet();
         for(String id : map.keySet()) {
@@ -159,7 +172,7 @@ public class DataExtractor {
             boolean remove = false;
             for(GenericObjectProperty property: object.getProperties(RadioPlayType.TITLE)) {
                 for(String description:property.getDescriptions()) {
-                    if(description.toLowerCase().contains("lesung") || description.toLowerCase().contains("gelesen")){
+                    if(checkFilter(description)){
                         remove = true;
                         break;
                     }
@@ -169,7 +182,7 @@ public class DataExtractor {
 
             for(GenericObjectProperty property: object.getProperties(RadioPlayType.PROGRAMSET_TITLE)) {
                 for(String description:property.getDescriptions()) {
-                    if(description.toLowerCase().contains("lesung") || description.toLowerCase().contains("gelesen")){
+                    if(checkFilter(description)){
                         remove = true;
                         break;
                     }
@@ -179,7 +192,7 @@ public class DataExtractor {
 
             for(GenericObjectProperty property: object.getProperties(RadioPlayType.PROGRAMSET_DESCRIPTION)) {
                 for(String description:property.getDescriptions()) {
-                    if(description.toLowerCase().contains("lesung") || description.toLowerCase().contains("gelesen")){
+                    if(checkFilter(description)){
                         remove = true;
                         break;
                     }
@@ -189,7 +202,7 @@ public class DataExtractor {
 
             for(GenericObjectProperty property: object.getProperties(RadioPlayType.DESCRIPTION)) {
                 for(String description:property.getDescriptions()) {
-                    if(description.toLowerCase().contains("lesung") || description.toLowerCase().contains("gelesen")){
+                    if(checkFilter(description)){
                         remove = true;
                         break;
                     }
