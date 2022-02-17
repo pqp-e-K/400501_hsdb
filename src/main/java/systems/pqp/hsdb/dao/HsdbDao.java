@@ -235,6 +235,10 @@ public class HsdbDao {
             titles.add(title);
             //titles.add(titleWithoutSeasonOrEpisode);
             radioPlay.addDescriptionProperty(RadioPlayType.TITLE, new ArrayList<String>(titles));
+            String episodeTitle = DATA_EXTRACTOR.getEpisodeTitle(title);
+            if(episodeTitle != null){
+                radioPlay.addDescriptionProperty(RadioPlayType.EPISODE_TITLE, episodeTitle);
+            }
 
             Integer episode = DATA_EXTRACTOR.getEpisodeFromTitle(title);
             if(episode != null) {

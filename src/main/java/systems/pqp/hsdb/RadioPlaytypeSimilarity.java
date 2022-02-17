@@ -9,59 +9,64 @@ import java.util.List;
 public class RadioPlaytypeSimilarity extends GenericSimilarity {
 
     public float calcSimilarity(GenericObject hsdbObject, GenericObject audiothekObject) {
+        synchronized (audiothekObject) {
+            boolean cleanPersonInvolved = false;
+            if (null != hsdbObject.getProperties(RadioPlayType.PERSON_INVOLVED)) {
+                List<GenericObjectProperty> hspdbPersonInvolved = hsdbObject.getProperties(RadioPlayType.PERSON_INVOLVED);
+                if (audiothekObject.getProperties(RadioPlayType.PERSON_INVOLVED) != null)
+                    audiothekObject.cleanPropertíes(RadioPlayType.PERSON_INVOLVED);
+                for (GenericObjectProperty genericObjectProperty : hspdbPersonInvolved) {
+                    for (String hspdbPersonName : genericObjectProperty.getDescriptions()) {
+                        if (hspdbPersonName == null || hspdbPersonName.trim().length() == 0)
+                            continue;
 
-        if(null != hsdbObject.getProperties(RadioPlayType.PERSON_INVOLVED)) {
-            List<GenericObjectProperty> hspdbPersonInvolved = hsdbObject.getProperties(RadioPlayType.PERSON_INVOLVED);
-            if(audiothekObject.getProperties(RadioPlayType.PERSON_INVOLVED)!=null)
-                audiothekObject.getProperties(RadioPlayType.PERSON_INVOLVED).clear();
-            for (GenericObjectProperty genericObjectProperty : hspdbPersonInvolved) {
-                for(String hspdbPersonName:genericObjectProperty.getDescriptions()) {
-                    if (hspdbPersonName == null || hspdbPersonName.trim().length() == 0)
-                        continue;
-
-                    //Wenn Name in Titel
-                    for (GenericObjectProperty audiothekGenericObjectProperty : audiothekObject.getProperties(RadioPlayType.TITLE)) {
-                        for (String descrition : audiothekGenericObjectProperty.getDescriptions()) {
-                            if (descrition.contains(hspdbPersonName)) {
-                                audiothekObject.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, hspdbPersonName);
-                                audiothekObject.addDescriptionProperty(RadioPlayType.TITLE,descrition.replaceAll("/*\\s*"+hspdbPersonName + "\\s*:?|\\s*von?\\s*" + hspdbPersonName+"\\s*/*", "").trim());
+                        //Wenn Name in Titel
+                        for (GenericObjectProperty audiothekGenericObjectProperty : audiothekObject.getProperties(RadioPlayType.TITLE)) {
+                            for (String descrition : audiothekGenericObjectProperty.getDescriptions()) {
+                                if (descrition.contains(hspdbPersonName)) {
+                                    cleanPersonInvolved = true;
+                                    audiothekObject.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, hspdbPersonName);
+                                    audiothekObject.addDescriptionProperty(RadioPlayType.TITLE, descrition.replaceAll("/*\\s*" + hspdbPersonName + "\\s*:?|\\s*von?\\s*" + hspdbPersonName + "\\s*/*", "").trim());
+                                }
                             }
                         }
-                    }
 
-                    //Wenn Name in Description
-                    for (GenericObjectProperty audiothekGenericObjectProperty : audiothekObject.getProperties(RadioPlayType.DESCRIPTION)) {
-                        for (String descrition : audiothekGenericObjectProperty.getDescriptions()) {
-                            if (descrition.contains(hspdbPersonName)) {
-                                audiothekObject.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, hspdbPersonName);
+                        //Wenn Name in Description
+                        for (GenericObjectProperty audiothekGenericObjectProperty : audiothekObject.getProperties(RadioPlayType.DESCRIPTION)) {
+                            for (String descrition : audiothekGenericObjectProperty.getDescriptions()) {
+                                if (descrition.contains(hspdbPersonName)) {
+                                    cleanPersonInvolved = true;
+                                    audiothekObject.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, hspdbPersonName);
+                                }
                             }
                         }
-                    }
 
-                    //Wenn Name in ProgrammSet-Titel
-                    for (GenericObjectProperty audiothekGenericObjectProperty : audiothekObject.getProperties(RadioPlayType.PROGRAMSET_TITLE)) {
-                        for (String descrition : audiothekGenericObjectProperty.getDescriptions()) {
-                            if (descrition.contains(hspdbPersonName)) {
-                                audiothekObject.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, hspdbPersonName);
-                                //audiothekObject.addDescriptionProperty(RadioPlayType.PROGRAMSET_TITLE, descrition.replaceAll("/*\\s*"+hspdbPersonName + "\\s*:?|\\s*von?\\s*" + hspdbPersonName+"\\s*/*", "").trim());
+                        //Wenn Name in ProgrammSet-Titel
+                        for (GenericObjectProperty audiothekGenericObjectProperty : audiothekObject.getProperties(RadioPlayType.PROGRAMSET_TITLE)) {
+                            for (String descrition : audiothekGenericObjectProperty.getDescriptions()) {
+                                if (descrition.contains(hspdbPersonName)) {
+                                    cleanPersonInvolved = true;
+                                    audiothekObject.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, hspdbPersonName);
+                                    //audiothekObject.addDescriptionProperty(RadioPlayType.PROGRAMSET_TITLE, descrition.replaceAll("/*\\s*"+hspdbPersonName + "\\s*:?|\\s*von?\\s*" + hspdbPersonName+"\\s*/*", "").trim());
+                                }
                             }
                         }
-                    }
 
-                    //Wenn Name in ProgrammSet-Titel
-                    for (GenericObjectProperty audiothekGenericObjectProperty : audiothekObject.getProperties(RadioPlayType.PROGRAMSET_DESCRIPTION)) {
-                        for (String descrition : audiothekGenericObjectProperty.getDescriptions()) {
-                            if (descrition.contains(hspdbPersonName)) {
-                                audiothekObject.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, hspdbPersonName);
-                                //audiothekObject.addDescriptionProperty(RadioPlayType.TITLE, descrition.replaceAll("/*\\s*"+hspdbPersonName + "\\s*:?|\\s*von?\\s*" + hspdbPersonName+"\\s*/*", "").trim());
+                        //Wenn Name in ProgrammSet-Titel
+                        for (GenericObjectProperty audiothekGenericObjectProperty : audiothekObject.getProperties(RadioPlayType.PROGRAMSET_DESCRIPTION)) {
+                            for (String descrition : audiothekGenericObjectProperty.getDescriptions()) {
+                                if (descrition.contains(hspdbPersonName)) {
+                                    cleanPersonInvolved = true;
+                                    audiothekObject.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, hspdbPersonName);
+                                    //audiothekObject.addDescriptionProperty(RadioPlayType.TITLE, descrition.replaceAll("/*\\s*"+hspdbPersonName + "\\s*:?|\\s*von?\\s*" + hspdbPersonName+"\\s*/*", "").trim());
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-        //Kombination aus Sendungstitel + Episodentitel hinzufügen
+            //Kombination aus Sendungstitel + Episodentitel hinzufügen
         /*if(null != audiothekObject.getProperties(RadioPlayType.PROGRAM_SET_TITLE)) {
             for (GenericObjectProperty sendungGenericObjectProperty : audiothekObject.getProperties(RadioPlayType.PROGRAM_SET_TITLE)) {
                 for(String sendungsTitel:sendungGenericObjectProperty.getDescriptions()) {
@@ -75,7 +80,7 @@ public class RadioPlaytypeSimilarity extends GenericSimilarity {
             }
         }*/
 
-        //Episode anreichern
+            //Episode anreichern
         /*for (GenericObjectProperty genericObjectProperty : audiothekObject.getProperties(RadioPlayType.TITLE)) {
             for(String title:genericObjectProperty.getDescriptions()) {
                 String episode = dataExtractor.getEpisodeFromTitle(title);
@@ -92,10 +97,13 @@ public class RadioPlaytypeSimilarity extends GenericSimilarity {
             }
         }*/
 
-        try {
-            return super.calcSimilarity(hsdbObject, audiothekObject);
-        }finally {
-            audiothekObject.getProperties(RadioPlayType.PERSON_INVOLVED).clear();
+            try {
+                return super.calcSimilarity(hsdbObject, audiothekObject);
+            } finally {
+                if(cleanPersonInvolved) {
+                    audiothekObject.cleanPropertíes(RadioPlayType.PERSON_INVOLVED);
+                }
+            }
         }
     }
 }

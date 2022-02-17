@@ -10,14 +10,31 @@ import java.util.regex.Pattern;
 
 public class DataExtractor {
 
+    static final Pattern numericPattern = Pattern.compile("\\d+");
+
     static final String episodeRegexSearch = "\\s*Folge\\s*:?\\s*(\\d+).*" +
             "|\\s*Flg\\.?\\s*:?\\s*(\\d+).*"+
             "|\\s*Teil\\.?\\s*:?\\s*(\\d+).*"+
+            "|\\s*Teil\\.?\\s*:?\\s*([IVX]+).*"+
             "|\\s*\\(\\s*(\\d+)\\s*\\).*"+
             "|\\s*\\(\\s*(\\d+)\\s*/\\s*\\d+\\s*\\).*"+
             "|(\\d+)\\s*\\.\\s*Folge.*"+
             "|(\\d+)+\\s*\\.\\s*Teil.*"+
             "|(\\d+)\\s*\\.\\s*Fall.*";
+
+    static final String episodeTitleRegexSearch = ".*\\s*Folge\\s*.?\\s*\\d*[/\\d*]*\\s*:\\s*([^()\\[\\]{}]+)[()\\[\\]{}]*"+
+            "|.*\\s*Teil\\s*.?\\s*\\d*[/\\d*]*\\s*:\\s*([^()\\[\\]{}]+)[()\\[\\]{}]*"+
+            "|.*\\s*Flg\\s*.?\\s*\\d*[/\\d*]*\\s*:\\s*([^()\\[\\]{}]+)[()\\[\\]{}]*"+
+            "|.*\\s*Staffel\\s*.?\\s*\\d*[/\\d*]*\\s*:\\s*([^()\\[\\]{}]+)[()\\[\\]{}]*";
+         //   "|\\s*Flg\\.?\\s*:?\\s*(\\d+).*"+
+        //    "|\\s*Teil\\.?\\s*:?\\s*(\\d+).*"+
+        //    "|\\s*Teil\\.?\\s*:?\\s*([IVX]+).*"+
+        //    "|\\s*\\(\\s*(\\d+)\\s*\\).*"+
+        //    "|\\s*\\(\\s*(\\d+)\\s*/\\s*\\d+\\s*\\).*"+
+        //    "|(\\d+)\\s*\\.\\s*Folge.*"+
+        //    "|(\\d+)+\\s*\\.\\s*Teil.*"+
+        //    "|(\\d+)\\s*\\.\\s*Fall.*";
+
 
     static final String episodeRegexRemove = "[,;.]*\\s*Folge\\s*:?\\s*(\\d+)(\\/\\d+)*\\s*:?\\s*" +
             "|[,;.]*\\s*Flg\\.?\\s*:?\\s*(\\d+)"+
@@ -36,14 +53,30 @@ public class DataExtractor {
             "|(\\d+)+\\s*\\.\\s*Staffel\\s*:?\\s*";
 
     static final Pattern episodePattern = Pattern.compile(episodeRegexSearch.toLowerCase());
+    static final Pattern episodeTitlePattern = Pattern.compile(episodeTitleRegexSearch);
     static final Pattern seasonPattern = Pattern.compile(seasonRegexSearch.toLowerCase());
 
     public static Integer getEpisodeFromTitle(String title) {
         Matcher matcher = episodePattern.matcher(title.toLowerCase());
         while (matcher.find()) {
             for(int group=1;group<=matcher.groupCount();group++) {
-                if(matcher.group(group) != null) {
-                    return Integer.valueOf(matcher.group(group));
+                String number = matcher.group(group);
+                if(number != null) {
+                    if(numericPattern.matcher(number).matches()) {
+                        return Integer.valueOf(number);
+                    } else {
+                        Integer result = 0;
+                        for(int i=0;i<number.length();i++) {
+                            if('i'==number.charAt(i))
+                                result++;
+                            else if('v'==number.charAt(i)) {
+                                result = result + 5;
+                            }else if('x'==number.charAt(i)) {
+                                result = result + 10;
+                            }
+                        }
+                        return result;
+                    }
                 }
             }
         }
@@ -58,6 +91,23 @@ public class DataExtractor {
                     return Integer.valueOf(matcher.group(group));
                 }
             }
+        }
+        return null;
+    }
+
+    public static String getEpisodeTitle(String title) {
+       //System.out.println(title);
+        Matcher matcher = episodeTitlePattern.matcher(title);
+        String group;
+        while (matcher.find()) {
+            for(int i=1;i<=matcher.groupCount();i++) {
+                group = matcher.group(i);
+               // System.out.println("group:"+group);
+                if(group != null) {
+                    return group.replaceAll("\\s+", " ").trim();
+                }
+            }
+
         }
         return null;
     }
