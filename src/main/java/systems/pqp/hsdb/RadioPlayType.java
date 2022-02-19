@@ -12,11 +12,11 @@ import de.ard.sad.normdb.similarity.model.generic.GenricObjectType;
 import de.ard.sad.normdb.similarity.model.generic.types.BasicType;
 
 public class RadioPlayType extends BasicType {
-    public static final GenricObjectType TITLE = new GenricObjectType("string.title", 0.9f, 0.0f, true, true, true, 0.7f,false,20f,new RadioPlayTypeTitelVariantSimilarity(new InstitutionNameSimilarity(new ScaledLevensteinWithPartTest(), 2.0d, 0.5d, true, 0.0f), FuzzyStringVariantSimilarity.OutputSetting.MAX,true,true));
+    public static final GenricObjectType TITLE = new GenricObjectType("string.title", 0.9f, 0.0f, true, true, true, 0.7f,false,20f,new RadioPlayTypeTitelVariantSimilarity(new InstitutionNameSimilarity(new ScaledLevensteinWithPartTest(), 2.0d, 0.5d, true, 0.0f), RadioPlayTypeTitelBasicStringVariantSimilarity.OutputSetting.MAX,true,true));
 
     public static final GenricObjectType PROGRAMSET_ID = new GenricObjectType("string.id.programset", 1.0f, 0.0f, false, false, false, new EqualSimilarity());
     public static final GenricObjectType PROGRAMSET_LINK = new GenricObjectType("string.link.programset", 1.0f, 0.0f, false, false, false, new EqualSimilarity());
-    public static final GenricObjectType PROGRAMSET_TITLE =  new GenricObjectType("string.title.programset", 0.9f, 0.0f, false, false, false, 0.7f,false,20f,new EqualSimilarity());
+    public static final GenricObjectType PROGRAMSET_TITLE =  new GenricObjectType("string.title.programset", 0.9f, 0.0f, false, false, false, 0.7f,false,20f,new EqualSimilarity()).setForceSimCalc(true);
     public static final GenricObjectType PROGRAMSET_DESCRIPTION =  new GenricObjectType("string.description.programset", 0.9f, 0.0f, false, false, false, 0.7f,false,20f,new EqualSimilarity());
     public static final GenricObjectType BIO = new GenricObjectType("string.bio", 1.0f, 0.0f, false, false, false, new EqualSimilarity());
     public static final GenricObjectType DESCRIPTION = new GenricObjectType("string.description", 1.0f, 0.0f, false, false, false, new EqualSimilarity());
@@ -24,7 +24,7 @@ public class RadioPlayType extends BasicType {
     public static final GenricObjectType PUBLICATION_DT = new GenricObjectType("string.publication_dt", 0.9f, 0.0f, false, true, false,0.9f, new FuzzyDateSimilarity());
     public static final GenricObjectType PUBLISHER = new GenricObjectType("string.publisher", 1.0f, 0.0f, false, true, true, new BroadcastingCompanySimilarity());
     public static final GenricObjectType LINK = new GenricObjectType("string.link", 1.0f, 0.0f, false, false, false, new EqualSimilarity());
-    public static final GenricObjectType PERSON_INVOLVED = new GenricObjectType("string.person_name.involved", 1.0f, 0.0f, false, true, true, new EqualSimilarity());
+    public static final GenricObjectType PERSON_INVOLVED = new GenricObjectType("string.person_name.involved", 1.0f, 0.0f, false, true, false, new EqualSimilarity());
     public static final GenricObjectType PERSON_ROLE = new GenricObjectType("string.person_name.role", 1.0f, 0.0f, false, false, false, new EqualSimilarity());
 
     public static final GenricObjectType SEASON = new GenricObjectType("number.season", 1.0f, 0.0f, false, false, true,0.9f,true,20f, new EqualSimilarity());

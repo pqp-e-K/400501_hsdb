@@ -227,7 +227,15 @@ public class HsdbDao {
 
         try {
             String title = bean.getTitle().replaceAll("\\s+", " ").trim();
+            String programSet = null;
             if(title.startsWith("[")){
+                //Sendungs-/Programmtitel
+                int idx = title.indexOf("]");
+                if(idx >=0) {
+                    programSet = title.substring(1,idx);
+                }
+
+                //normaler Titel
                 title = title.replaceFirst("\\[","").replaceFirst("\\]"," ").replaceAll("\\s+", " ").trim();
             }
             String titleWithoutSeasonOrEpisode = DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title);
@@ -238,6 +246,10 @@ public class HsdbDao {
             String episodeTitle = DATA_EXTRACTOR.getEpisodeTitle(title);
             if(episodeTitle != null){
                 radioPlay.addDescriptionProperty(RadioPlayType.EPISODE_TITLE, episodeTitle);
+            }
+
+            if(programSet != null) {
+                radioPlay.addDescriptionProperty(RadioPlayType.PROGRAMSET_TITLE, programSet);
             }
 
             Integer episode = DATA_EXTRACTOR.getEpisodeFromTitle(title);

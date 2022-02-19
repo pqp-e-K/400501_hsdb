@@ -12,6 +12,10 @@ public class DataExtractor {
 
     static final Pattern numericPattern = Pattern.compile("\\d+");
 
+    static final String bracketRegexSearch =".*(\\(.*\\)).*"+
+            "|.*(\\{.*\\}).*"+
+            "|.*(\\[.*\\]).*";
+
     static final String episodeRegexSearch = "\\s*Folge\\s*:?\\s*(\\d+).*" +
             "|\\s*Flg\\.?\\s*:?\\s*(\\d+).*"+
             "|\\s*Teil\\.?\\s*:?\\s*(\\d+).*"+
@@ -26,18 +30,10 @@ public class DataExtractor {
             "|.*\\s*Teil\\s*.?\\s*\\d*[/\\d*]*\\s*:\\s*([^()\\[\\]{}]+)[()\\[\\]{}]*"+
             "|.*\\s*Flg\\s*.?\\s*\\d*[/\\d*]*\\s*:\\s*([^()\\[\\]{}]+)[()\\[\\]{}]*"+
             "|.*\\s*Staffel\\s*.?\\s*\\d*[/\\d*]*\\s*:\\s*([^()\\[\\]{}]+)[()\\[\\]{}]*";
-         //   "|\\s*Flg\\.?\\s*:?\\s*(\\d+).*"+
-        //    "|\\s*Teil\\.?\\s*:?\\s*(\\d+).*"+
-        //    "|\\s*Teil\\.?\\s*:?\\s*([IVX]+).*"+
-        //    "|\\s*\\(\\s*(\\d+)\\s*\\).*"+
-        //    "|\\s*\\(\\s*(\\d+)\\s*/\\s*\\d+\\s*\\).*"+
-        //    "|(\\d+)\\s*\\.\\s*Folge.*"+
-        //    "|(\\d+)+\\s*\\.\\s*Teil.*"+
-        //    "|(\\d+)\\s*\\.\\s*Fall.*";
-
 
     static final String episodeRegexRemove = "[,;.]*\\s*Folge\\s*:?\\s*(\\d+)(\\/\\d+)*\\s*:?\\s*" +
             "|[,;.]*\\s*Flg\\.?\\s*:?\\s*(\\d+)"+
+            "|(\\d+)+\\s*\\.\\s*Teil\\s*der\\s*([^()\\[\\]{}]+)[()\\[\\]{}]*"+
             "|[,;.]*\\s*Teil\\.?\\s*:?\\s*(\\d+)"+
             "|[,;.]*\\s*\\(\\s*(\\d+)\\s*\\)"+
             "|[,;.]*\\s*\\(\\s*(\\d+)\\s*/\\s*\\d+\\s*\\)"+
@@ -55,6 +51,7 @@ public class DataExtractor {
     static final Pattern episodePattern = Pattern.compile(episodeRegexSearch.toLowerCase());
     static final Pattern episodeTitlePattern = Pattern.compile(episodeTitleRegexSearch);
     static final Pattern seasonPattern = Pattern.compile(seasonRegexSearch.toLowerCase());
+    static final Pattern bracketPattern = Pattern.compile(bracketRegexSearch);
 
     public static Integer getEpisodeFromTitle(String title) {
         Matcher matcher = episodePattern.matcher(title.toLowerCase());
@@ -96,13 +93,11 @@ public class DataExtractor {
     }
 
     public static String getEpisodeTitle(String title) {
-       //System.out.println(title);
         Matcher matcher = episodeTitlePattern.matcher(title);
         String group;
         while (matcher.find()) {
             for(int i=1;i<=matcher.groupCount();i++) {
                 group = matcher.group(i);
-               // System.out.println("group:"+group);
                 if(group != null) {
                     return group.replaceAll("\\s+", " ").trim();
                 }
@@ -110,6 +105,59 @@ public class DataExtractor {
 
         }
         return null;
+    }
+
+    /**
+     * Boolean Pattern.matcher(String).matches() funktioniert nicht immer, deswegen eigene Implementierung
+     */
+    private static boolean matches(String text, Pattern pattern) {
+        Matcher m = pattern.matcher(text);
+        while (m.find()) {
+            for (int i = 1; i <= m.groupCount(); i++) {
+                String bracketFound = m.group(i);
+                if (bracketFound != null) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static String removeBracketsWithoutSeasonAndEpisode(String text) {
+        int idx;
+        Matcher m = bracketPattern.matcher(text);
+        while (m.find()) {
+            for (int i = 1; i <= m.groupCount(); i++) {
+                String bracketFound = m.group(i);
+                if (bracketFound != null ) {
+                    bracketFound = bracketFound.toLowerCase();
+                    if (matches(bracketFound,episodePattern) ||
+                            matches(bracketFound,seasonPattern) ||
+                            matches(bracketFound,episodePattern)) {
+                        continue;
+                    }
+
+                    //Gefundenen String herauslöschen
+                    StringBuilder sb = new StringBuilder();
+
+                    //Teile vor dem zu löschenden String behalten
+                    idx = text.toLowerCase().lastIndexOf(bracketFound);
+                    if(idx>0)
+                        sb.append(text.substring(0,idx));
+
+                    //Leerzeichen als Platzhalter für zu löschenden String einfügen
+                    sb.append(" ");
+
+                    //Teile nach dem zu löschenden String behalten
+                    if(idx+bracketFound.length() < text.length())
+                        sb.append(text.substring(idx+bracketFound.length()));
+
+                    text = sb.toString();
+                }
+            }
+        }
+
+        return text.replaceAll("\\s+", " ").trim();
     }
 
     public static String getTitleWithoutEpisodeOrSeason(String title) {

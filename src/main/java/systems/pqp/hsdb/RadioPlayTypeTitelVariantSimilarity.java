@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RadioPlayTypeTitelVariantSimilarity extends FuzzyStringVariantSimilarity {
+public class RadioPlayTypeTitelVariantSimilarity extends RadioPlayTypeTitelBasicStringVariantSimilarity {   //TODO Klassen könnten mittlerweile zusammengeführt werden
 
     Pattern p = Pattern.compile("\"([^\"]*)\"");
 
@@ -31,6 +31,7 @@ public class RadioPlayTypeTitelVariantSimilarity extends FuzzyStringVariantSimil
         Set<String> results = new HashSet<>();
         results.add(tileWithoutEpisodeOrSeason);
         results.addAll(super.generateStringVariantsExtended(tileWithoutEpisodeOrSeason));
+        //results.addAll(super.generateStringVariantsExtended(text));
         return results;
     }
 
@@ -57,9 +58,9 @@ public class RadioPlayTypeTitelVariantSimilarity extends FuzzyStringVariantSimil
         return results;
     }
 
-    protected float calcSimilarityIntern(String pattern, String target) {
-        //System.out.println("Filter Compare: "+pattern+" || "+target);
-        //return super.calcSimilarityIntern(pattern, target);
+    protected float calcSimilarityIntern(String pattern, String target, boolean allowContainCheck) {
+        allowContainCheck=false;
+        //System.out.println("Filter Compare: "+pattern+" || "+target +" || allowContainCheck:"+allowContainCheck);
         if(pattern != null && target != null) {
             int patternLength= pattern.length();
             int targetLength = target.length();
@@ -67,15 +68,18 @@ public class RadioPlayTypeTitelVariantSimilarity extends FuzzyStringVariantSimil
             float maxLength = Math.max(patternLength,targetLength);
 
             if(minLength/maxLength < 0.5f) {
-                if(checkContains(pattern, target)) {
+                if(allowContainCheck && checkContains(pattern, target)) {
                     //System.out.println("Filter Compare containe0=true");
                     return 0.9f;
-                }else
+                }else {
+                    //System.out.println("return 0.0");
                     return 0.0f;
+                }
             }else {
-                float result = super.calcSimilarityIntern(pattern, target);
-                if(result<0.99f) {
-                    if(checkContains(pattern, target)) {
+                float result = super.calcSimilarityIntern(pattern, target, allowContainCheck);
+                //System.out.println("result="+result);
+                if(result<0.90f) {
+                    if(allowContainCheck && checkContains(pattern, target)) {
                         //System.out.println("Filter Compare containe=true");
                         return 0.9f;
                     }
@@ -83,13 +87,7 @@ public class RadioPlayTypeTitelVariantSimilarity extends FuzzyStringVariantSimil
                 return result;
             }
         }else {
-            float result = super.calcSimilarityIntern(pattern, target);
-            if(result<0.99f) {
-                if(checkContains(pattern, target)) {
-                    //System.out.println("Filter Compare containe2=true");
-                    return 0.9f;
-                }
-            }
+            float result = super.calcSimilarityIntern(pattern, target,allowContainCheck);
             return result;
         }
     }
