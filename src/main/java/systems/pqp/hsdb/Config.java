@@ -18,6 +18,7 @@ public class Config extends Properties {
     public static final String HSDB_MAPPING_TABLE = "hsdb.mapping.table";
     public static final String THRESHOLD = "check.threshold";
     public static final String NUM_THREADS = "check.threads";
+    public static final String AUDIOTHEK_EXCLUDES = "check.audiothek.excludes";
 
     private static final String PREFIX = "similarity";
     private static final Logger LOG = LogManager.getLogger(Config.class);

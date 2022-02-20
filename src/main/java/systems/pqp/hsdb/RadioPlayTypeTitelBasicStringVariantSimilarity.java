@@ -41,7 +41,7 @@ public class RadioPlayTypeTitelBasicStringVariantSimilarity implements SimAlgori
 
 	public float calcSimilarity(String pattern, String target) {
 		//Originale Strings vergleichen
-		boolean allowContainCheck = true;
+		boolean allowContainCheck = false;
 		float nativeSim = calcSimilarityIntern(pattern,target,allowContainCheck);
 		List<String> alreadyCalculated = new ArrayList<>();
 		String check = pattern+ " <-> "+target +" <-> "+allowContainCheck;
@@ -135,7 +135,7 @@ public class RadioPlayTypeTitelBasicStringVariantSimilarity implements SimAlgori
 		}
 
 		//Verschiedene Patternvarianten vergleichen
-		allowContainCheck = true;
+		allowContainCheck = false;
 		if(extractLeftSidedPart) {
 			patternVariants = patternVariantsExtended;
 			targetVariants = targetVariantsExtended;

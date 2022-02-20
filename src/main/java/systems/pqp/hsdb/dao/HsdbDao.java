@@ -227,29 +227,38 @@ public class HsdbDao {
 
         try {
             String title = bean.getTitle().replaceAll("\\s+", " ").trim();
-            String programSet = null;
+            Set<String> programSet = new HashSet<>();
+
+            //Extrahiere Programmtitel aus Titel & bereinige normalen Titel
             if(title.startsWith("[")){
                 //Sendungs-/Programmtitel
                 int idx = title.indexOf("]");
                 if(idx >=0) {
-                    programSet = title.substring(1,idx);
+                    programSet.add(title.substring(1,idx));
                 }
 
                 //normaler Titel
                 title = title.replaceFirst("\\[","").replaceFirst("\\]"," ").replaceAll("\\s+", " ").trim();
             }
+
+            //RTI als Programmtitel übernehmen
+            String rti = bean.getShowTitle();
+            if(rti != null) {
+                programSet.add(rti);
+            }
+
             String titleWithoutSeasonOrEpisode = DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title);
             Set<String> titles = new HashSet<>();
             titles.add(title);
             //titles.add(titleWithoutSeasonOrEpisode);
-            radioPlay.addDescriptionProperty(RadioPlayType.TITLE, new ArrayList<String>(titles));
+            radioPlay.addDescriptionProperty(RadioPlayType.TITLE, new ArrayList<>(titles));
             String episodeTitle = DATA_EXTRACTOR.getEpisodeTitle(title);
             if(episodeTitle != null){
                 radioPlay.addDescriptionProperty(RadioPlayType.EPISODE_TITLE, episodeTitle);
             }
 
-            if(programSet != null) {
-                radioPlay.addDescriptionProperty(RadioPlayType.PROGRAMSET_TITLE, programSet);
+            if(programSet != null && programSet.size() > 0) {
+                radioPlay.addDescriptionProperty(RadioPlayType.PROGRAMSET_TITLE, new ArrayList<>(programSet));
             }
 
             Integer episode = DATA_EXTRACTOR.getEpisodeFromTitle(title);

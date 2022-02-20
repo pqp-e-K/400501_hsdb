@@ -3,6 +3,7 @@ package systems.pqp.hsdb;
 import de.ard.sad.normdb.similarity.model.generic.GenericModel;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import de.ard.sad.normdb.similarity.model.generic.GenericObjectProperty;
+import de.ard.sad.normdb.similarity.model.generic.GenricObjectType;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -263,6 +264,35 @@ public class DataExtractor {
 
     }
 
+    public static Map<String, GenericObject> removeAudiothekExcludes(Map<String, GenericObject> map,String[] audiothekExcludes) {
+        if(audiothekExcludes != null && audiothekExcludes.length > 0) {
+            //Iteriere über alle Hörspiele und prüfe jede einzeln auf alle Filtereinträge
+            HashSet<String> removeList = new HashSet();
+            for (String id : map.keySet()) {
+                GenericObject object = map.get(id);
+
+                List<String> publisher = getListOfPropertyDescriptions(object, RadioPlayType.PUBLISHER);
+                List<String> programSetTitle = getListOfPropertyDescriptions(object, RadioPlayType.PROGRAMSET_TITLE);
+
+                //Prüfe Bedingungen pro Objekt
+                for (String senderSendungFilter : audiothekExcludes) {
+                    String[] senderSendung = senderSendungFilter.split(":::");
+                    if (publisher != null && publisher.contains(senderSendung[0]) &&
+                            programSetTitle != null && programSetTitle.contains(senderSendung[1])) {
+                        removeList.add(id);
+                        break;
+                    }
+                }
+            }
+
+            for (String id : removeList) {
+                map.remove(id);
+            }
+        }
+
+        return map;
+    }
+
     public static Map<String, GenericObject> removeReadings(Map<String, GenericObject> map) {
         HashSet<String> removeList = new HashSet();
         for(String id : map.keySet()) {
@@ -315,5 +345,16 @@ public class DataExtractor {
         }
 
         return map;
+    }
+
+    public static List<String> getListOfPropertyDescriptions(GenericObject genericObject, GenricObjectType type) {
+        List<String> result = new ArrayList<>();
+
+        for (GenericObjectProperty audiothekGenericObjectProperty : genericObject.getProperties(type)) {
+            for (String descrition : audiothekGenericObjectProperty.getDescriptions()) {
+                result.add(descrition);
+            }
+        }
+        return result;
     }
 }

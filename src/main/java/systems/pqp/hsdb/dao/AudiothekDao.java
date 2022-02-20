@@ -29,6 +29,7 @@ public class AudiothekDao {
     static final int RADIO_PLAY_ID = Integer.parseInt(CONFIG.getProperty("api.category.id"));
     static final String API_URL = CONFIG.getProperty("api.url");
     private static final String LIMIT = CONFIG.getProperty("api.limit","100000");
+    static final String[] AUDIOTHEK_EXCLUDES = CONFIG.getProperty(Config.AUDIOTHEK_EXCLUDES,"").split(",");
     private static final DataHarmonizer DATA_HARMONIZER = new DataHarmonizer();
     private static final DataExtractor DATA_EXTRACTOR = new DataExtractor();
 
@@ -73,6 +74,7 @@ public class AudiothekDao {
         LOG.info("Fetch finished...Num Program-Sets: {}", resultMap.size());
 
         Map<String, GenericObject> results = DataExtractor.removeReadings(resultMap);
+        DataExtractor.removeAudiothekExcludes(resultMap,AUDIOTHEK_EXCLUDES);
         results.putAll(DataExtractor.createVirtualRadioPlayOnProgramSet(results));
 
         LOG.info("Num Program-Sets after removeReadings(): {}", resultMap.size());
@@ -150,8 +152,9 @@ public class AudiothekDao {
         radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, description);
         radioPlay.addDescriptionProperty(RadioPlayType.LINK, linkAudiothek);
 
+        String programSetTitle = null;
         if( programSet.containsKey("title")){
-            String programSetTitle = ((String)programSet.get("title")).replaceAll("\\s+", " ").trim();
+            programSetTitle = ((String)programSet.get("title")).replaceAll("\\s+", " ").trim();
             radioPlay.addDescriptionProperty(RadioPlayType.PROGRAMSET_TITLE, programSetTitle);
         }
 

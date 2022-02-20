@@ -59,7 +59,6 @@ public class RadioPlayTypeTitelVariantSimilarity extends RadioPlayTypeTitelBasic
     }
 
     protected float calcSimilarityIntern(String pattern, String target, boolean allowContainCheck) {
-        allowContainCheck=false;
         //System.out.println("Filter Compare: "+pattern+" || "+target +" || allowContainCheck:"+allowContainCheck);
         if(pattern != null && target != null) {
             int patternLength= pattern.length();
