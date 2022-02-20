@@ -7,15 +7,21 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 public class DataExtractorTest {
     @ParameterizedTest
-    @ValueSource(strings = {"Folge 1","folge 1", "Teil 1", "Hello World Folge 1", "Hello-Folge 1", "World (1)", "World ( 1 )", "Hello World (1/2)", "Staffel 2 Folge 1: Der Tod","Caiman Club III: Justice (1/4) | Neue Staffel des Polit-Thrillers","CAIMAN CLUB - Größtmögliche Zurückhaltung (St.2 Flg.1) (1/4)","Caiman Club (1. Folge: Test)","Papa, Kevin hat gesagt … (3. Staffel: 1. Folge: Karrieregeil)","Die Wahlverwandtschaften (1. Teil)","Johann Wolfgang von Goethe: Die Wahlverwandtschaften (1/2) | Roman","Die Wahlverwandtschaften (1/2) | Roman","Professor van Dusen ermittelt (1. Fall: Professor van Dusen treibt den Teufel aus)","Karl May: Sitara - Land der Sternenblumen (Teil I: Marah Durimeh)"}) // six numbers
+    @ValueSource(strings = {"Folge 1","folge 1", "Teil 1", "Hello World Folge 1", "Hello-Folge 1", "World (1)", "World ( 1 )", "Hello World (1/2)", "Staffel 2 Folge 1: Der Tod","Caiman Club III: Justice (1/4) | Neue Staffel des Polit-Thrillers","CAIMAN CLUB - Größtmögliche Zurückhaltung (St.2 Flg.1) (1/4)","Caiman Club (1. Folge: Test)","Papa, Kevin hat gesagt … (3. Staffel: 1. Folge: Karrieregeil)","Die Wahlverwandtschaften (1. Teil)","Johann Wolfgang von Goethe: Die Wahlverwandtschaften (1/2) | Roman","Die Wahlverwandtschaften (1/2) | Roman","Professor van Dusen ermittelt (1. Fall: Professor van Dusen treibt den Teufel aus)","Karl May: Sitara - Land der Sternenblumen (Teil I: Marah Durimeh)","Ernst Toller: Eine Jugend in Deutschland (1/3: Gefängnis)"}) // six numbers
     public void episode1(String title) {
         Assertions.assertEquals(1,DataExtractor.getEpisodeFromTitle(title));
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"Folge 21","folge 21", "Teil 21", "Hello World Folge 21", "Hello-Folge 21", "World (21)", "World ( 21 )", "Hello World (21/2)", "Staffel 2 Folge 21: Der Tod","Caiman Club III: Justice (21/4) | Neue Staffel des Polit-Thrillers","CAIMAN CLUB - Größtmögliche Zurückhaltung (St.2 Flg.21) (21/4)","Caiman Club (21. Folge: Test)","Papa, Kevin hat gesagt … (3. Staffel: 21. Folge: Karrieregeil)","Die Wahlverwandtschaften (21. Teil)","Johann Wolfgang von Goethe: Die Wahlverwandtschaften (21/22) | Roman","Die Wahlverwandtschaften (21/22) | Roman","Professor van Dusen ermittelt (21. Fall: Professor van Dusen treibt den Teufel aus)","Karl May: Sitara - Land der Sternenblumen (Teil XXI: Marah Durimeh)"}) // six numbers
+    @ValueSource(strings = {"Folge 21","folge 21", "Teil 21", "Hello World Folge 21", "Hello-Folge 21", "World (21)", "World ( 21 )", "Hello World (21/2)", "Staffel 2 Folge 21: Der Tod","Caiman Club III: Justice (21/4) | Neue Staffel des Polit-Thrillers","CAIMAN CLUB - Größtmögliche Zurückhaltung (St.2 Flg.21) (21/4)","Caiman Club (21. Folge: Test)","Papa, Kevin hat gesagt … (3. Staffel: 21. Folge: Karrieregeil)","Die Wahlverwandtschaften (21. Teil)","Johann Wolfgang von Goethe: Die Wahlverwandtschaften (21/22) | Roman","Die Wahlverwandtschaften (21/22) | Roman","Professor van Dusen ermittelt (21. Fall: Professor van Dusen treibt den Teufel aus)","Karl May: Sitara - Land der Sternenblumen (Teil XXI: Marah Durimeh)","Ernst Toller: Eine Jugend in Deutschland (21/22: Gefängnis)"}) // six numbers
     public void episode21(String title) {
         Assertions.assertEquals(21,DataExtractor.getEpisodeFromTitle(title));
+    }
+
+    @Test
+    public void getBasicString() {
+        Assertions.assertEquals("Hallo Welt Eine Geschichte um die Welt",DataExtractor.getBasicString("Hallo Welt[Eine Geschichte um die Welt]"));
+
     }
 
     @Test
@@ -55,10 +61,12 @@ public class DataExtractorTest {
         Assertions.assertEquals("Folge 4/8: Alice - Kulissen",DataExtractor.removeBracketsWithoutSeasonAndEpisode("Folge 4/8: Alice - Kulissen"));
         Assertions.assertEquals("Alice (4. Folge: Kulissen)",DataExtractor.removeBracketsWithoutSeasonAndEpisode("Alice (4. Folge: Kulissen)"));
 
-        Assertions.assertEquals("Jacobs Zimmer (Cambridge und das Cornwall)",DataExtractor.getTitleWithoutEpisodeOrSeason("Jacobs Zimmer (2. Teil: Cambridge und das Cornwall)"));
-        Assertions.assertEquals("Die Faust vor der Sonne",DataExtractor.getTitleWithoutEpisodeOrSeason("Die Faust vor der Sonne (1. Teil)"));
+        Assertions.assertEquals("Jacobs Zimmer (2. Teil: Cambridge und das Cornwall)",DataExtractor.removeBracketsWithoutSeasonAndEpisode("Jacobs Zimmer (2. Teil: Cambridge und das Cornwall)"));
+        Assertions.assertEquals("Die Faust vor der Sonne (1. Teil)",DataExtractor.removeBracketsWithoutSeasonAndEpisode("Die Faust vor der Sonne (1. Teil)"));
 
-        Assertions.assertEquals("Was dein Name verbirgt : KZ-Überlebender jagt NS-Verbrecher | Krimi",DataExtractor.getTitleWithoutEpisodeOrSeason("Was dein Name verbirgt (1/2): KZ-Überlebender jagt NS-Verbrecher | Krimi"));
+        Assertions.assertEquals("Was dein Name verbirgt (1/2): KZ-Überlebender jagt NS-Verbrecher | Krimi",DataExtractor.removeBracketsWithoutSeasonAndEpisode("Was dein Name verbirgt (1/2): KZ-Überlebender jagt NS-Verbrecher | Krimi"));
+
+        Assertions.assertEquals("Ernst Toller: Eine Jugend in Deutschland (3/3: Gefängnis)",DataExtractor.removeBracketsWithoutSeasonAndEpisode("Ernst Toller: Eine Jugend in Deutschland (3/3: Gefängnis)"));
     }
 
 
@@ -89,6 +97,8 @@ public class DataExtractorTest {
         Assertions.assertEquals("Die Faust vor der Sonne",DataExtractor.getTitleWithoutEpisodeOrSeason("Die Faust vor der Sonne (1. Teil)"));
 
         Assertions.assertEquals("Was dein Name verbirgt : KZ-Überlebender jagt NS-Verbrecher | Krimi",DataExtractor.getTitleWithoutEpisodeOrSeason("Was dein Name verbirgt (1/2): KZ-Überlebender jagt NS-Verbrecher | Krimi"));
+
+        Assertions.assertEquals("Ernst Toller: Eine Jugend in Deutschland Gefängnis)",DataExtractor.getTitleWithoutEpisodeOrSeason("Ernst Toller: Eine Jugend in Deutschland (3/3: Gefängnis)"));
     }
 
     @Test
@@ -117,6 +127,7 @@ public class DataExtractorTest {
         Assertions.assertEquals("Dschungelcamp",DataExtractor.getEpisodeTitle("Papa, Kevin hat gesagt … (3. Staffel: 12. Folge: Dschungelcamp)"));
         Assertions.assertEquals("Elitenschweine",DataExtractor.getEpisodeTitle("Papa, Kevin hat gesagt Staffel 3: Elitenschweine"));
 
+        Assertions.assertEquals("Gefängnis",DataExtractor.getEpisodeTitle("Ernst Toller: Eine Jugend in Deutschland (3/3: Gefängnis)"));
         //Assertions.assertEquals("Was dein Name verbirgt : KZ-Überlebender jagt NS-Verbrecher | Krimi",DataExtractor.getEpisodeTitle("Was dein Name verbirgt (1/2): KZ-Überlebender jagt NS-Verbrecher | Krimi"));
     }
 }

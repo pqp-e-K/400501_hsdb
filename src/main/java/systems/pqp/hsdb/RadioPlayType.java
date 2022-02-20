@@ -4,7 +4,6 @@ import de.ard.sad.normdb.similarity.compare.basic.date.FuzzyDateSimilarity;
 import de.ard.sad.normdb.similarity.compare.basic.numeric.FloatPercentageSimilarity;
 import de.ard.sad.normdb.similarity.compare.basic.string.ContainsSimilarity;
 import de.ard.sad.normdb.similarity.compare.basic.string.EqualSimilarity;
-import de.ard.sad.normdb.similarity.compare.basic.string.FuzzyStringVariantSimilarity;
 import de.ard.sad.normdb.similarity.compare.basic.string.ScaledLevensteinWithPartTest;
 import de.ard.sad.normdb.similarity.compare.ndb.institution.BroadcastingCompanySimilarity;
 import de.ard.sad.normdb.similarity.compare.ndb.name.InstitutionNameSimilarity;
@@ -29,6 +28,6 @@ public class RadioPlayType extends BasicType {
 
     public static final GenricObjectType SEASON = new GenricObjectType("number.season", 1.0f, 0.0f, false, false, true,0.9f,true,20f, new EqualSimilarity());
     public static final GenricObjectType EPISODE = new GenricObjectType("number.episode", 1.0f, 0.0f, false, false, true, 0.9f,true,20f,new EqualSimilarity());
-    public static final GenricObjectType EPISODE_TITLE = new GenricObjectType("string.title.episode", 0.9f, 0.0f, false, false, true, 0.9f,true,20f,new ContainsSimilarity());
+    public static final GenricObjectType EPISODE_TITLE = new GenricObjectType("string.title.episode", 0.9f, 0.0f, false, false, true, 0.9f,false,20f,new ContainsSimilarity());
 
 }

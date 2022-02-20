@@ -23,6 +23,7 @@ public class DataExtractor {
             "|\\s*Teil\\.?\\s*:?\\s*([IVX]+).*"+
             "|\\s*\\(\\s*(\\d+)\\s*\\).*"+
             "|\\s*\\(\\s*(\\d+)\\s*/\\s*\\d+\\s*\\).*"+
+            "|\\s*\\(\\s*(\\d+)\\s*/\\s*\\d+\\s*:?.*\\).*"+
             "|(\\d+)\\s*\\.\\s*Folge.*"+
             "|(\\d+)+\\s*\\.\\s*Teil.*"+
             "|(\\d+)\\s*\\.\\s*Fall.*";
@@ -30,7 +31,8 @@ public class DataExtractor {
     static final String episodeTitleRegexSearch = ".*\\s*Folge\\s*.?\\s*\\d*[/\\d*]*\\s*:\\s*([^()\\[\\]{}]+)[()\\[\\]{}]*"+
             "|.*\\s*Teil\\s*.?\\s*\\d*[/\\d*]*\\s*:\\s*([^()\\[\\]{}]+)[()\\[\\]{}]*"+
             "|.*\\s*Flg\\s*.?\\s*\\d*[/\\d*]*\\s*:\\s*([^()\\[\\]{}]+)[()\\[\\]{}]*"+
-            "|.*\\s*Staffel\\s*.?\\s*\\d*[/\\d*]*\\s*:\\s*([^()\\[\\]{}]+)[()\\[\\]{}]*";
+            "|.*\\s*Staffel\\s*.?\\s*\\d*[/\\d*]*\\s*:\\s*([^()\\[\\]{}]+)[()\\[\\]{}]*"+
+            "|.*\\(\\s*\\d+\\s*/\\s*\\d+\\s*:\\s*([^()\\[\\]{}]+)[()\\[\\]{}]*";
 
     static final String episodeRegexRemove = "[,;.]*\\s*Folge\\s*:?\\s*(\\d+)(\\/\\d+)*\\s*:?\\s*" +
             "|[,;.]*\\s*Flg\\.?\\s*:?\\s*(\\d+)"+
@@ -38,6 +40,7 @@ public class DataExtractor {
             "|[,;.]*\\s*Teil\\.?\\s*:?\\s*(\\d+)"+
             "|[,;.]*\\s*\\(\\s*(\\d+)\\s*\\)"+
             "|[,;.]*\\s*\\(\\s*(\\d+)\\s*/\\s*\\d+\\s*\\)"+
+            "|\\s*\\(\\s*(\\d+)\\s*/\\s*\\d+\\s*:?"+ //neu
             "|(\\d+)+\\s*\\.\\s*Folge\\s*:?\\s*"+
             "|(\\d+)+\\s*\\.\\s*Teil\\s*:?\\s*";
 
@@ -356,5 +359,12 @@ public class DataExtractor {
             }
         }
         return result;
+    }
+
+    public static String getBasicString(String text) {
+        if(text != null) {
+            return text.replaceAll("[^A-Za-z0-9äöüßÄÖÜ]"," ").replaceAll("\\s+", " ").trim();
+        }
+        return  text;
     }
 }

@@ -41,8 +41,9 @@ public class RadioPlayTypeTitelBasicStringVariantSimilarity implements SimAlgori
 
 	public float calcSimilarity(String pattern, String target) {
 		//Originale Strings vergleichen
-		boolean allowContainCheck = false;
+		boolean allowContainCheck = true;
 		float nativeSim = calcSimilarityIntern(pattern,target,allowContainCheck);
+		allowContainCheck = false;
 		List<String> alreadyCalculated = new ArrayList<>();
 		String check = pattern+ " <-> "+target +" <-> "+allowContainCheck;
 		alreadyCalculated.add(check);
@@ -239,46 +240,9 @@ public class RadioPlayTypeTitelBasicStringVariantSimilarity implements SimAlgori
 				}
 			}
 
-			//Bereich vor Doppelpunkt extrahieren
-			/*idx = findSeperator(text,": ");
-			if (idx >= 0) {
-				tmp = text.substring(0, idx).trim(); //unnötige Leerzeichen entfernen
-				if (text.equals(tmp) == false  && tmp.length()>0) {
-					tmp = tmp.replaceAll("\\s+", " ").trim();
-					results.add(tmp);
-				}
-			}*/
 		}
 
-		/*
-		//Runde Klammern komplett entfernen
-		String tmp = text.replaceAll("\\(.*\\)", " ");	//sorgt dafür, dass Doppelnamen auch erkannt werden können wenn nur einer der beiden Namen mit - Verbunden
-		tmp = tmp.replaceAll("\\s+", " ").trim();	//unnötige Leerzeichen entfernen
-		if(text.equals(tmp)==false && tmp.length()>0)
-			results.add(tmp);
-
-		//Geschweifte Klammern komplett entfernen
-		tmp = DataExtractor.removeBracketsWithoutSeasonAndEpisode(text,geschweifteKlammernPattern);
-		tmp = text.replaceAll("\\{.*\\}", " ");	//sorgt dafür, dass Doppelnamen auch erkannt werden können wenn nur einer der beiden Namen mit - Verbunden
-		tmp = tmp.replaceAll("\\s+", " ").trim();	//unnötige Leerzeichen entfernen
-		if(text.equals(tmp)==false && tmp.length()>0)
-			results.add(tmp);
-
-		//Eckige Klammern komplett entfernen
-		tmp = DataExtractor.removeBracketsWithoutSeasonAndEpisode(text,eckigeKlammernPattern);
-		tmp = text.replaceAll("\\[.*\\]", " ");	//sorgt dafür, dass Doppelnamen auch erkannt werden können wenn nur einer der beiden Namen mit - Verbunden
-		tmp = tmp.replaceAll("\\s+", " ").trim();	//unnötige Leerzeichen entfernen
-		if(text.equals(tmp)==false && tmp.length()>0)
-			results.add(tmp);
-
-		 */
-
-		//Alle Klammerarten komplett entfernen
 		String tmp = DataExtractor.removeBracketsWithoutSeasonAndEpisode(text);
-		/*tmp = text.replaceAll("\\(.*\\)", " ");	//sorgt dafür, dass Doppelnamen auch erkannt werden können wenn nur einer der beiden Namen mit - Verbunden
-		tmp = tmp.replaceAll("\\{.*\\}", " ");	//sorgt dafür, dass Doppelnamen auch erkannt werden können wenn nur einer der beiden Namen mit - Verbunden
-		tmp = tmp.replaceAll("\\[.*\\]", " ");	//sorgt dafür, dass Doppelnamen auch erkannt werden können wenn nur einer der beiden Namen mit - Verbunden
-		tmp = tmp.replaceAll("\\s+", " ").trim();	//unnötige Leerzeichen entfernen*/
 		if(text.equals(tmp)==false && tmp.length()>0)
 			results.add(tmp);
 

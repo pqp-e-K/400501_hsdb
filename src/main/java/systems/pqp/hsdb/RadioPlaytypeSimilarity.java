@@ -35,12 +35,14 @@ public class RadioPlaytypeSimilarity extends GenericSimilarity {
                     if(LOGGER.isDebugEnabled())
                         LOGGER.debug("Interceptor - Sonderregel 1.1 -> Ignoriere Titelähnlichkeit von " + titleSim);
                     similarities.remove(RadioPlayType.TITLE);
+                    return;   //aktuell wird nur der Titel durch die Regeln auf 0 gesetzt, entsprechend brauchen weitere Regeln nicht geprüft werden
                 } else {
-                    if (checkEpisodeIsPartOfTitle(pattern, target) ||
+                    if (/*checkEpisodeIsPartOfTitle(pattern, target) ||*/
                             checkEpisodeIsPartOfTitle(target, pattern)) {
                         if(LOGGER.isDebugEnabled())
                             LOGGER.debug("Interceptor - Sonderregel 1.2 -> Ignoriere Titelähnlichkeit von " + titleSim);
                         similarities.remove(RadioPlayType.TITLE);
+                        return;   //aktuell wird nur der Titel durch die Regeln auf 0 gesetzt, entsprechend brauchen weitere Regeln nicht geprüft werden
                     }
                 }
             }
@@ -51,16 +53,18 @@ public class RadioPlaytypeSimilarity extends GenericSimilarity {
                     if(LOGGER.isDebugEnabled())
                         LOGGER.debug("Interceptor - Sonderregel 2 -> Ignoriere Titelähnlichkeit von " + titleSim);
                     similarities.remove(RadioPlayType.TITLE);
+                    return;   //aktuell wird nur der Titel durch die Regeln auf 0 gesetzt, entsprechend brauchen weitere Regeln nicht geprüft werden
                 }
             }
 
             //Interceptor - Sonderregel 3 (Wenn Mitwirkende übereinstimmen, Episodennummer übereinstimmt und Episodentitel in Titel vorkommt
             if (isSame(personInvolvedSim) && isSame(episodeNumberSim)) {
-                if (checkEpisodeIsPartOfTitle(pattern, target) ||
+                if (isSame(episodeTitleSim)/*checkEpisodeIsPartOfTitle(pattern, target)*/ ||
                             checkEpisodeIsPartOfTitle(target, pattern)) {
                     if(LOGGER.isDebugEnabled())
                         LOGGER.debug("Interceptor - Sonderregel 3 -> Ignoriere Titelähnlichkeit von " + titleSim);
                     similarities.remove(RadioPlayType.TITLE);
+                    return;   //aktuell wird nur der Titel durch die Regeln auf 0 gesetzt, entsprechend brauchen weitere Regeln nicht geprüft werden
                 }
             }
 
@@ -69,6 +73,7 @@ public class RadioPlaytypeSimilarity extends GenericSimilarity {
                     if(LOGGER.isDebugEnabled())
                         LOGGER.debug("Interceptor - Sonderregel 4 -> Ignoriere Titelähnlichkeit von " + titleSim);
                     similarities.remove(RadioPlayType.TITLE);
+                    return;   //aktuell wird nur der Titel durch die Regeln auf 0 gesetzt, entsprechend brauchen weitere Regeln nicht geprüft werden
             }
 
             //Interceptor - Sonderregel 5 (Wenn (keine Staffelinformationen vorhanden oder gleich) und (Programmtitel gleich) und Episodennnummer gleich und Mitwirkende gleich
@@ -77,8 +82,20 @@ public class RadioPlaytypeSimilarity extends GenericSimilarity {
                     if(LOGGER.isDebugEnabled())
                         LOGGER.debug("Interceptor - Sonderregel 5 -> Ignoriere Titelähnlichkeit von " + titleSim);
                     similarities.remove(RadioPlayType.TITLE);
+                    return;   //aktuell wird nur der Titel durch die Regeln auf 0 gesetzt, entsprechend brauchen weitere Regeln nicht geprüft werden
                 }
             }
+
+            //Interceptor - Sonderregel 6
+            if(isSame(seasonNumberSim) || (pattern.getProperties(RadioPlayType.SEASON).size()==0 && target.getProperties(RadioPlayType.SEASON).size()==0)) {
+                if(isSameOrMissing(programSetTitleSim) && isSame(episodeNumberSim) && isSameOrMissing(personInvolvedSim)) {
+                    if(LOGGER.isDebugEnabled())
+                        LOGGER.debug("Interceptor - Sonderregel 6 -> Ignoriere Titelähnlichkeit von " + titleSim);
+                    similarities.remove(RadioPlayType.TITLE);
+                    return;   //aktuell wird nur der Titel durch die Regeln auf 0 gesetzt, entsprechend brauchen weitere Regeln nicht geprüft werden
+                }
+            }
+
         }
     }
 
@@ -106,9 +123,10 @@ public class RadioPlaytypeSimilarity extends GenericSimilarity {
     private boolean checkEpisodeIsPartOfTitle(GenericObject pattern, GenericObject target) {
         for(GenericObjectProperty episodeTitleProperties:pattern.getProperties(RadioPlayType.EPISODE_TITLE)) {
             for(String episodeTitle:episodeTitleProperties.getDescriptions()) {
+                episodeTitle = DataExtractor.getBasicString(episodeTitle); //Sonderzeichen entfernen für Vergleich
                 for(GenericObjectProperty titleProperties:target.getProperties(RadioPlayType.TITLE)) {
                     for (String title : titleProperties.getDescriptions()) {
-                        if(title.contains(episodeTitle))
+                        if(title != null && DataExtractor.getBasicString(title).contains(episodeTitle))            //Sonderzeichen entfernen aus Titel für Vergleich (TODO nicht ideal hier, da mehrfach aufgerufen) & prüfen, ob enthalten in Text
                             return true;
                     }
                 }
@@ -124,12 +142,13 @@ public class RadioPlaytypeSimilarity extends GenericSimilarity {
         boolean cleanProgramSetTitle = false;
         List<String> backupProgramSetTitleList = DataExtractor.getListOfPropertyDescriptions(audiothekObject,RadioPlayType.PROGRAMSET_TITLE);
 
+        //Gefundene mitwirkende Personen aus HSDB in Audiothek Datensatz suchen
         if (null != hsdbObject.getProperties(RadioPlayType.PERSON_INVOLVED)) {
             List<GenericObjectProperty> hspdbPersonInvolved = hsdbObject.getProperties(RadioPlayType.PERSON_INVOLVED);
             if (audiothekObject.getProperties(RadioPlayType.PERSON_INVOLVED) != null)
                 audiothekObject.cleanPropertíes(RadioPlayType.PERSON_INVOLVED);
             for (GenericObjectProperty genericObjectProperty : hspdbPersonInvolved) {
-                for (String hspdbPersonName : genericObjectProperty.getDescriptions()) {
+                loop:for (String hspdbPersonName : genericObjectProperty.getDescriptions()) {
                     if (hspdbPersonName == null || hspdbPersonName.trim().length() == 0)
                         continue;
 
@@ -140,6 +159,7 @@ public class RadioPlaytypeSimilarity extends GenericSimilarity {
                                 cleanPersonInvolved = true;
                                 audiothekObject.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, hspdbPersonName);
                                 audiothekObject.addDescriptionProperty(RadioPlayType.TITLE, descrition.replaceAll("/*\\s*" + hspdbPersonName + "\\s*:?|\\s*von?\\s*" + hspdbPersonName + "\\s*/*", "").trim());
+                                //continue loop hier nicht, da andernfalls nicht alle Titelvarianten generiert werden
                             }
                         }
                     }
@@ -150,6 +170,7 @@ public class RadioPlaytypeSimilarity extends GenericSimilarity {
                             if (descrition.contains(hspdbPersonName)) {
                                 cleanPersonInvolved = true;
                                 audiothekObject.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, hspdbPersonName);
+                                continue loop;
                             }
                         }
                     }
@@ -161,17 +182,19 @@ public class RadioPlaytypeSimilarity extends GenericSimilarity {
                                 cleanPersonInvolved = true;
                                 audiothekObject.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, hspdbPersonName);
                                 //audiothekObject.addDescriptionProperty(RadioPlayType.PROGRAMSET_TITLE, descrition.replaceAll("/*\\s*"+hspdbPersonName + "\\s*:?|\\s*von?\\s*" + hspdbPersonName+"\\s*/*", "").trim());
+                                continue loop;
                             }
                         }
                     }
 
-                    //Wenn Name in ProgrammSet-Titel
+                    //Wenn Name in ProgrammSet Beschreibung
                     for (GenericObjectProperty audiothekGenericObjectProperty : audiothekObject.getProperties(RadioPlayType.PROGRAMSET_DESCRIPTION)) {
                         for (String descrition : audiothekGenericObjectProperty.getDescriptions()) {
                             if (descrition.contains(hspdbPersonName)) {
                                 cleanPersonInvolved = true;
                                 audiothekObject.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, hspdbPersonName);
                                 //audiothekObject.addDescriptionProperty(RadioPlayType.TITLE, descrition.replaceAll("/*\\s*"+hspdbPersonName + "\\s*:?|\\s*von?\\s*" + hspdbPersonName+"\\s*/*", "").trim());
+                                continue loop;
                             }
                         }
                     }
@@ -179,19 +202,24 @@ public class RadioPlaytypeSimilarity extends GenericSimilarity {
             }
         }
 
+        //Gefundenen ProgramSet Title aus HSDB in Audiothek Datensatz suchen
         if (null != hsdbObject.getProperties(RadioPlayType.PROGRAMSET_TITLE)) {
             List<GenericObjectProperty> hspdbProgramSet = hsdbObject.getProperties(RadioPlayType.PROGRAMSET_TITLE);
             for (GenericObjectProperty genericObjectProperty : hspdbProgramSet) {
-                for (String hspdbProgramSetTitle : genericObjectProperty.getDescriptions()) {
+                loop:for (String hspdbProgramSetTitle : genericObjectProperty.getDescriptions()) {
                     if (hspdbProgramSetTitle == null || hspdbProgramSetTitle.trim().length() == 0)
                         continue;
+
+                    String hspdbProgramSetTitleBasic = DataExtractor.getBasicString(hspdbProgramSetTitle);
 
                     //Wenn Programmset-Titlel aus hspdb ebenfalls im Audiotheks Titel vorkommt -> ProgramSet Title übernehemen
                     for (GenericObjectProperty audiothekGenericObjectProperty : audiothekObject.getProperties(RadioPlayType.TITLE)) {
                         for (String descrition : audiothekGenericObjectProperty.getDescriptions()) {
-                            if (backupProgramSetTitleList.contains(hspdbProgramSetTitle) == false && descrition.contains(hspdbProgramSetTitle)) {
+                            descrition = DataExtractor.getBasicString(descrition);
+                            if (backupProgramSetTitleList.contains(hspdbProgramSetTitle) == false && descrition.contains(hspdbProgramSetTitleBasic)) {
                                 cleanProgramSetTitle = true;
                                 audiothekObject.addDescriptionProperty(RadioPlayType.PROGRAMSET_TITLE, hspdbProgramSetTitle);
+                                continue loop;
                             }
                         }
                     }
@@ -199,19 +227,39 @@ public class RadioPlaytypeSimilarity extends GenericSimilarity {
             }
         }
 
+
+        //Gefundenen Episodentitel aus HSDB in Audiothek Datensatz suchen
         if (null != hsdbObject.getProperties(RadioPlayType.EPISODE_TITLE)) {
+            List<String> hspdbProgramSet = DataExtractor.getListOfPropertyDescriptions(hsdbObject,RadioPlayType.PROGRAMSET_TITLE);
             List<GenericObjectProperty> hspdbEpisode = hsdbObject.getProperties(RadioPlayType.EPISODE_TITLE);
             for (GenericObjectProperty genericObjectProperty : hspdbEpisode) {
-                for (String hspdbEpisodeTitle : genericObjectProperty.getDescriptions()) {
+                loop:for (String hspdbEpisodeTitle : genericObjectProperty.getDescriptions()) {
                     if (hspdbEpisodeTitle == null || hspdbEpisodeTitle.trim().length() == 0)
                         continue;
-
+                    String hspdbEpisodeTitleBasic = DataExtractor.getBasicString(hspdbEpisodeTitle);
+                    boolean specialCondition = false;
+                    for(String programSet:hspdbProgramSet) {
+                        if (programSet.equals(hspdbEpisodeTitle) == false && programSet.contains(hspdbEpisodeTitle)) {
+                            specialCondition = true;
+                            break;
+                        }
+                    }
                     //Wenn Programmset-Titlel aus hspdb ebenfalls im Audiotheks Titel vorkommt -> ProgramSet Title übernehemen
                     for (GenericObjectProperty audiothekGenericObjectProperty : audiothekObject.getProperties(RadioPlayType.TITLE)) {
                         for (String descrition : audiothekGenericObjectProperty.getDescriptions()) {
-                            if (backupEpisodeTitleList.contains(hspdbEpisodeTitle) == false && descrition.contains(hspdbEpisodeTitle)) {
+                            //Sonderbedingung: Wenn gesuchter Episodentitel ebenfalls Bestandteil des Programmtitels ist, dann vorder aus zu prüfendem Audiotheks Titel den Programmtitel entfernen
+                            descrition = DataExtractor.getBasicString(descrition);
+                            if(specialCondition == true) {
+                                for(String programSetTitel:hspdbProgramSet) {
+                                    if(programSetTitel != null && programSetTitel.trim().length()>0)
+                                        descrition = descrition.replaceAll(DataExtractor.getBasicString(programSetTitel)," ");
+                                }
+                                descrition = descrition.replaceAll("\\s+", " ").trim();
+                            }
+                            if (backupEpisodeTitleList.contains(hspdbEpisodeTitle) == false && descrition.contains(hspdbEpisodeTitleBasic)) {
                                 cleanEpisodeTitle = true;
                                 audiothekObject.addDescriptionProperty(RadioPlayType.EPISODE_TITLE, hspdbEpisodeTitle);
+                                continue loop;
                             }
                         }
                     }

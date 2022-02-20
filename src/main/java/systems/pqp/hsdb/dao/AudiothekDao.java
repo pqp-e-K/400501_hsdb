@@ -80,7 +80,6 @@ public class AudiothekDao {
         LOG.info("Num Program-Sets after removeReadings(): {}", resultMap.size());
 
         return results;
-        //return DataExtractor.createVirtualRadioPlayOnProgramSet(results);
     }
 
     /**
@@ -124,16 +123,19 @@ public class AudiothekDao {
         titles.add(title);
 
         radioPlay.addDescriptionProperty(RadioPlayType.TITLE, new ArrayList<String>(titles));
+        //Episodentitel aus Titel lesen
         String episodeTitle = DATA_EXTRACTOR.getEpisodeTitle(title);
         if(episodeTitle != null){
             radioPlay.addDescriptionProperty(RadioPlayType.EPISODE_TITLE, episodeTitle);
         }
 
+        //Episodennummer aus Titel lesen
         Integer episode = DATA_EXTRACTOR.getEpisodeFromTitle(title);
         if(episode != null) {
             radioPlay.addDescriptionProperty(RadioPlayType.EPISODE, String.valueOf(episode));
         }
 
+        //Staffelnummer aus Titel lesen
         Integer season = DATA_EXTRACTOR.getSeasonFromTitle(title);
         if(season != null) {
             radioPlay.addDescriptionProperty(RadioPlayType.SEASON, String.valueOf(season));
