@@ -1,17 +1,16 @@
 package systems.pqp.hsdb;
 
-import de.ard.sad.normdb.similarity.compare.basic.string.FuzzyStringVariantSimilarity;
 import de.ard.sad.normdb.similarity.model.generic.GenricObjectType.SimAlgorithm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RadioPlayTypeTitelVariantSimilarity extends FuzzyStringVariantSimilarity {
-
+public class RadioPlayTypeTitelVariantSimilarity extends RadioPlayTypeTitelBasicStringVariantSimilarity {   //TODO Klassen könnten mittlerweile zusammengeführt werden
+    public static Logger LOGGER = LoggerFactory.getLogger(RadioPlayTypeTitelVariantSimilarity.class);
     Pattern p = Pattern.compile("\"([^\"]*)\"");
 
     public RadioPlayTypeTitelVariantSimilarity(SimAlgorithm basicSimAlgorithm, OutputSetting output) {
@@ -26,12 +25,23 @@ public class RadioPlayTypeTitelVariantSimilarity extends FuzzyStringVariantSimil
         super(basicSimAlgorithm, output, extractLeftSidedPart, compareVariantsAgainstEachOther);
     }
 
+    public Set<String> generateStringVariantsExtended(String text) {
+        String tileWithoutEpisodeOrSeason = DataExtractor.getTitleWithoutEpisodeOrSeason(text);
+        Set<String> results = new HashSet<>();
+        results.add(tileWithoutEpisodeOrSeason);
+        results.addAll(super.generateStringVariantsExtended(tileWithoutEpisodeOrSeason));
+        //results.addAll(super.generateStringVariantsExtended(text));
+        return results;
+    }
+
 
     //Varianten eines Strings erzeugen
-    public List<String> generateStringVariants(String text) {
-        Set<String> results = new HashSet<>(super.generateStringVariants(text));
-        results.addAll(super.generateStringVariants(DataExtractor.getTitleWithoutEpisodeOrSeason(text)));
-        results.addAll(super.generateStringVariants(text.replaceAll("\\(.*\\)", "").replaceAll("\\s+", " ").trim()));
+    public Set<String> generateStringVariants(String text) {
+        String tileWithoutEpisodeOrSeason = DataExtractor.getTitleWithoutEpisodeOrSeason(text);
+        Set<String> results = new HashSet<>();
+        //Set<String> results = new HashSet<>(super.generateStringVariants(text));
+        results.add(tileWithoutEpisodeOrSeason);
+        results.addAll(super.generateStringVariants(tileWithoutEpisodeOrSeason));
 
         if (text != null) {
             Matcher m = p.matcher(text);
@@ -44,11 +54,13 @@ public class RadioPlayTypeTitelVariantSimilarity extends FuzzyStringVariantSimil
             }
         }
 
-        return new ArrayList<String>(results);
+        return results;
     }
 
-    protected float calcSimilarityIntern(String pattern, String target) {
-        //return super.calcSimilarityIntern(pattern, target);
+    protected float calcSimilarityIntern(String pattern, String target, boolean allowContainCheck) {
+        if(LOGGER.isDebugEnabled())
+            LOGGER.debug("Filter Compare: "+pattern+" || "+target +" || allowContainCheck:"+allowContainCheck);
+
         if(pattern != null && target != null) {
             int patternLength= pattern.length();
             int targetLength = target.length();
@@ -56,13 +68,46 @@ public class RadioPlayTypeTitelVariantSimilarity extends FuzzyStringVariantSimil
             float maxLength = Math.max(patternLength,targetLength);
 
             if(minLength/maxLength < 0.5f) {
-                //System.out.println(minLength+"/"+maxLength+" Filter Compare: "+pattern+" || "+target);
-                return 0.0f;
+                if(allowContainCheck && checkContains(pattern, target)) {
+                    if(LOGGER.isDebugEnabled())
+                        LOGGER.debug("Filter Compare 0 return 0.9f");
+                    return 0.9f;
+                }else {
+                    if(LOGGER.isDebugEnabled())
+                        LOGGER.debug("Filter Compare 1 return 0.0f");
+                    return 0.0f;
+                }
             }else {
-                return super.calcSimilarityIntern(pattern, target);
+                float result = super.calcSimilarityIntern(pattern, target, allowContainCheck);
+                //System.out.println("result="+result);
+                if(result<0.90f) {
+                    if(allowContainCheck && checkContains(pattern, target)) {
+                        if(LOGGER.isDebugEnabled())
+                            LOGGER.debug("Filter Compare 3 return 0.9f");
+                        return 0.9f;
+                    }
+                }
+                if(LOGGER.isDebugEnabled())
+                    LOGGER.debug("No Filter -> return "+result);
+                return result;
             }
         }else {
-            return super.calcSimilarityIntern(pattern, target);
+            float result = super.calcSimilarityIntern(pattern, target,allowContainCheck);
+            if(LOGGER.isDebugEnabled())
+                LOGGER.debug("No Filter -> return "+result);
+            return result;
+        }
+    }
+
+    private boolean checkContains(String pattern, String target){
+        if(pattern != null
+                && target != null
+                && pattern.split(" ").length>2
+                && target.split(" ").length>2
+                && (pattern.contains(target) || target.contains(pattern))) {
+            return true;
+        }else {
+            return false;
         }
     }
 }

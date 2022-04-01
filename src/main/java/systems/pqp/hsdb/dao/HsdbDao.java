@@ -227,22 +227,52 @@ public class HsdbDao {
 
         try {
             String title = bean.getTitle().replaceAll("\\s+", " ").trim();
+            Set<String> programSet = new HashSet<>();
+
+            //Extrahiere Programmtitel aus Titel & bereinige normalen Titel
             if(title.startsWith("[")){
+                //Sendungs-/Programmtitel
+                int idx = title.indexOf("]");
+                if(idx >=0) {
+                    programSet.add(title.substring(1,idx));
+                }
+
+                //normaler Titel
                 title = title.replaceFirst("\\[","").replaceFirst("\\]"," ").replaceAll("\\s+", " ").trim();
             }
+
+            //RTI als Programmtitel übernehmen
+            String rti = bean.getShowTitle();
+            if(rti != null) {
+                programSet.add(rti);
+            }
+
             String titleWithoutSeasonOrEpisode = DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title);
             Set<String> titles = new HashSet<>();
             titles.add(title);
             //titles.add(titleWithoutSeasonOrEpisode);
-            radioPlay.addDescriptionProperty(RadioPlayType.TITLE, new ArrayList<String>(titles));
+            radioPlay.addDescriptionProperty(RadioPlayType.TITLE, new ArrayList<>(titles));
+            String episodeTitle = DATA_EXTRACTOR.getEpisodeTitle(title);
+            if(episodeTitle != null){
+                radioPlay.addDescriptionProperty(RadioPlayType.EPISODE_TITLE, episodeTitle);
+            }
 
-            String episode = DATA_EXTRACTOR.getEpisodeFromTitle(title);
+            if(programSet != null && programSet.size() > 0) {
+                radioPlay.addDescriptionProperty(RadioPlayType.PROGRAMSET_TITLE, new ArrayList<>(programSet));
+            }
+
+            Integer episode = DATA_EXTRACTOR.getEpisodeFromTitle(title);
             if(episode != null) {
-                radioPlay.addDescriptionProperty(RadioPlayType.EPISODE, episode);
+                radioPlay.addDescriptionProperty(RadioPlayType.EPISODE, String.valueOf(episode));
+            }
+
+            Integer season = DATA_EXTRACTOR.getSeasonFromTitle(title);
+            if(season != null) {
+                radioPlay.addDescriptionProperty(RadioPlayType.SEASON, String.valueOf(season));
             }
 
             //radioPlay.addDescriptionProperty(RadioPlayType.SHOW_TITLE, bean.getShowTitle());
-            radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
+            //radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
 
             Float duration = bean.getDurationInSeconds();
             if(duration>0.0f)   //Dauer nur hinzufügen, sofern Angabe existiert
@@ -254,7 +284,7 @@ public class HsdbDao {
                     LOG.debug(e.getMessage(), e);
                 }
             }
-            radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
+            //radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
             radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, bean.getDescription());
             //radioPlay.addDescriptionProperty(RadioPlayType.LONG_TITLE, bean.getLongTitle());
             radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, null == bean.getProductionCompany() ? "" : bean.getProductionCompany());

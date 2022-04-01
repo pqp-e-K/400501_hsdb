@@ -29,6 +29,7 @@ public class AudiothekDao {
     static final int RADIO_PLAY_ID = Integer.parseInt(CONFIG.getProperty("api.category.id"));
     static final String API_URL = CONFIG.getProperty("api.url");
     private static final String LIMIT = CONFIG.getProperty("api.limit","100000");
+    static final String[] AUDIOTHEK_EXCLUDES = CONFIG.getProperty(Config.AUDIOTHEK_EXCLUDES,"").split(",");
     private static final DataHarmonizer DATA_HARMONIZER = new DataHarmonizer();
     private static final DataExtractor DATA_EXTRACTOR = new DataExtractor();
 
@@ -73,12 +74,12 @@ public class AudiothekDao {
         LOG.info("Fetch finished...Num Program-Sets: {}", resultMap.size());
 
         Map<String, GenericObject> results = DataExtractor.removeReadings(resultMap);
+        DataExtractor.removeAudiothekExcludes(resultMap,AUDIOTHEK_EXCLUDES);
         results.putAll(DataExtractor.createVirtualRadioPlayOnProgramSet(results));
 
         LOG.info("Num Program-Sets after removeReadings(): {}", resultMap.size());
 
         return results;
-        //return DataExtractor.createVirtualRadioPlayOnProgramSet(results);
     }
 
     /**
@@ -120,18 +121,24 @@ public class AudiothekDao {
 
         HashSet<String> titles = new HashSet<>();
         titles.add(title);
-        //titles.add(DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title));
-        //Überflüssige Klammerung entfernen
 
-        /*if(title.indexOf("(") < title.indexOf(")")) {
-            titles.add(title.replaceAll("\\(.*\\)", "").replaceAll("\\s+", " ").trim());
-        }*/
         radioPlay.addDescriptionProperty(RadioPlayType.TITLE, new ArrayList<String>(titles));
+        //Episodentitel aus Titel lesen
+        String episodeTitle = DATA_EXTRACTOR.getEpisodeTitle(title);
+        if(episodeTitle != null){
+            radioPlay.addDescriptionProperty(RadioPlayType.EPISODE_TITLE, episodeTitle);
+        }
 
-
-        String episode = DATA_EXTRACTOR.getEpisodeFromTitle(title);
+        //Episodennummer aus Titel lesen
+        Integer episode = DATA_EXTRACTOR.getEpisodeFromTitle(title);
         if(episode != null) {
-            radioPlay.addDescriptionProperty(RadioPlayType.EPISODE, episode);
+            radioPlay.addDescriptionProperty(RadioPlayType.EPISODE, String.valueOf(episode));
+        }
+
+        //Staffelnummer aus Titel lesen
+        Integer season = DATA_EXTRACTOR.getSeasonFromTitle(title);
+        if(season != null) {
+            radioPlay.addDescriptionProperty(RadioPlayType.SEASON, String.valueOf(season));
         }
 
         //radioPlay.addDescriptionProperty(RadioPlayType.BIO, description);
@@ -147,8 +154,9 @@ public class AudiothekDao {
         radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, description);
         radioPlay.addDescriptionProperty(RadioPlayType.LINK, linkAudiothek);
 
+        String programSetTitle = null;
         if( programSet.containsKey("title")){
-            String programSetTitle = (String)programSet.get("title");
+            programSetTitle = ((String)programSet.get("title")).replaceAll("\\s+", " ").trim();
             radioPlay.addDescriptionProperty(RadioPlayType.PROGRAMSET_TITLE, programSetTitle);
         }
 
