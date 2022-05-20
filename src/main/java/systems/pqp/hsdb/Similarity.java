@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 /**
  *
  */
-public class SimilarityBean implements Serializable {
+public class Similarity implements Serializable {
 
     private String id;
     private String dukey;
@@ -16,7 +16,7 @@ public class SimilarityBean implements Serializable {
     private LocalDateTime validationDateTime;
     private boolean deleted;
 
-    public SimilarityBean(){}
+    public Similarity(){}
 
     public String getId() {
         return id;
@@ -76,7 +76,7 @@ public class SimilarityBean implements Serializable {
 
     @Override
     public String toString() {
-        return "SimilarityBean{" +
+        return "Similarity{" +
                 "id='" + id + '\'' +
                 ", dukey='" + dukey + '\'' +
                 ", audiothekId='" + audiothekId + '\'' +

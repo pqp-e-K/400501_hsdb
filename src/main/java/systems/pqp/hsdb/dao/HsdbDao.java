@@ -11,6 +11,7 @@ import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import systems.pqp.hsdb.*;
+import systems.pqp.hsdb.types.RadioPlayType;
 
 import java.io.Serializable;
 import java.sql.*;
@@ -80,7 +81,7 @@ public class HsdbDao {
      * Upsert eine List aus SimilarityBean-Objekten
      * @param similarities
      */
-    public void upsertMany(List<SimilarityBean> similarities){
+    public void upsertMany(List<Similarity> similarities){
         try(
                 Connection connection = createConnection();
                 PreparedStatement upsertCheck = connection.prepareStatement(UPSERT_CHECK_QUERY);
@@ -89,17 +90,17 @@ public class HsdbDao {
         ){
             connection.setAutoCommit(false);
             similarities.forEach(
-                    similarityBean -> {
+                    similarity -> {
                         try {
-                            if(checkUpsert(upsertCheck, similarityBean)){
+                            if(checkUpsert(upsertCheck, similarity)){
                                 // update
-                                updateOne(update, similarityBean, true);
+                                updateOne(update, similarity, true);
                             } else {
                                 // insert
-                                insertOne(insert, similarityBean, true);
+                                insertOne(insert, similarity, true);
                             }
                         } catch (SQLException e) {
-                            LOG.error("Upsert similiarity failed for {}", similarityBean, e);
+                            LOG.error("Upsert similiarity failed for {}", similarity, e);
                         }
                     }
             );
@@ -116,7 +117,7 @@ public class HsdbDao {
      * @return
      * @throws SQLException
      */
-    private boolean checkUpsert(PreparedStatement upsertCheck, SimilarityBean bean) throws SQLException {
+    private boolean checkUpsert(PreparedStatement upsertCheck, Similarity bean) throws SQLException {
         upsertCheck.setString(1, bean.getDukey());
         upsertCheck.setString(2, bean.getAudiothekId());
         ResultSet checkResult = upsertCheck.executeQuery();
@@ -134,34 +135,34 @@ public class HsdbDao {
     /**
      *
      * @param update
-     * @param similarityBean
+     * @param similarity
      * @return
      * @throws SQLException
      */
-    public String updateOne(PreparedStatement update, SimilarityBean similarityBean, boolean execute) throws SQLException {
-        update.setFloat(1, similarityBean.getScore());
-        update.setString(2, similarityBean.getAudiothekLink());
-        update.setString(3, similarityBean.getValidationDateTime().toString());
-        update.setString(4, similarityBean.getId());
+    public String updateOne(PreparedStatement update, Similarity similarity, boolean execute) throws SQLException {
+        update.setFloat(1, similarity.getScore());
+        update.setString(2, similarity.getAudiothekLink());
+        update.setString(3, similarity.getValidationDateTime().toString());
+        update.setString(4, similarity.getId());
         if(execute){
             update.executeUpdate();
         }
-        return similarityBean.getId();
+        return similarity.getId();
     }
 
     /**
      *
      * @param insert
-     * @param similarityBean
+     * @param similarity
      * @param execute
      * @throws SQLException
      */
-    public void insertOne(PreparedStatement insert, SimilarityBean similarityBean, boolean execute) throws SQLException {
-        insert.setString(1, similarityBean.getDukey());
-        insert.setString(2, similarityBean.getAudiothekId());
-        insert.setFloat(3, similarityBean.getScore());
-        insert.setString(4, similarityBean.getAudiothekLink());
-        insert.setString(5, similarityBean.getValidationDateTime().toString());
+    public void insertOne(PreparedStatement insert, Similarity similarity, boolean execute) throws SQLException {
+        insert.setString(1, similarity.getDukey());
+        insert.setString(2, similarity.getAudiothekId());
+        insert.setFloat(3, similarity.getScore());
+        insert.setString(4, similarity.getAudiothekLink());
+        insert.setString(5, similarity.getValidationDateTime().toString());
         insert.setBoolean(6, false);
         if(execute) {
             insert.executeUpdate();

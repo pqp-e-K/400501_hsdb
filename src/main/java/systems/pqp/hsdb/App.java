@@ -12,6 +12,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import systems.pqp.hsdb.dao.AudiothekDao;
+import systems.pqp.hsdb.dao.AudiothekDaoV2;
 import systems.pqp.hsdb.dao.HsdbDao;
 
 import java.io.FileNotFoundException;
@@ -90,14 +91,15 @@ public class App {
         Config.Config(cli.getOptionValue("c"));
         LOGGER.info("Lade Daten...");
         Map<String, GenericObject> audiothekObjects;
+        audiothekObjects = new AudiothekDaoV2().getRadioPlays();
         if( cli.hasOption("l") ){
-            Gson gson = new Gson();
+            /*Gson gson = new Gson();
             FileReader reader = new FileReader(cli.getOptionValue("l"));
             Map dumpFile = gson.fromJson(reader, Map.class);
-            audiothekObjects = AudiothekDao.genericObjectsFromJson(dumpFile);
-            LOGGER.info("ARD Audiothek-Daten aus lokaler Datei geladen.");
+            audiothekObjects = AudiothekDaoV2.genericObjectsFromJson(dumpFile);
+            LOGGER.info("ARD Audiothek-Daten aus lokaler Datei geladen."); TODO neu mit einzel files*/
         } else {
-            audiothekObjects = new AudiothekDao().getRadioPlays();
+            audiothekObjects = new AudiothekDaoV2().getRadioPlays();
             LOGGER.info("ARD Audiothek-Daten aus Api geladen.");
         }
         HsdbDao hsdbDao = new HsdbDao();

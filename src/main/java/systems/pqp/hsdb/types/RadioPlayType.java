@@ -1,4 +1,4 @@
-package systems.pqp.hsdb;
+package systems.pqp.hsdb.types;
 
 import de.ard.sad.normdb.similarity.compare.basic.date.FuzzyDateSimilarity;
 import de.ard.sad.normdb.similarity.compare.basic.numeric.FloatPercentageSimilarity;

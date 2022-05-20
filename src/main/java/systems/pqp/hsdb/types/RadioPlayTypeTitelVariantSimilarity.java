@@ -1,8 +1,9 @@
-package systems.pqp.hsdb;
+package systems.pqp.hsdb.types;
 
 import de.ard.sad.normdb.similarity.model.generic.GenricObjectType.SimAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.pqp.hsdb.DataExtractor;
 
 import java.util.HashSet;
 import java.util.Set;

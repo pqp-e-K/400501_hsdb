@@ -5,19 +5,33 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 import de.ard.sad.normdb.similarity.model.generic.GenericModel;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
-import systems.pqp.hsdb.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import systems.pqp.hsdb.Config;
+import systems.pqp.hsdb.DataExtractor;
+import systems.pqp.hsdb.DataHarmonizer;
+import systems.pqp.hsdb.DataHarmonizerException;
+import systems.pqp.hsdb.ImportException;
+import systems.pqp.hsdb.types.RadioPlayType;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-
+@Deprecated
 public class AudiothekDao {
     /**
      *
@@ -197,7 +211,6 @@ public class AudiothekDao {
     }
 
     /**
-     * Methode fuer Chefe
      * Laedt und entpackt api.json.zip aus test/resources/api-examples und gibt genericObjectsFromJson zurueck
      * @param path String
      * @return Map<String, GenericObject>

@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import systems.pqp.hsdb.ImportException;
-import systems.pqp.hsdb.RadioPlayType;
+import systems.pqp.hsdb.types.RadioPlayType;
 
 import java.io.FileWriter;
 import java.io.IOException;

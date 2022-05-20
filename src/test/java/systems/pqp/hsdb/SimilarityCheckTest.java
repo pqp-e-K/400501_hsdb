@@ -5,12 +5,11 @@ import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import systems.pqp.hsdb.dao.AudiothekDao;
 import systems.pqp.hsdb.dao.HsdbDao;
+import systems.pqp.hsdb.types.RadioPlaytypeSimilarity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +17,7 @@ import java.io.InputStreamReader;
 import java.util.Map;
 
 //@Execution(ExecutionMode.CONCURRENT)
+@Deprecated
 class SimilarityCheckTest {
 
     SimilarityCheck similarityCheck = new SimilarityCheck();

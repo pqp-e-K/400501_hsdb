@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
-import systems.pqp.hsdb.SimilarityBean;
+import systems.pqp.hsdb.Similarity;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -78,7 +78,7 @@ public class HsdbDaoTest {
     @Test
     public void upsertMany(){
         HsdbDao dao = new HsdbDao();
-        SimilarityBean bean1 = new SimilarityBean();
+        Similarity bean1 = new Similarity();
         bean1.setAudiothekId("autid 1");
         bean1.setAudiothekLink("link 1");
         bean1.setDukey("1");
@@ -86,7 +86,7 @@ public class HsdbDaoTest {
         LocalDateTime ldt = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
         bean1.setValidationDateTime(ldt);
 
-        SimilarityBean bean2 = new SimilarityBean();
+        Similarity bean2 = new Similarity();
         bean2.setAudiothekId("autid 2");
         bean2.setAudiothekLink("link 2");
         bean2.setDukey("2");
@@ -94,7 +94,7 @@ public class HsdbDaoTest {
         ldt = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
         bean2.setValidationDateTime(ldt);
 
-        SimilarityBean bean3 = new SimilarityBean();
+        Similarity bean3 = new Similarity();
         bean3.setAudiothekId("autid 3");
         bean3.setAudiothekLink("link 3");
         bean3.setDukey("3");
@@ -102,10 +102,10 @@ public class HsdbDaoTest {
         ldt = LocalDateTime.ofInstant(instant, ZoneOffset.UTC);
         bean3.setValidationDateTime(ldt);
 
-        List<SimilarityBean> similarityBeans = List.of(
+        List<Similarity> similarities = List.of(
                 bean1, bean2, bean3
         );
 
-        dao.upsertMany(similarityBeans);
+        dao.upsertMany(similarities);
     }
 }
