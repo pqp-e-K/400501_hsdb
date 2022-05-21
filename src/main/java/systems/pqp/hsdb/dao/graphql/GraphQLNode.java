@@ -72,7 +72,7 @@ public class GraphQLNode {
         String episodePattern = ":episode:";
         if(null != getExternalIds()) {
             for (String _id : getExternalIds()) {
-                if (_id.contains(episodePattern)) {
+                if (null != _id && _id.contains(episodePattern)) {
                     return _id;
                 }
             }

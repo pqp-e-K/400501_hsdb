@@ -1,11 +1,13 @@
 package systems.pqp.hsdb.dao;
 
+import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import systems.pqp.hsdb.ImportException;
 import systems.pqp.hsdb.dao.coreapi.V2ApiPage;
@@ -38,7 +40,8 @@ public class AudiothekDaoV2Test {
 
     @Test
     public void getRadioPlays() throws ImportException, InterruptedException {
-        dao.getRadioPlays();
+        Map<String, GenericObject> plays = dao.getRadioPlays();
+        Assertions.assertFalse(plays.isEmpty());
     }
 
 }

@@ -37,6 +37,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
 public class AudiothekDaoV2 {
@@ -75,6 +76,11 @@ public class AudiothekDaoV2 {
     public Map<String, GenericObject> getRadioPlays() throws ImportException, InterruptedException {
         // get all shows
         List<GraphQLGrouping> graphQLShows = getRadioPlayShowsFromGraphQL();
+
+        // Remove "Lesungen" id: 7258744
+        LOG.info("Entferne Lesungen...");
+        graphQLShows = graphQLShows.stream().filter(show -> !Objects.equals(show.getId(), "7258744")).collect(Collectors.toList());
+
         String v2ApiRequestUrl = API_URL + "/items/episodes/";
 
         Map<String, GenericObject> radioPlays = new HashMap<>();
@@ -122,6 +128,7 @@ public class AudiothekDaoV2 {
             titles.add(title);
         }
         radioPlay.addDescriptionProperty(RadioPlayType.TITLE, new ArrayList<>(titles));
+        radioPlay.addDescriptionProperty(RadioPlayType.LINK, graphQLNode.getSharingUrl());
 
         //Episodennummer aus Titel lesen
         Integer episode = DataExtractor.getEpisodeFromTitle(title);
@@ -153,7 +160,6 @@ public class AudiothekDaoV2 {
             if( null != v2ApiEpisode.getDescription() ) {
                 radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, v2ApiEpisode.getDescription());
             }
-            radioPlay.addDescriptionProperty(RadioPlayType.LINK, v2ApiEpisode.getExternalId());
             radioPlay.addDescriptionProperty(RadioPlayType.PROGRAMSET_ID, v2ApiEpisode.getParentAsset().getId());
             radioPlay.addDescriptionProperty(RadioPlayType.PROGRAMSET_TITLE, v2ApiEpisode.getParentAsset().getTitle());
         }
@@ -377,7 +383,6 @@ public class AudiothekDaoV2 {
             HttpResponse<byte[]> response = httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
             if(response.statusCode() == 200) {
                 String responseAsString = new String(gzipDecompress(response.body()), StandardCharsets.UTF_8);
-                LOG.info(responseAsString);
 
                 Map<String, Object> responseMap = gson.fromJson(responseAsString, Map.class);
                 String programSetListString = gson.toJson(
