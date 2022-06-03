@@ -12,6 +12,14 @@ public class GraphQLNode {
     String sharingUrl;
     GraphQLDocument coreDocument;
 
+    public GraphQLDocument getCoreDocument() {
+        return coreDocument;
+    }
+
+    public void setCoreDocument(GraphQLDocument coreDocument) {
+        this.coreDocument = coreDocument;
+    }
+
     public String getId() {
         return id;
     }
@@ -89,7 +97,7 @@ public class GraphQLNode {
 
     @Override
     public String toString() {
-        return "GraphQLItem{" +
+        return "GraphQLNode{" +
                 "id='" + id + '\'' +
                 ", coreId='" + coreId + '\'' +
                 ", externalIds=" + Arrays.toString(externalIds) +

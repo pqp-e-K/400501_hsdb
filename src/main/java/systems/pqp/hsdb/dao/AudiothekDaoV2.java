@@ -54,19 +54,14 @@ public class AudiothekDaoV2 {
     static final String PROXY_HOST = CONFIG.getProperty("api.v2.proxy.url", null);
     static final String PROXY_PORT = CONFIG.getProperty("api.v2.proxy.port", null);
     static final String LIMIT = CONFIG.getProperty("api.v2.limit","100");
-
     static final String GRAPH_QL_URL = "https://api.ardaudiothek.de/graphql";
-
     static final String HEADER_ACCEPT_CONTENT_TYPE = "application/json";
+    static final String[] AUDIOTHEK_EXCLUDES = CONFIG.getProperty(Config.AUDIOTHEK_EXCLUDES,"").split(",");
 
     String userPass = "deliver:J9Xsbzg4SkHvjvrgpx*c";
     String authorizationString = "Basic " + Base64.encodeBase64String(userPass.getBytes(StandardCharsets.UTF_8));
 
     private static final DataHarmonizer DATA_HARMONIZER = new DataHarmonizer();
-    private static final DataExtractor DATA_EXTRACTOR = new DataExtractor();
-    static final String[] AUDIOTHEK_EXCLUDES = CONFIG.getProperty(Config.AUDIOTHEK_EXCLUDES,"").split(",");
-
-    public AudiothekDaoV2(){}
 
     /**
      *
@@ -78,11 +73,10 @@ public class AudiothekDaoV2 {
         List<GraphQLGrouping> graphQLShows = getRadioPlayShowsFromGraphQL();
 
         // Remove "Lesungen" id: 7258744, 9839150, 47077138, 55964050, 78907202, 93466914
-        String[] readings = CONFIG.getProperty("check.audiothek.excludes","7258744,9839150,47077138,55964050,78907202,93466914").split(",");
-        LOG.info("Entferne Lesungen [{}]",List.of(readings));
+        LOG.info("Entferne Lesungen [{}]",List.of(AUDIOTHEK_EXCLUDES));
         graphQLShows = graphQLShows.stream().filter(
                 show -> {
-                    for( String id: readings ){
+                    for( String id: AUDIOTHEK_EXCLUDES ){
                         if( show.getId().equals(id) ){
                             return false;
                         }
@@ -97,7 +91,7 @@ public class AudiothekDaoV2 {
 
         graphQLShows.forEach(
                 show -> Arrays.stream(show.getItems().getEdges()).sequential().forEach(
-                        edge -> radioPlays.put(edge.getNode().getId(), radioPlayFromApiResults(null, edge.getNode()))
+                        edge -> radioPlays.put(edge.getNode().getId(), radioPlayFromApiResults(edge.getNode()))
                 )
         );
 
@@ -106,26 +100,32 @@ public class AudiothekDaoV2 {
 
     /**
      *
-     * @param v2ApiEpisode
      * @param graphQLNode
      * @return
      */
-    GenericObject radioPlayFromApiResults(V2ApiEpisode v2ApiEpisode, GraphQLNode graphQLNode){
+    GenericObject radioPlayFromApiResults(GraphQLNode graphQLNode){
         GenericModel genericModel = new GenericModel(RadioPlayType.class);
         GenericObject radioPlay = new GenericObject(genericModel,graphQLNode.getId());
 
         HashSet<String> titles = new HashSet<>();
         String title = graphQLNode.getTitle();
         titles.add(title);
-        if(null != v2ApiEpisode){
-            title = v2ApiEpisode.getSelf().getTitle();
-            titles.add(title);
-        }
+
         radioPlay.addDescriptionProperty(RadioPlayType.TITLE, new ArrayList<>(titles));
         radioPlay.addDescriptionProperty(RadioPlayType.LINK, graphQLNode.getSharingUrl());
 
+        if( null == graphQLNode.getGraphQLDocument() ){
+            LOG.warn("Node ohne Document! Id: {}", graphQLNode.getId() );
+            return radioPlay;
+        }
+
         //Episodennummer aus Titel lesen
-        Integer episode = DataExtractor.getEpisodeFromTitle(title);
+        Integer episode;
+        if( null == graphQLNode.getGraphQLDocument().getEpisodeNumber()) {
+            episode = DataExtractor.getEpisodeFromTitle(title);
+        } else {
+            episode = graphQLNode.getGraphQLDocument().getEpisodeNumber();
+        }
         if(episode != null) {
             radioPlay.addDescriptionProperty(RadioPlayType.EPISODE, String.valueOf(episode));
         }
@@ -136,226 +136,23 @@ public class AudiothekDaoV2 {
             radioPlay.addDescriptionProperty(RadioPlayType.SEASON, String.valueOf(season));
         }
 
-        if( null != graphQLNode.getGraphQLDocument()) {
+        if( null != graphQLNode.getGraphQLDocument().getDuration() ) {
             Integer duration = graphQLNode.getGraphQLDocument().getDuration();
             radioPlay.addDescriptionProperty(RadioPlayType.DURATION, String.valueOf(duration));
         }
 
-
-
-
-
-        if( null != v2ApiEpisode ) {
-            try {
-                if(null != v2ApiEpisode.getPremiereDate()) {
-                    LOG.info("Using premiereDate from v2Api.");
-                    radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(v2ApiEpisode.getPremiereDate()));
-                } else {
-                    LOG.info("Using startDate from GraphQL.");
-                    radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(graphQLNode.getGraphQLDocument().getStartDate()));
-                }
-            } catch (DataHarmonizerException e) {
-                LOG.warn(e.getMessage(), e);
-            }
-            radioPlay.addDescriptionProperty(RadioPlayType.DURATION, String.valueOf(v2ApiEpisode.getDuration()));
-            radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, v2ApiEpisode.getProducer());
-            if( null != v2ApiEpisode.getDescription() ) {
-                radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, v2ApiEpisode.getDescription());
-            }
-            radioPlay.addDescriptionProperty(RadioPlayType.PROGRAMSET_ID, v2ApiEpisode.getParentAsset().getId());
-            radioPlay.addDescriptionProperty(RadioPlayType.PROGRAMSET_TITLE, v2ApiEpisode.getParentAsset().getTitle());
+        try {
+            if( null != graphQLNode.getGraphQLDocument().getStartDate() ) radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(graphQLNode.getGraphQLDocument().getStartDate()));
+            if( null != graphQLNode.getGraphQLDocument().getStartDate() ) radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(graphQLNode.getGraphQLDocument().getStartDate()));
+        } catch (DataHarmonizerException e) {
+            LOG.warn(e.getMessage(), e);
         }
+
+        if( null != graphQLNode.getGraphQLDocument().getDuration() ) radioPlay.addDescriptionProperty(RadioPlayType.DURATION, String.valueOf(graphQLNode.getGraphQLDocument().getDuration()));
+        if( null != graphQLNode.getGraphQLDocument().getProducer() ) radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, graphQLNode.getGraphQLDocument().getProducer());
+        if( null != graphQLNode.getGraphQLDocument().getDescription() ) radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, graphQLNode.getGraphQLDocument().getDescription());
 
         return radioPlay;
-    }
-
-    /**
-     *
-     * @return
-     * @throws ImportException
-     */
-    List<V2ApiPage> getAllShowAssetPages() throws ImportException {
-        return getAllPagesForRessource(API_URL+"/groupings/shows?size="+LIMIT, false);
-    }
-
-    /**
-     *
-     * @param pageHref
-     * @param decompress
-     * @return
-     * @throws ImportException
-     */
-    List<V2ApiPage> getAllPagesForRessource(String pageHref, boolean decompress) throws ImportException {
-        List<V2ApiPage> pages = new ArrayList<>();
-        paginateCoreV2Api(pages, pageHref, decompress);
-        return pages;
-    }
-
-    /**
-     *
-     * @param resultList
-     * @param href
-     * @param decompress
-     * @throws ImportException
-     */
-    void paginateCoreV2Api(List<V2ApiPage> resultList, String href, boolean decompress) throws ImportException {
-        V2ApiPage page = getPageFromCoreV2Api(getRawResultFromCoreV2Api(href,decompress));
-        resultList.add(page);
-        if( page.hasNext() ){
-            paginateCoreV2Api(resultList, page.getNext().getHref(),decompress);
-        }
-    }
-
-    /**
-     *
-     * @param rawPage
-     * @return
-     */
-    V2ApiEpisode getEpisodeFromCoreV2Api(String rawPage){
-        return gson.fromJson(rawPage, V2ApiEpisode.class);
-    }
-
-    /**
-     *
-     * @param rawPage
-     * @return
-     */
-    V2ApiPage getPageFromCoreV2Api(String rawPage){
-        return gson.fromJson(rawPage, V2ApiPage.class);
-    }
-
-    /**
-     *
-     * @param pageHref
-     * @param decompress
-     * @return
-     * @throws ImportException
-     */
-    String getRawResultFromCoreV2Api(String pageHref, boolean decompress) throws ImportException {
-        LOG.info("GET "+pageHref);
-        String[] parts = pageHref.split("/");
-        String id = parts[parts.length-1];
-
-        // id in cache?
-        String path = "api-cache/"+id.replace(":","_")+".json";
-        File file = new File(path);
-        if(file.exists()){
-            LOG.info("Loading {} from cache!", id);
-            try {
-                return Files.readString(Path.of(path));
-            } catch (IOException e) {
-                LOG.error("Failed to load {} from cache!", id);
-                LOG.error(e.getMessage(),e);
-            }
-        }
-
-        HttpClient httpClient;
-        if(null != PROXY_HOST) {
-            LOG.info("Proxy set to {}", PROXY_HOST);
-            httpClient = HttpClient.newBuilder()
-                    .version(HttpClient.Version.HTTP_1_1)
-                    .followRedirects(HttpClient.Redirect.ALWAYS)
-                    .connectTimeout(Duration.ofSeconds(20))
-                    .proxy(ProxySelector.of(new InetSocketAddress(PROXY_HOST, Integer.parseInt(PROXY_PORT))))
-                    .build();
-        } else {
-            httpClient = HttpClient.newHttpClient();
-        }
-
-        if( httpClient.proxy().isPresent() ){
-            LOG.info("Using proxy...");
-        }
-
-        HttpRequest request =  HttpRequest.newBuilder()
-                .uri(URI.create(pageHref))
-                .header(HttpHeaders.CONTENT_TYPE,HEADER_ACCEPT_CONTENT_TYPE)
-                .header(HttpHeaders.ACCEPT,HEADER_ACCEPT_CONTENT_TYPE)
-                .header(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate, br")
-                .header(HttpHeaders.AUTHORIZATION, authorizationString)
-                .GET()
-                .build();
-        try {
-            HttpResponse<byte[]> response = httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
-            if(response.statusCode() == 200) {
-                byte[] encodedResponse;
-                if(decompress) {
-                    encodedResponse = gzipDecompress(response.body());
-                } else {
-                    encodedResponse = response.body();
-                }
-                return new String(encodedResponse, StandardCharsets.UTF_8);
-            } else {
-                throw new ImportException("Response: " + response.statusCode());
-            }
-        } catch (IOException | InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new ImportException(e.getMessage(), e);
-        }
-    }
-
-
-    /**
-     *
-     * @return
-     * @throws ImportException
-     * @throws IOException
-     */
-    String fetchFromCoreV2Api() throws ImportException, InterruptedException {
-        return this.fetchFromCoreV2Api(API_URL, RESOURCE, false);
-    }
-
-    /**
-     *
-     * @param apiUrl
-     * @param resource
-     * @param decompress
-     * @return
-     * @throws IOException
-     * @throws ImportException
-     */
-    String fetchFromCoreV2Api(String apiUrl, String resource, boolean decompress) throws ImportException, InterruptedException {
-        LOG.info("GET {}", resource);
-        HttpClient httpClient;
-        if(null != PROXY_HOST) {
-            LOG.info("Proxy set to {}", PROXY_HOST);
-            httpClient = HttpClient.newBuilder()
-                    .version(HttpClient.Version.HTTP_1_1)
-                    .followRedirects(HttpClient.Redirect.ALWAYS)
-                    .connectTimeout(Duration.ofSeconds(20))
-                    .proxy(ProxySelector.of(new InetSocketAddress(PROXY_HOST, Integer.parseInt(PROXY_PORT))))
-                    .build();
-        } else {
-            httpClient = HttpClient.newHttpClient();
-        }
-
-        if( httpClient.proxy().isPresent() ){
-            LOG.info("Using proxy...");
-        }
-
-        HttpRequest request =  HttpRequest.newBuilder()
-                .uri(URI.create(apiUrl + "/" + resource))
-                .header(HttpHeaders.CONTENT_TYPE,HEADER_ACCEPT_CONTENT_TYPE)
-                .header(HttpHeaders.ACCEPT,HEADER_ACCEPT_CONTENT_TYPE)
-                .header(HttpHeaders.ACCEPT_ENCODING, "gzip, deflate, br")
-                .header(HttpHeaders.AUTHORIZATION, authorizationString)
-                .GET()
-                .build();
-        try {
-            HttpResponse<byte[]> response = httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
-            if(response.statusCode() == 200) {
-                byte[] encodedResponse;
-                if(decompress) {
-                    encodedResponse = gzipDecompress(response.body());
-                } else {
-                    encodedResponse = response.body();
-                }
-                return new String(encodedResponse, StandardCharsets.UTF_8);
-            } else {
-                throw new ImportException("Response: " + response.statusCode());
-            }
-        } catch (IOException e ) {
-            throw new ImportException(e.getMessage(), e);
-        }
     }
 
     /**
@@ -417,15 +214,4 @@ public class AudiothekDaoV2 {
         }
     }
 
-    void cacheEpisode(V2ApiEpisode episode){
-        if( null != episode ){
-            try {
-                FileWriter writer = new FileWriter("api-cache/"+episode.getSelf().getId().replace(":","_")+".json");
-                gson.toJson(episode,writer);
-                writer.flush();
-            } catch (IOException e) {
-                LOG.error(e.getMessage(),e);
-            }
-        }
-    }
 }
