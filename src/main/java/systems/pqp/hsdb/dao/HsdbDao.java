@@ -286,7 +286,9 @@ public class HsdbDao {
                 }
             }
             //radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
-            radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, dto.getDescription());
+            if(null != dto.getDescription()) {
+                radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, dto.getDescription());
+            }
             //radioPlay.addDescriptionProperty(RadioPlayType.LONG_TITLE, bean.getLongTitle());
             radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, null == dto.getProductionCompany() ? "" : dto.getProductionCompany());
             radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, null == dto.getAbrfa() ? "" : dto.getAbrfa());
@@ -535,7 +537,7 @@ public class HsdbDao {
 
         @Override
         public String toString() {
-            return "VollinfoBean{" +
+            return "VollinfoDTO{" +
                     "category='" + category + '\'' +
                     ", author='" + author + '\'' +
                     ", translator='" + translator + '\'' +
@@ -553,6 +555,7 @@ public class HsdbDao {
                     ", abrfa='" + abrfa + '\'' +
                     '}';
         }
+
     }
 
     /**
@@ -586,7 +589,7 @@ public class HsdbDao {
 
         @Override
         public String toString() {
-            return "Actor{" +
+            return "ActorDTO{" +
                     "rolle='" + rolle + '\'' +
                     ", name='" + name + '\'' +
                     '}';

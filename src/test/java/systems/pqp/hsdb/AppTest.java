@@ -6,6 +6,7 @@ import org.apache.commons.cli.ParseException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import systems.pqp.hsdb.dao.AudiothekDao;
+import systems.pqp.hsdb.dao.AudiothekDaoV2;
 import systems.pqp.hsdb.dao.HsdbDao;
 
 import java.io.FileNotFoundException;
@@ -59,7 +60,7 @@ public class AppTest {
 
     @Test //großer integrations-test -- dauert derzeit bei 10 threads ca. 4h
     public void similarityCheck() throws ImportException, ExecutionException, InterruptedException {
-        AudiothekDao audiothekDao = new AudiothekDao();
+        AudiothekDaoV2 audiothekDao = new AudiothekDaoV2();
         Map<String, GenericObject> audiothekObjects = audiothekDao.getRadioPlays();
 
         HsdbDao hsdbDao = new HsdbDao();

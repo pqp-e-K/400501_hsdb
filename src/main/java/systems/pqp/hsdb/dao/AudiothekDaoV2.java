@@ -1,6 +1,5 @@
 package systems.pqp.hsdb.dao;
 
-import com.google.common.net.HttpHeaders;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.ard.sad.normdb.similarity.model.generic.GenericModel;
@@ -13,23 +12,17 @@ import systems.pqp.hsdb.DataExtractor;
 import systems.pqp.hsdb.DataHarmonizer;
 import systems.pqp.hsdb.DataHarmonizerException;
 import systems.pqp.hsdb.ImportException;
-import systems.pqp.hsdb.dao.coreapi.V2ApiEpisode;
-import systems.pqp.hsdb.dao.coreapi.V2ApiPage;
 import systems.pqp.hsdb.dao.graphql.GraphQLGrouping;
 import systems.pqp.hsdb.dao.graphql.GraphQLNode;
 import systems.pqp.hsdb.types.RadioPlayType;
 
 import java.io.*;
-import java.net.InetSocketAddress;
-import java.net.ProxySelector;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -49,17 +42,9 @@ public class AudiothekDaoV2 {
     private static final Config CONFIG = Config.Config();
     private static final Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
 
-    static final String API_URL = CONFIG.getProperty("api.v2.url");
-    static final String RESOURCE = CONFIG.getProperty("api.v2.resource");
-    static final String PROXY_HOST = CONFIG.getProperty("api.v2.proxy.url", null);
-    static final String PROXY_PORT = CONFIG.getProperty("api.v2.proxy.port", null);
-    static final String LIMIT = CONFIG.getProperty("api.v2.limit","100");
     static final String GRAPH_QL_URL = "https://api.ardaudiothek.de/graphql";
     static final String HEADER_ACCEPT_CONTENT_TYPE = "application/json";
     static final String[] AUDIOTHEK_EXCLUDES = CONFIG.getProperty(Config.AUDIOTHEK_EXCLUDES,"").split(",");
-
-    String userPass = "deliver:J9Xsbzg4SkHvjvrgpx*c";
-    String authorizationString = "Basic " + Base64.encodeBase64String(userPass.getBytes(StandardCharsets.UTF_8));
 
     private static final DataHarmonizer DATA_HARMONIZER = new DataHarmonizer();
 
@@ -91,7 +76,12 @@ public class AudiothekDaoV2 {
 
         graphQLShows.forEach(
                 show -> Arrays.stream(show.getItems().getEdges()).sequential().forEach(
-                        edge -> radioPlays.put(edge.getNode().getId(), radioPlayFromApiResults(edge.getNode()))
+                        edge -> {
+                            GenericObject genericObject = radioPlayFromApiResults(edge.getNode());
+                            if( null != genericObject ) { // null wenn kein coreDocument oder keine duration
+                                radioPlays.put(edge.getNode().getId(), genericObject);
+                            }
+                        }
                 )
         );
 
@@ -116,8 +106,15 @@ public class AudiothekDaoV2 {
 
         if( null == graphQLNode.getGraphQLDocument() ){
             LOG.warn("Node ohne Document! Id: {}", graphQLNode.getId() );
-            return radioPlay;
+            return null;
         }
+
+        if( null == graphQLNode.getGraphQLDocument().getDuration() ) {
+            LOG.warn("Item ohne Duration! Id: {}", graphQLNode.getId() );
+            return null;
+        }
+        Integer duration = graphQLNode.getGraphQLDocument().getDuration();
+        radioPlay.addDescriptionProperty(RadioPlayType.DURATION, String.valueOf(duration));
 
         //Episodennummer aus Titel lesen
         Integer episode;
@@ -134,11 +131,6 @@ public class AudiothekDaoV2 {
         Integer season = DataExtractor.getSeasonFromTitle(title);
         if(season != null) {
             radioPlay.addDescriptionProperty(RadioPlayType.SEASON, String.valueOf(season));
-        }
-
-        if( null != graphQLNode.getGraphQLDocument().getDuration() ) {
-            Integer duration = graphQLNode.getGraphQLDocument().getDuration();
-            radioPlay.addDescriptionProperty(RadioPlayType.DURATION, String.valueOf(duration));
         }
 
         try {
