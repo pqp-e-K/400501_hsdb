@@ -38,7 +38,7 @@ public class HsdbDaoTest {
         /*
          * Test für VollInfoBean-Methode getDurationInSeconds()
          */
-        HsdbDao.VollinfoBean bean = new HsdbDao.VollinfoBean();
+        HsdbDao.VollinfoDTO bean = new HsdbDao.VollinfoDTO();
         bean.setDuration("10"); // 10 minutes
         Assertions.assertEquals(600F, bean.getDurationInSeconds(),0F);
         bean.setDuration("5'40"); // 5 minutes 40 seconds -> 340s
@@ -50,7 +50,7 @@ public class HsdbDaoTest {
     @Test
     public void beanFromXmlString() throws JsonProcessingException {
         HsdbDao hsdbDao = new HsdbDao();
-        HsdbDao.VollinfoBean bean = hsdbDao.beanFromXmlString(xml);
+        HsdbDao.VollinfoDTO bean = hsdbDao.dtoFromXmlString(xml);
         Assertions.assertNotNull(bean);
         System.out.println(bean);
     }
@@ -68,9 +68,9 @@ public class HsdbDaoTest {
         String id = "123";
 
         HsdbDao hsdbDao = new HsdbDao();
-        HsdbDao.VollinfoBean bean = hsdbDao.beanFromXmlString(xml);
+        HsdbDao.VollinfoDTO bean = hsdbDao.dtoFromXmlString(xml);
 
-        GenericObject radioPlay = hsdbDao.genericObjectFromBean(id, bean);
+        GenericObject radioPlay = hsdbDao.genericObjectFromDTO(id, bean);
         Assertions.assertNotNull(radioPlay);
         System.out.println(radioPlay);
     }

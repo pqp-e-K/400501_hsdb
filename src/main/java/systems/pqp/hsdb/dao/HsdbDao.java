@@ -193,13 +193,13 @@ public class HsdbDao {
                     String xml = resultSet.getString(2);
                     String publisher = resultSet.getString(3);
 
-                    VollinfoBean bean = beanFromXmlString(xml);
+                    VollinfoDTO bean = dtoFromXmlString(xml);
 
                     if( LOG.isDebugEnabled() ){
                         LOG.debug(bean.toString());
                     }
 
-                    GenericObject radioPlay = genericObjectFromBean(
+                    GenericObject radioPlay = genericObjectFromDTO(
                             id,
                             bean
                     );
@@ -217,17 +217,17 @@ public class HsdbDao {
     }
 
     /**
-     * Parsed VollinfoBean zu GenericObject
+     * Parsed VollinfoDTO zu GenericObject
      * @param id String, DUKEY
-     * @param bean VollinfoBean
+     * @param dto VollinfoDTO
      * @return GenericObject
      */
-    GenericObject genericObjectFromBean(String id, VollinfoBean bean){
+    GenericObject genericObjectFromDTO(String id, VollinfoDTO dto){
         GenericModel genericModel = new GenericModel(RadioPlayType.class);
         GenericObject radioPlay = new GenericObject(genericModel,id);
 
         try {
-            String title = bean.getTitle().replaceAll("\\s+", " ").trim();
+            String title = dto.getTitle().replaceAll("\\s+", " ").trim();
             Set<String> programSet = new HashSet<>();
 
             //Extrahiere Programmtitel aus Titel & bereinige normalen Titel
@@ -243,7 +243,7 @@ public class HsdbDao {
             }
 
             //RTI als Programmtitel übernehmen
-            String rti = bean.getShowTitle();
+            String rti = dto.getShowTitle();
             if(rti != null) {
                 programSet.add(rti);
             }
@@ -275,27 +275,27 @@ public class HsdbDao {
             //radioPlay.addDescriptionProperty(RadioPlayType.SHOW_TITLE, bean.getShowTitle());
             //radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
 
-            Float duration = bean.getDurationInSeconds();
+            Float duration = dto.getDurationInSeconds();
             if(duration>0.0f)   //Dauer nur hinzufügen, sofern Angabe existiert
-                radioPlay.addDescriptionProperty(RadioPlayType.DURATION, String.valueOf(bean.getDurationInSeconds()));
+                radioPlay.addDescriptionProperty(RadioPlayType.DURATION, String.valueOf(dto.getDurationInSeconds()));
             try {
-                radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(bean.getPublicationDt()));
+                radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(dto.getPublicationDt()));
             } catch (DataHarmonizerException e) {
                 if(LOG.isDebugEnabled()){
                     LOG.debug(e.getMessage(), e);
                 }
             }
             //radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
-            radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, bean.getDescription());
+            radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, dto.getDescription());
             //radioPlay.addDescriptionProperty(RadioPlayType.LONG_TITLE, bean.getLongTitle());
-            radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, null == bean.getProductionCompany() ? "" : bean.getProductionCompany());
-            radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, null == bean.getAbrfa() ? "" : bean.getAbrfa());
-            radioPlay.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, bean.getInvolvedNames());
-            radioPlay.addDescriptionProperty(RadioPlayType.PERSON_ROLE, bean.getActorRoles());
+            radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, null == dto.getProductionCompany() ? "" : dto.getProductionCompany());
+            radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, null == dto.getAbrfa() ? "" : dto.getAbrfa());
+            radioPlay.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, dto.getInvolvedNames());
+            radioPlay.addDescriptionProperty(RadioPlayType.PERSON_ROLE, dto.getActorRoles());
 
         } catch (IllegalArgumentException exception){
             LOG.error(exception.getMessage(), exception);
-            LOG.info(bean.toString());
+            LOG.info(dto.toString());
         }
         return radioPlay;
     }
@@ -306,17 +306,17 @@ public class HsdbDao {
      * @return VollinfoBean
      * @throws JsonProcessingException
      */
-    VollinfoBean beanFromXmlString(String xml) throws JsonProcessingException {
+    VollinfoDTO dtoFromXmlString(String xml) throws JsonProcessingException {
 
-        return XML_MAPPER.readValue(xml, VollinfoBean.class);
+        return XML_MAPPER.readValue(xml, VollinfoDTO.class);
 
     }
 
     /**
-     * Java-Bean für VOLLINFO-XML-Daten in hs_du-Tabelle
+     * DTO für VOLLINFO-XML-Daten in hs_du-Tabelle
      */
     @JsonIgnoreProperties(ignoreUnknown = true)
-    static class VollinfoBean implements Serializable {
+    static class VollinfoDTO implements Serializable {
 
         @JsonProperty("KAT")
         private String category = "";
@@ -337,7 +337,7 @@ public class HsdbDao {
         @JsonProperty("INH")
         private String description = "";
         @JsonProperty("SPR")
-        private List<ActorBean> actors = new ArrayList<>();
+        private List<ActorDTO> actors = new ArrayList<>();
         @JsonProperty("REG")
         private String director = "";
         @JsonProperty("ESD")
@@ -349,7 +349,7 @@ public class HsdbDao {
         @JsonProperty("ABRFA")
         private String abrfa = "";
 
-        public VollinfoBean(){}
+        public VollinfoDTO(){}
 
         public String getCategory() {
             return category;
@@ -423,11 +423,11 @@ public class HsdbDao {
             this.description = description;
         }
 
-        public List<ActorBean> getActors() {
+        public List<ActorDTO> getActors() {
             return actors;
         }
 
-        public void setActors(List<ActorBean> actors) {
+        public void setActors(List<ActorDTO> actors) {
             this.actors = actors;
         }
 
@@ -501,11 +501,11 @@ public class HsdbDao {
         }
 
         public List<String> getActorNames() {
-            return getActors().stream().map(ActorBean::getName).filter(name -> !"".equals(name)).collect(Collectors.toList());
+            return getActors().stream().map(ActorDTO::getName).filter(name -> !"".equals(name)).collect(Collectors.toList());
         }
 
         public List<String> getActorRoles() {
-            return getActors().stream().map(ActorBean::getRolle).filter(name -> !"".equals(name)).collect(Collectors.toList());
+            return getActors().stream().map(ActorDTO::getRolle).filter(name -> !"".equals(name)).collect(Collectors.toList());
         }
 
         public List<String> getInvolvedNames() {
@@ -559,14 +559,14 @@ public class HsdbDao {
      *
      */
     @JsonIgnoreProperties(ignoreUnknown = true)
-    static class ActorBean implements Serializable{
+    static class ActorDTO implements Serializable{
         @JacksonXmlProperty(isAttribute = true)
         private String rolle = "";
         @JsonProperty("NAM")
         @JacksonXmlText
         private String name = "";
 
-        public ActorBean(){}
+        public ActorDTO(){}
 
         public String getRolle() {
             return rolle;
