@@ -77,33 +77,27 @@ public class AudiothekDaoV2 {
         // get all shows
         List<GraphQLGrouping> graphQLShows = getRadioPlayShowsFromGraphQL();
 
-        // Remove "Lesungen" id: 7258744
-        LOG.info("Entferne Lesungen...");
-        graphQLShows = graphQLShows.stream().filter(show -> !Objects.equals(show.getId(), "7258744")).collect(Collectors.toList());
+        // Remove "Lesungen" id: 7258744, 9839150, 47077138, 55964050, 78907202, 93466914
+        String[] readings = CONFIG.getProperty("check.audiothek.excludes","7258744,9839150,47077138,55964050,78907202,93466914").split(",");
+        LOG.info("Entferne Lesungen [{}]",List.of(readings));
+        graphQLShows = graphQLShows.stream().filter(
+                show -> {
+                    for( String id: readings ){
+                        if( show.getId().equals(id) ){
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+        ).collect(Collectors.toList());
 
-        String v2ApiRequestUrl = API_URL + "/items/episodes/";
+        //String v2ApiRequestUrl = API_URL + "/items/publications/";
 
         Map<String, GenericObject> radioPlays = new HashMap<>();
 
         graphQLShows.forEach(
                 show -> Arrays.stream(show.getItems().getEdges()).sequential().forEach(
-                        edge -> {
-                            try {
-                                String externalId = edge.getNode().getEpisodeId();
-                                V2ApiEpisode episode = null;
-                                if(null != externalId) {
-                                    episode = getEpisodeFromCoreV2Api(getRawResultFromCoreV2Api(
-                                                    v2ApiRequestUrl + externalId,
-                                                    true
-                                            )
-                                    );
-                                    cacheEpisode(episode);
-                                }
-                                radioPlays.put(edge.getNode().getId(), radioPlayFromApiResults(episode, edge.getNode()));
-                            } catch (ImportException e) {
-                                LOG.error(e.getMessage(), e);
-                            }
-                        }
+                        edge -> radioPlays.put(edge.getNode().getId(), radioPlayFromApiResults(null, edge.getNode()))
                 )
         );
 
@@ -147,10 +141,18 @@ public class AudiothekDaoV2 {
             radioPlay.addDescriptionProperty(RadioPlayType.DURATION, String.valueOf(duration));
         }
 
+
+
+
+
         if( null != v2ApiEpisode ) {
             try {
                 if(null != v2ApiEpisode.getPremiereDate()) {
+                    LOG.info("Using premiereDate from v2Api.");
                     radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(v2ApiEpisode.getPremiereDate()));
+                } else {
+                    LOG.info("Using startDate from GraphQL.");
+                    radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(graphQLNode.getGraphQLDocument().getStartDate()));
                 }
             } catch (DataHarmonizerException e) {
                 LOG.warn(e.getMessage(), e);
@@ -370,7 +372,7 @@ public class AudiothekDaoV2 {
         HttpRequest.BodyPublisher body;
         try {
             body = HttpRequest.BodyPublishers.ofFile(
-                    Path.of(Objects.requireNonNull(loader.getResource("graphqlrequest.json")).getFile()));
+                    Path.of(Objects.requireNonNull(loader.getResource("graphqlrequest_4.json")).getFile()));
             HttpClient httpClient  = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(GRAPH_QL_URL))
