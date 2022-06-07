@@ -1,11 +1,10 @@
 package systems.pqp.hsdb.dao.graphql;
 
-public class GraphQLGrouping {
+public class GraphQLPublisherGrouping {
 
     private String id;
-    private String title;
+    private String organizationName;
     private String coreId;
-    private GraphQLItem items;
 
     public String getId() {
         return id;
@@ -15,12 +14,12 @@ public class GraphQLGrouping {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getOrganizationName() {
+        return organizationName;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
     }
 
     public String getCoreId() {
@@ -31,21 +30,12 @@ public class GraphQLGrouping {
         this.coreId = coreId;
     }
 
-    public GraphQLItem getItems() {
-        return items;
-    }
-
-    public void setItems(GraphQLItem items) {
-        this.items = items;
-    }
-
     @Override
     public String toString() {
         return "GraphQLShow{" +
                 "id='" + id + '\'' +
-                ", title='" + title + '\'' +
-                ", coreId='" + coreId + '\'' +
-                ", episodes=" + items +
+                ", organizationName='" + organizationName + '\'' +
+                ", coreId='" + coreId +
                 '}';
     }
 }

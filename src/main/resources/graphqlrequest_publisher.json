@@ -1,0 +1,5 @@
+{
+"query": "{\n  publicationServices {\n    nodes {\n      id\n      coreId\n      organizationName\n    }\n  }\n}\n\n",
+"variables": null,
+"operationName": null
+}
