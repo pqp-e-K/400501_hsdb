@@ -235,7 +235,9 @@ public class HsdbDao {
                 //Sendungs-/Programmtitel
                 int idx = title.indexOf("]");
                 if(idx >=0) {
-                    programSet.add(title.substring(1,idx));
+                    String programSetTitle = title.substring(1,idx).replaceAll("\\s+", " ").trim();
+                    if(programSetTitle.length() > 0)
+                        programSet.add(programSetTitle);
                 }
 
                 //normaler Titel
@@ -245,7 +247,9 @@ public class HsdbDao {
             //RTI als Programmtitel übernehmen
             String rti = dto.getShowTitle();
             if(rti != null) {
-                programSet.add(rti);
+                rti = rti.replaceAll("\\s+", " ").trim();
+                if(rti.length() > 0)
+                    programSet.add(rti.trim());
             }
 
             String titleWithoutSeasonOrEpisode = DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title);
