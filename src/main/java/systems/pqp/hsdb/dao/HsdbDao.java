@@ -74,6 +74,13 @@ public class HsdbDao {
             MAPPING_TABLE_COL_VALIDATION_DATE,
             MAPPING_TABLE_COL_DELETED
     );
+    private static final String VALIDATE_STMT = String.format(
+            "UPDATE %s.%s SET %s = ? WHERE %s = ?",
+            DB,
+            MAPPING_TAB,
+            MAPPING_TABLE_COL_DELETED,
+            MAPPING_TABLE_COL_AUDIOTHEK_ID
+    );
 
     public HsdbDao() {}
 
@@ -100,7 +107,7 @@ public class HsdbDao {
                                 insertOne(insert, similarity, true);
                             }
                         } catch (SQLException e) {
-                            LOG.error("Upsert similiarity failed for {}", similarity, e);
+                            LOG.error("Upsert fehlgeschlagen für {}", similarity, e);
                         }
                     }
             );
@@ -113,20 +120,20 @@ public class HsdbDao {
     /**
      *
      * @param upsertCheck
-     * @param bean
+     * @param similarity
      * @return
      * @throws SQLException
      */
-    private boolean checkUpsert(PreparedStatement upsertCheck, Similarity bean) throws SQLException {
-        upsertCheck.setString(1, bean.getDukey());
-        upsertCheck.setString(2, bean.getAudiothekId());
+    private boolean checkUpsert(PreparedStatement upsertCheck, Similarity similarity) throws SQLException {
+        upsertCheck.setString(1, similarity.getDukey());
+        upsertCheck.setString(2, similarity.getAudiothekId());
         ResultSet checkResult = upsertCheck.executeQuery();
         if( checkResult.getFetchSize() > 1 ){ // kann eigentlich nie passieren
-            LOG.warn("Mehrere Einträge in {}.{} gefunden für {},{}",DB,MAPPING_TAB,bean.getDukey(),bean.getAudiothekId());
+            LOG.warn("Mehrere Einträge in {}.{} gefunden für {},{}",DB,MAPPING_TAB,similarity.getDukey(),similarity.getAudiothekId());
         }
 
         if( checkResult.next() ){
-            bean.setId(checkResult.getString(1));
+            similarity.setId(checkResult.getString(1));
             return true;
         }
         return false;
@@ -148,6 +155,47 @@ public class HsdbDao {
             update.executeUpdate();
         }
         return similarity.getId();
+    }
+
+    /**
+     * @param validate PreparedStatement
+     * @param id String
+     * @return id String
+     * @throws SQLException
+     */
+    public String validateOne(PreparedStatement validate, String id, boolean execute) throws SQLException {
+        validate.setBoolean(1, true);
+        validate.setString(2, id);
+        if(execute){
+            validate.executeUpdate();
+        }
+        return id;
+    }
+
+    /**
+     *
+     * @param ids
+     */
+    public void validateMany(List<String> ids){
+        try(
+                Connection connection = createConnection();
+                PreparedStatement validate = connection.prepareStatement(VALIDATE_STMT);
+        ){
+            connection.setAutoCommit(false);
+            ids.forEach(
+                    id -> {
+                        try {
+                            validateOne(validate, id, true);
+                        } catch (SQLException e) {
+                            LOG.error("Validate fehlgeschlagen für {}", id, e);
+                        }
+                    }
+            );
+            connection.commit();
+            LOG.info("Datenbank aktualisiert.");
+        } catch (SQLException throwables) {
+            LOG.error(throwables.getMessage(), throwables);
+        }
     }
 
     /**
@@ -252,7 +300,7 @@ public class HsdbDao {
                     programSet.add(rti.trim());
             }
 
-            String titleWithoutSeasonOrEpisode = DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title);
+            //String titleWithoutSeasonOrEpisode = DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title);
             Set<String> titles = new HashSet<>();
             titles.add(title);
             //titles.add(titleWithoutSeasonOrEpisode);

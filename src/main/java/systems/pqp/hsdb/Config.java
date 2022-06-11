@@ -1,5 +1,6 @@
 package systems.pqp.hsdb;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,6 +20,7 @@ public class Config extends Properties {
     public static final String THRESHOLD = "check.threshold";
     public static final String NUM_THREADS = "check.threads";
     public static final String AUDIOTHEK_EXCLUDES = "check.audiothek.excludes";
+    public static final String AUDIOTHEK_EXCLUDE_UNPUBLISHED = "check.audiothek.exclude.unpublished";
 
     private static final String PREFIX = "similarity";
     private static final Logger LOG = LogManager.getLogger(Config.class);
@@ -44,23 +46,19 @@ public class Config extends Properties {
         try {
             load(path);
         } catch (IOException e) {
-            LOG.error("FAILED to load configuration!", e);
+            LOG.error("Fehler beim Laden der Konfigurationsdatei!", e);
         }
     }
 
     private void load(String path) throws IOException {
         Properties tmp = new Properties();
         if( null == path ){
-            if( LOG.isDebugEnabled() ) {
-                LOG.debug("Loading config from classpath ...");
-            }
+            LOG.info("Lade Konfiguration aus Classpath ...");
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             InputStream stream = loader.getResourceAsStream("application.properties");
             tmp.load(stream);
         } else {
-            if( LOG.isDebugEnabled() ) {
-                LOG.debug(String.format("Loading config from path: %1$s ...", path));
-            }
+            LOG.log(Level.INFO, "Lade Konfiguration aus Pfad: {} ...", path);
             try(FileInputStream inputStream = new FileInputStream(path)){
                 tmp.load(inputStream);
             }
@@ -71,7 +69,5 @@ public class Config extends Properties {
                 put(key.split(PREFIX + ".")[1], tmp.getProperty(key));
             }
         }
-
-        LOG.info("FINISHED loading configuration");
     }
 }

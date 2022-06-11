@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.ard.sad.normdb.similarity.model.generic.GenericModel;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import systems.pqp.hsdb.Config;
@@ -59,21 +60,7 @@ public class AudiothekDaoV2 {
         // get all shows
         List<GraphQLRadioPlayShowGrouping> graphQLShows = getRadioPlayShowsFromGraphQL();
 
-        // Remove "Lesungen" id: 7258744, 9839150, 47077138, 55964050, 78907202, 93466914
-        LOG.info("Entferne Lesungen [{}]",List.of(AUDIOTHEK_EXCLUDES));
-        graphQLShows = graphQLShows.stream().filter(
-                show -> {
-                    for( String id: AUDIOTHEK_EXCLUDES ){
-                        if( show.getId().equals(id) ){
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-        ).collect(Collectors.toList());
-
         //String v2ApiRequestUrl = API_URL + "/items/publications/";
-
         Map<String, GenericObject> radioPlays = new HashMap<>();
 
         graphQLShows.forEach(
@@ -92,38 +79,43 @@ public class AudiothekDaoV2 {
 
     /**
      *
-     * @param graphQLNode
+     * @param graphQLEpisode
      * @return
      */
-    GenericObject radioPlayFromApiResults(GraphQLNode graphQLNode, HashMap<String,GraphQLPublisherGrouping> publisherLookUp){
+    GenericObject radioPlayFromApiResults(GraphQLNode graphQLEpisode, HashMap<String,GraphQLPublisherGrouping> publisherLookUp){
         GenericModel genericModel = new GenericModel(RadioPlayType.class);
-        GenericObject radioPlay = new GenericObject(genericModel,graphQLNode.getId());
+        GenericObject radioPlay = new GenericObject(genericModel,graphQLEpisode.getId());
 
         HashSet<String> titles = new HashSet<>();
-        String title = graphQLNode.getTitle();
+        String title = graphQLEpisode.getTitle();
         titles.add(title);
 
         radioPlay.addDescriptionProperty(RadioPlayType.TITLE, new ArrayList<>(titles));
-        radioPlay.addDescriptionProperty(RadioPlayType.LINK, graphQLNode.getSharingUrl());
+        radioPlay.addDescriptionProperty(RadioPlayType.LINK, graphQLEpisode.getSharingUrl());
 
-        if( null == graphQLNode.getGraphQLDocument() ){
-            LOG.warn("Node ohne Document! Id: {}", graphQLNode.getId() );
+        if( null == graphQLEpisode.getGraphQLDocument() ){
+            LOG.warn("Node ohne Document! Id: {}", graphQLEpisode.getId() );
             return null;
         }
 
-        if( null == graphQLNode.getGraphQLDocument().getDuration() ) {
-            LOG.warn("Item ohne Duration! Id: {}", graphQLNode.getId() );
+        if( null == graphQLEpisode.getGraphQLDocument().getDuration() ) {
+            LOG.warn("Document ohne Duration! Id: {}", graphQLEpisode.getId() );
             return null;
         }
-        Integer duration = graphQLNode.getGraphQLDocument().getDuration();
+
+        if( Boolean.parseBoolean(CONFIG.getProperty(Config.AUDIOTHEK_EXCLUDE_UNPUBLISHED,"true")) && !graphQLEpisode.getGraphQLDocument().getPublished() ){
+            LOG.log(Level.DEBUG, "Ignoriere nicht veröffentlichte Episode.");
+            return null;
+        }
+        Integer duration = graphQLEpisode.getGraphQLDocument().getDuration();
         radioPlay.addDescriptionProperty(RadioPlayType.DURATION, String.valueOf(duration));
 
         //Episodennummer aus Titel lesen
         Integer episode;
-        if( null == graphQLNode.getGraphQLDocument().getEpisodeNumber()) {
+        if( null == graphQLEpisode.getGraphQLDocument().getEpisodeNumber()) {
             episode = DataExtractor.getEpisodeFromTitle(title);
         } else {
-            episode = graphQLNode.getGraphQLDocument().getEpisodeNumber();
+            episode = graphQLEpisode.getGraphQLDocument().getEpisodeNumber();
         }
         if(episode != null) {
             radioPlay.addDescriptionProperty(RadioPlayType.EPISODE, String.valueOf(episode));
@@ -136,20 +128,42 @@ public class AudiothekDaoV2 {
         }
 
         try {
-            if( null != graphQLNode.getGraphQLDocument().getStartDate() ) radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(graphQLNode.getGraphQLDocument().getStartDate()));
-            if( null != graphQLNode.getGraphQLDocument().getStartDate() ) radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(graphQLNode.getGraphQLDocument().getStartDate()));
+            if( null != graphQLEpisode.getGraphQLDocument().getStartDate() ) radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(graphQLEpisode.getGraphQLDocument().getStartDate()));
+            if( null != graphQLEpisode.getGraphQLDocument().getStartDate() ) radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(graphQLEpisode.getGraphQLDocument().getStartDate()));
         } catch (DataHarmonizerException e) {
             LOG.warn(e.getMessage(), e);
         }
 
-        if( null != graphQLNode.getGraphQLDocument().getDuration() ) radioPlay.addDescriptionProperty(RadioPlayType.DURATION, String.valueOf(graphQLNode.getGraphQLDocument().getDuration()));
-        if( null != graphQLNode.getGraphQLDocument().getProducer() ) {
-            GraphQLPublisherGrouping publisherGrouping = publisherLookUp.get(graphQLNode.getGraphQLDocument().getPublisherId());
+        if( null != graphQLEpisode.getGraphQLDocument().getDuration() ) radioPlay.addDescriptionProperty(RadioPlayType.DURATION, String.valueOf(graphQLEpisode.getGraphQLDocument().getDuration()));
+        if( null != graphQLEpisode.getGraphQLDocument().getProducer() ) {
+            GraphQLPublisherGrouping publisherGrouping = publisherLookUp.get(graphQLEpisode.getGraphQLDocument().getPublisherId());
             radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, publisherGrouping.getOrganizationName());
         }
-        if( null != graphQLNode.getGraphQLDocument().getDescription() ) radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, graphQLNode.getGraphQLDocument().getDescription());
+        if( null != graphQLEpisode.getGraphQLDocument().getDescription() ) radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, graphQLEpisode.getGraphQLDocument().getDescription());
 
         return radioPlay;
+    }
+
+    /**
+     *
+     * @return
+     * @throws ImportException
+     * @throws InterruptedException
+     */
+    public List<String> getUnpublishedRadioPlayIds() throws ImportException, InterruptedException {
+        List<GraphQLRadioPlayShowGrouping> graphQLShows = getRadioPlayShowsFromGraphQL();
+        List<String> graphQLEpisodeIds = new ArrayList<>();
+        graphQLShows.forEach(
+                show -> Arrays.stream(show.getItems().getEdges()).sequential().forEach(
+                        edge -> {
+                            if(null == edge.getNode().getGraphQLDocument() || !edge.getNode().getGraphQLDocument().getPublished()){
+                                graphQLEpisodeIds.add(edge.getNode().getId());
+                            }
+                        }
+                )
+        );
+        LOG.info("Nicht veröffentlichte Hörspiele in Audiothek: {}", graphQLEpisodeIds.size());
+        return graphQLEpisodeIds;
     }
 
     /**
@@ -160,13 +174,13 @@ public class AudiothekDaoV2 {
      */
     List<GraphQLRadioPlayShowGrouping> getRadioPlayShowsFromGraphQL() throws InterruptedException, ImportException {
 
-        LOG.info("Get radio plays from GraphQL...");
+        LOG.info("Lese Hörspiele aus GraphQL...");
 
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         HttpRequest.BodyPublisher body;
         try {
-            body = HttpRequest.BodyPublishers.ofFile(
-                    Path.of(Objects.requireNonNull(loader.getResource("graphqlrequest_4.json")).getFile()));
+            InputStream inputStream = loader.getResourceAsStream("graphqlrequest_shows.json");
+            body = HttpRequest.BodyPublishers.ofString(new String(inputStream.readAllBytes(), StandardCharsets.UTF_8));
             HttpClient httpClient  = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(GRAPH_QL_URL))
@@ -187,24 +201,43 @@ public class AudiothekDaoV2 {
                                 .get("editorialCategory"))
                                 .get("programSetsList")
                 );
-                return Arrays.asList(gson.fromJson(programSetListString, GraphQLRadioPlayShowGrouping[].class));
+                List<GraphQLRadioPlayShowGrouping> graphQLShows = Arrays.asList(gson.fromJson(programSetListString, GraphQLRadioPlayShowGrouping[].class));
+                // Remove "Lesungen" id: 7258744, 9839150, 47077138, 55964050, 78907202, 93466914
+                LOG.info("Entferne Lesungen [{}]",List.of(AUDIOTHEK_EXCLUDES));
+                graphQLShows = graphQLShows.stream().filter(
+                        show -> {
+                            for( String id: AUDIOTHEK_EXCLUDES ){
+                                if( show.getId().equals(id) ){
+                                    return false;
+                                }
+                            }
+                            return true;
+                        }
+                ).collect(Collectors.toList());
+                return graphQLShows;
             } else {
-                throw new ImportException("Get readio plays from GraphQL failed! " + response.statusCode());
+                throw new ImportException("Fehler beim Lesen der GraphQL " + response.statusCode());
             }
         } catch (IOException exception){
             throw new ImportException(exception.getMessage(), exception);
         }
     }
 
+    /**
+     *
+     * @return
+     * @throws InterruptedException
+     * @throws ImportException
+     */
     List<GraphQLPublisherGrouping> getPublisherFromGraphQL() throws InterruptedException, ImportException {
 
-        LOG.info("Get publisher from GraphQL...");
+        LOG.info("Lese Publisher aus GraphQL...");
 
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         HttpRequest.BodyPublisher body;
         try {
-            body = HttpRequest.BodyPublishers.ofFile(
-                    Path.of(Objects.requireNonNull(loader.getResource("graphqlrequest_publisher.json")).getFile()));
+            InputStream inputStream = loader.getResourceAsStream("graphqlrequest_publisher.json");
+            body = HttpRequest.BodyPublishers.ofString(new String(inputStream.readAllBytes(), StandardCharsets.UTF_8));
             HttpClient httpClient  = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(GRAPH_QL_URL))
@@ -227,7 +260,7 @@ public class AudiothekDaoV2 {
                 );
                 return Arrays.asList(gson.fromJson(publisherListString, GraphQLPublisherGrouping[].class));
             } else {
-                throw new ImportException("Get readio plays from GraphQL failed! " + response.statusCode());
+                throw new ImportException("Fehler beim Lesen der GraphQL! " + response.statusCode());
             }
         } catch (IOException exception){
             throw new ImportException(exception.getMessage(), exception);

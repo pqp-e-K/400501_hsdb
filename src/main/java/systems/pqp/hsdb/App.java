@@ -1,6 +1,5 @@
 package systems.pqp.hsdb;
 
-import com.google.gson.Gson;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -11,14 +10,14 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import systems.pqp.hsdb.dao.AudiothekDao;
 import systems.pqp.hsdb.dao.AudiothekDaoV2;
 import systems.pqp.hsdb.dao.HsdbDao;
 
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+
 
 public class App {
 
@@ -32,41 +31,57 @@ public class App {
     public static CommandLine createCLI(String[] args) {
         cliOptions = new Options();
         Option help = new Option("help", "Zeige diese Ansicht");
-        Option configFilePath   = Option.builder("c").longOpt("config-file")
-                .argName("file")
-                .hasArg(true)
-                .required(true)
-                .desc("Pfad zur Konfigurationsdatei, z.B. /pfad/zur/datei/application.properties")
-                .type(String.class)
-                .build();
-        Option validate = Option.builder("validate")
+        Option similarityCheck = Option.builder("l").longOpt("link")
                 .required(false)
                 .optionalArg(true)
-                .desc("Vorhandende Verknüpfungen überprüfen und ggf. aus DB-Tabelle entfernen?")
+                .desc("Hauptfunktion. HSDB-Audiothek-Abgleich starten")
                 .type(Boolean.class)
                 .build();
-        Option useLocalApiDump = Option.builder("l").longOpt("local-audiothek-dump-file")
+        Option validateLinks = Option.builder("validate")
+                .required(false)
+                .optionalArg(true)
+                .desc("Vorhandende Audiothek-Verknüpfungen überprüfen und ggf. aus DB-Tabelle entfernen")
+                .type(Boolean.class)
+                .build();
+        Option configFilePath = Option.builder("c").longOpt("config-file")
+                .argName("file")
+                .hasArg(true)
+                .required(false)
+                .optionalArg(true)
+                .desc("Pfad zur Konfigurationsdatei, z.B. /pfad/zur/datei/application.properties . " +
+                        "Wenn nicht gesetzt, werden Default-Properties im Classpath verwendet.")
+                .type(String.class)
+                .build();
+        /*Option useLocalApiDump = Option.builder("d").longOpt("use-dump")
                 .required(false)
                 .hasArg(true)
                 .optionalArg(true)
                 .desc("Einen lokalen Audiothek-Dump anstatt eines REST-Calls gegen die Api verwenden")
                 .type(String.class)
-                .build();
+                .build();*/
         cliOptions.addOption(help);
+        cliOptions.addOption(similarityCheck);
+        cliOptions.addOption(validateLinks);
         cliOptions.addOption(configFilePath);
-        cliOptions.addOption(validate);
-        cliOptions.addOption(useLocalApiDump);
+        //cliOptions.addOption(useLocalApiDump);
 
         CommandLineParser parser = new DefaultParser();
 
         try {
-            return parser.parse(cliOptions, args);
+            CommandLine cli = parser.parse(cliOptions, args);
+            if( !cli.hasOption("-l") && !cli.hasOption("-validate") ){
+                printHelp();
+            }
+            return cli;
         } catch (ParseException e) {
             printHelp();
             throw new RuntimeException(e.getMessage(), e);
         }
     }
 
+    /**
+     *
+     */
     private static void printHelp(){
         HelpFormatter helpFormatter = new HelpFormatter();
         helpFormatter.printHelp("HSPDB - ARD Audiothek Abgleich by pqp e.K. 2022", cliOptions);
@@ -84,20 +99,27 @@ public class App {
             throws ExecutionException, InterruptedException {
         SimilarityCheck similarityCheck = new SimilarityCheck();
         similarityCheck.mapSimilarities(hsdbObjects, audiothekObjects,
-                Integer.parseInt(Config.Config().getProperty(Config.NUM_THREADS)));
+                Integer.parseInt(Config.Config().getProperty(Config.NUM_THREADS,"1")));
     }
 
+    /**
+     *
+     * @param cli
+     * @throws FileNotFoundException
+     * @throws ImportException
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public static void runSimilarityCheck(CommandLine cli) throws FileNotFoundException, ImportException, ExecutionException, InterruptedException {
         Config.Config(cli.getOptionValue("c"));
-        LOGGER.info("Lade Daten...");
-        Map<String, GenericObject> audiothekObjects;
-        audiothekObjects = new AudiothekDaoV2().getRadioPlays();
-        if( cli.hasOption("l") ){
+        Map<String, GenericObject> audiothekObjects = new AudiothekDaoV2().getRadioPlays();
+        if( cli.hasOption("d") ){
             /*Gson gson = new Gson();
             FileReader reader = new FileReader(cli.getOptionValue("l"));
             Map dumpFile = gson.fromJson(reader, Map.class);
             audiothekObjects = AudiothekDaoV2.genericObjectsFromJson(dumpFile);
             LOGGER.info("ARD Audiothek-Daten aus lokaler Datei geladen."); TODO neu mit einzel files*/
+            LOGGER.info("Derzeit nicht implementiert. Daten werden aus GraphQL geladen.");
         } else {
             audiothekObjects = new AudiothekDaoV2().getRadioPlays();
             LOGGER.info("ARD Audiothek-Daten aus Api geladen.");
@@ -107,23 +129,48 @@ public class App {
         LOGGER.info("HSPDB-Daten geladen.");
         LOGGER.info("Starte Abgleich...");
         calculateSimilarities(audiothekObjects, hsdbObjects);
-        LOGGER.info("Finished Abgleich.");
-        if( cli.hasOption("validate") ){
-            // TODO validate
-        }
+        LOGGER.info("Abgleich Beendet.");
     }
 
+    /**
+     *
+     */
+    public static void validateLinks() throws ImportException, InterruptedException {
+        LOGGER.info("Validiere Links in HSDB...");
+        List<String> episodes = new AudiothekDaoV2().getUnpublishedRadioPlayIds();
+        HsdbDao hsdbDao = new HsdbDao();
+        hsdbDao.validateMany(episodes);
+        LOGGER.info("Validierung abgeschlossen.");
+    }
+
+    /**
+     *
+     * @param args
+     * @throws InterruptedException
+     */
     public static void main(String[] args) throws InterruptedException{
         CommandLine cli = createCLI(args);
         if(cli.hasOption("help")){ // show help, terminate application
             printHelp();
         }
 
-        try {
-            runSimilarityCheck(cli);
-        } catch (FileNotFoundException | ImportException | ExecutionException e) {
-            LOGGER.error(e.getMessage(), e);
-            System.exit(1);
+        if(cli.hasOption("link")){
+            try {
+                runSimilarityCheck(cli);
+            } catch (FileNotFoundException | ImportException | ExecutionException e) {
+                LOGGER.error(e.getMessage(), e);
+                System.exit(1);
+            }
         }
+
+        if(cli.hasOption("validate")){
+            try {
+                validateLinks();
+            } catch (ImportException e) {
+                LOGGER.info(e.getMessage(), e);
+                System.exit(1);
+            }
+        }
+
     }
 }

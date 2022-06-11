@@ -78,7 +78,7 @@ public class SimilarityCheck {
      * @return boolean, true wenn gleich
      */
     public boolean checkSimilarity(RadioPlaytypeSimilarity similarityTest, GenericObject hsdbObject, GenericObject audiothekObject) {
-        return Float.parseFloat(config.getProperty(Config.THRESHOLD)) <= similarityTest.calcSimilarity(hsdbObject, audiothekObject);
+        return Float.parseFloat(config.getProperty(Config.THRESHOLD,"0.9")) <= similarityTest.calcSimilarity(hsdbObject, audiothekObject);
     }
 
     /**
@@ -160,7 +160,7 @@ public class SimilarityCheck {
         hsdbBucket.forEach(
                 hsdbGenericObject -> {
                     float similarity = similarityTest.calcSimilarity(hsdbGenericObject, audiothekObject);
-                    if (Float.parseFloat(config.getProperty(Config.THRESHOLD)) <= similarity) {
+                    if (Float.parseFloat(config.getProperty(Config.THRESHOLD,"0.9")) <= similarity) {
                         Similarity similarityBean = new Similarity();
                         similarityBean.setDukey(hsdbGenericObject.getUniqIdwithinDomain());
                         similarityBean.setAudiothekId(audiothekId);

@@ -683,7 +683,7 @@ class SimilarityCheckTest {
     Map loadJsonFromFile(String fileName) throws IOException {
         Gson gson = new Gson();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        InputStream stream = loader.getResourceAsStream(fileName);
+        InputStream stream = loader.getResourceAsStream(fileName);;
         assert stream != null;
         Map json = gson.fromJson(new InputStreamReader(stream), Map.class);
         stream.close();
