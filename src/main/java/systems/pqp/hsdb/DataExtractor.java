@@ -4,6 +4,7 @@ import de.ard.sad.normdb.similarity.model.generic.GenericModel;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import de.ard.sad.normdb.similarity.model.generic.GenericObjectProperty;
 import de.ard.sad.normdb.similarity.model.generic.GenricObjectType;
+import systems.pqp.hsdb.types.RadioPlayType;
 
 import java.util.*;
 import java.util.regex.Matcher;

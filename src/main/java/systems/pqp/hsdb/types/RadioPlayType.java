@@ -1,4 +1,4 @@
-package systems.pqp.hsdb;
+package systems.pqp.hsdb.types;
 
 import de.ard.sad.normdb.similarity.compare.basic.date.FuzzyDateSimilarity;
 import de.ard.sad.normdb.similarity.compare.basic.numeric.FloatPercentageSimilarity;
@@ -15,7 +15,7 @@ public class RadioPlayType extends BasicType {
 
     public static final GenricObjectType PROGRAMSET_ID = new GenricObjectType("string.id.programset", 1.0f, 0.0f, false, false, false, new EqualSimilarity());
     public static final GenricObjectType PROGRAMSET_LINK = new GenricObjectType("string.link.programset", 1.0f, 0.0f, false, false, false, new EqualSimilarity());
-    public static final GenricObjectType PROGRAMSET_TITLE =  new GenricObjectType("string.title.programset", 0.9f, 0.0f, false, false, false, 0.99f,false,20f,new RadioPlayTypeTitelVariantSimilarity(new InstitutionNameSimilarity(new ScaledLevensteinWithPartTest(), 2.0d, 0.5d, true, 0.0f), RadioPlayTypeTitelBasicStringVariantSimilarity.OutputSetting.MAX,true,true)).setForceSimCalc(true);
+    public static final GenricObjectType PROGRAMSET_TITLE =  new GenricObjectType("string.title.programset", 0.9f, 0.0f, false, false, true, 0.99f,false,20f,new RadioPlayTypeTitelVariantSimilarity(new InstitutionNameSimilarity(new ScaledLevensteinWithPartTest(), 2.0d, 0.5d, true, 0.0f), RadioPlayTypeTitelBasicStringVariantSimilarity.OutputSetting.MAX,true,true)).setForceSimCalc(true);
     public static final GenricObjectType PROGRAMSET_DESCRIPTION =  new GenricObjectType("string.description.programset", 0.9f, 0.0f, false, false, false, 0.7f,false,20f,new EqualSimilarity());
     public static final GenricObjectType BIO = new GenricObjectType("string.bio", 1.0f, 0.0f, false, false, false, new EqualSimilarity());
     public static final GenricObjectType DESCRIPTION = new GenricObjectType("string.description", 1.0f, 0.0f, false, false, false, new EqualSimilarity());

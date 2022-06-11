@@ -1,4 +1,4 @@
-package systems.pqp.hsdb;
+package systems.pqp.hsdb.types;
 
 import de.ard.sad.normdb.similarity.compare.generic.GenericSimilarity;
 import de.ard.sad.normdb.similarity.model.generic.GenericObject;
@@ -6,6 +6,7 @@ import de.ard.sad.normdb.similarity.model.generic.GenericObjectProperty;
 import de.ard.sad.normdb.similarity.model.generic.GenricObjectType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import systems.pqp.hsdb.DataExtractor;
 
 import java.util.*;
 
@@ -87,14 +88,14 @@ public class RadioPlaytypeSimilarity extends GenericSimilarity {
             }
 
             //Interceptor - Sonderregel 6
-            if(isSame(seasonNumberSim) || (pattern.getProperties(RadioPlayType.SEASON).size()==0 && target.getProperties(RadioPlayType.SEASON).size()==0)) {
+            /*if(isSame(seasonNumberSim) || (pattern.getProperties(RadioPlayType.SEASON).size()==0 && target.getProperties(RadioPlayType.SEASON).size()==0)) {
                 if(isSameOrMissing(programSetTitleSim) && isSame(episodeNumberSim) && isSameOrMissing(personInvolvedSim)) {
                     if(LOGGER.isDebugEnabled())
                         LOGGER.debug("Interceptor - Sonderregel 6 -> Ignoriere Titelähnlichkeit von " + titleSim);
                     similarities.remove(RadioPlayType.TITLE);
                     return;   //aktuell wird nur der Titel durch die Regeln auf 0 gesetzt, entsprechend brauchen weitere Regeln nicht geprüft werden
                 }
-            }
+            }*/
 
         }
     }

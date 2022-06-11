@@ -1,6 +1,7 @@
-package systems.pqp.hsdb;
+package systems.pqp.hsdb.types;
 
 import de.ard.sad.normdb.similarity.model.generic.GenricObjectType.SimAlgorithm;
+import systems.pqp.hsdb.DataExtractor;
 
 import java.util.ArrayList;
 import java.util.HashSet;

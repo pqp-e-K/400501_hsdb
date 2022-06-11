@@ -1,0 +1,1 @@
+java -jar ..\lib\hspdb-audiothek-matching.jar %*

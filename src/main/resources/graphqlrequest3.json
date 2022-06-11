@@ -1,0 +1,5 @@
+{
+  "query": "{\n  editorialCategory(id: 42914712) {\n    id\n    title\n    programSetsList {\n      id\n      title\n      coreId\n      }\n  }\n}\n",
+  "variables": null,
+  "operationName": null
+}

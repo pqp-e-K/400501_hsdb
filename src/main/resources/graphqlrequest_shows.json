@@ -1,0 +1,5 @@
+{
+  "query": "{\n  editorialCategory(id: 42914712) {\n    id\n    title\n    programSetsList {\n      id\n      title\n      coreId\n      coreDocument\n      numberOfElements\n      items {\n        edges {\n          node {\n            id\n            externalIds\n            title\n            coreId\n            coreDocument\n            url\n            sharingUrl\n          }\n        }\n      }\n    }\n  }\n}\n\n",
+  "variables": null,
+  "operationName": null
+}

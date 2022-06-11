@@ -4,6 +4,8 @@ import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import systems.pqp.hsdb.dao.HsdbDao;
+import systems.pqp.hsdb.types.RadioPlayType;
+import systems.pqp.hsdb.types.RadioPlaytypeSimilarity;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -22,7 +24,7 @@ public class SimilarityCheck {
     private Config config = Config.Config();
     private static final Logger LOG = LogManager.getLogger(SimilarityCheck.class.getName());
 
-    List<SimilarityBean> foundSimilarities = null;
+    List<Similarity> foundSimilarities = null;
     List<GenericObject> audiothekObjectsWithoutMatch = null;
     Map<String, Integer> state = Collections.synchronizedMap(new HashMap<>());
     int total = 0;
@@ -76,7 +78,7 @@ public class SimilarityCheck {
      * @return boolean, true wenn gleich
      */
     public boolean checkSimilarity(RadioPlaytypeSimilarity similarityTest, GenericObject hsdbObject, GenericObject audiothekObject) {
-        return Float.parseFloat(config.getProperty(Config.THRESHOLD)) <= similarityTest.calcSimilarity(hsdbObject, audiothekObject);
+        return Float.parseFloat(config.getProperty(Config.THRESHOLD,"0.9")) <= similarityTest.calcSimilarity(hsdbObject, audiothekObject);
     }
 
     /**
@@ -158,8 +160,8 @@ public class SimilarityCheck {
         hsdbBucket.forEach(
                 hsdbGenericObject -> {
                     float similarity = similarityTest.calcSimilarity(hsdbGenericObject, audiothekObject);
-                    if (Float.parseFloat(config.getProperty(Config.THRESHOLD)) <= similarity) {
-                        SimilarityBean similarityBean = new SimilarityBean();
+                    if (Float.parseFloat(config.getProperty(Config.THRESHOLD,"0.9")) <= similarity) {
+                        Similarity similarityBean = new Similarity();
                         similarityBean.setDukey(hsdbGenericObject.getUniqIdwithinDomain());
                         similarityBean.setAudiothekId(audiothekId);
                         similarityBean.setScore(similarity);

@@ -11,6 +11,7 @@ import de.ard.sad.normdb.similarity.model.generic.GenericObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import systems.pqp.hsdb.*;
+import systems.pqp.hsdb.types.RadioPlayType;
 
 import java.io.Serializable;
 import java.sql.*;
@@ -73,6 +74,13 @@ public class HsdbDao {
             MAPPING_TABLE_COL_VALIDATION_DATE,
             MAPPING_TABLE_COL_DELETED
     );
+    private static final String VALIDATE_STMT = String.format(
+            "UPDATE %s.%s SET %s = ? WHERE %s = ?",
+            DB,
+            MAPPING_TAB,
+            MAPPING_TABLE_COL_DELETED,
+            MAPPING_TABLE_COL_AUDIOTHEK_ID
+    );
 
     public HsdbDao() {}
 
@@ -80,7 +88,7 @@ public class HsdbDao {
      * Upsert eine List aus SimilarityBean-Objekten
      * @param similarities
      */
-    public void upsertMany(List<SimilarityBean> similarities){
+    public void upsertMany(List<Similarity> similarities){
         try(
                 Connection connection = createConnection();
                 PreparedStatement upsertCheck = connection.prepareStatement(UPSERT_CHECK_QUERY);
@@ -89,17 +97,17 @@ public class HsdbDao {
         ){
             connection.setAutoCommit(false);
             similarities.forEach(
-                    similarityBean -> {
+                    similarity -> {
                         try {
-                            if(checkUpsert(upsertCheck, similarityBean)){
+                            if(checkUpsert(upsertCheck, similarity)){
                                 // update
-                                updateOne(update, similarityBean, true);
+                                updateOne(update, similarity, true);
                             } else {
                                 // insert
-                                insertOne(insert, similarityBean, true);
+                                insertOne(insert, similarity, true);
                             }
                         } catch (SQLException e) {
-                            LOG.error("Upsert similiarity failed for {}", similarityBean, e);
+                            LOG.error("Upsert fehlgeschlagen für {}", similarity, e);
                         }
                     }
             );
@@ -112,20 +120,20 @@ public class HsdbDao {
     /**
      *
      * @param upsertCheck
-     * @param bean
+     * @param similarity
      * @return
      * @throws SQLException
      */
-    private boolean checkUpsert(PreparedStatement upsertCheck, SimilarityBean bean) throws SQLException {
-        upsertCheck.setString(1, bean.getDukey());
-        upsertCheck.setString(2, bean.getAudiothekId());
+    private boolean checkUpsert(PreparedStatement upsertCheck, Similarity similarity) throws SQLException {
+        upsertCheck.setString(1, similarity.getDukey());
+        upsertCheck.setString(2, similarity.getAudiothekId());
         ResultSet checkResult = upsertCheck.executeQuery();
         if( checkResult.getFetchSize() > 1 ){ // kann eigentlich nie passieren
-            LOG.warn("Mehrere Einträge in {}.{} gefunden für {},{}",DB,MAPPING_TAB,bean.getDukey(),bean.getAudiothekId());
+            LOG.warn("Mehrere Einträge in {}.{} gefunden für {},{}",DB,MAPPING_TAB,similarity.getDukey(),similarity.getAudiothekId());
         }
 
         if( checkResult.next() ){
-            bean.setId(checkResult.getString(1));
+            similarity.setId(checkResult.getString(1));
             return true;
         }
         return false;
@@ -134,34 +142,75 @@ public class HsdbDao {
     /**
      *
      * @param update
-     * @param similarityBean
+     * @param similarity
      * @return
      * @throws SQLException
      */
-    public String updateOne(PreparedStatement update, SimilarityBean similarityBean, boolean execute) throws SQLException {
-        update.setFloat(1, similarityBean.getScore());
-        update.setString(2, similarityBean.getAudiothekLink());
-        update.setString(3, similarityBean.getValidationDateTime().toString());
-        update.setString(4, similarityBean.getId());
+    public String updateOne(PreparedStatement update, Similarity similarity, boolean execute) throws SQLException {
+        update.setFloat(1, similarity.getScore());
+        update.setString(2, similarity.getAudiothekLink());
+        update.setString(3, similarity.getValidationDateTime().toString());
+        update.setString(4, similarity.getId());
         if(execute){
             update.executeUpdate();
         }
-        return similarityBean.getId();
+        return similarity.getId();
+    }
+
+    /**
+     * @param validate PreparedStatement
+     * @param id String
+     * @return id String
+     * @throws SQLException
+     */
+    public String validateOne(PreparedStatement validate, String id, boolean execute) throws SQLException {
+        validate.setBoolean(1, true);
+        validate.setString(2, id);
+        if(execute){
+            validate.executeUpdate();
+        }
+        return id;
+    }
+
+    /**
+     *
+     * @param ids
+     */
+    public void validateMany(List<String> ids){
+        try(
+                Connection connection = createConnection();
+                PreparedStatement validate = connection.prepareStatement(VALIDATE_STMT);
+        ){
+            connection.setAutoCommit(false);
+            ids.forEach(
+                    id -> {
+                        try {
+                            validateOne(validate, id, true);
+                        } catch (SQLException e) {
+                            LOG.error("Validate fehlgeschlagen für {}", id, e);
+                        }
+                    }
+            );
+            connection.commit();
+            LOG.info("Datenbank aktualisiert.");
+        } catch (SQLException throwables) {
+            LOG.error(throwables.getMessage(), throwables);
+        }
     }
 
     /**
      *
      * @param insert
-     * @param similarityBean
+     * @param similarity
      * @param execute
      * @throws SQLException
      */
-    public void insertOne(PreparedStatement insert, SimilarityBean similarityBean, boolean execute) throws SQLException {
-        insert.setString(1, similarityBean.getDukey());
-        insert.setString(2, similarityBean.getAudiothekId());
-        insert.setFloat(3, similarityBean.getScore());
-        insert.setString(4, similarityBean.getAudiothekLink());
-        insert.setString(5, similarityBean.getValidationDateTime().toString());
+    public void insertOne(PreparedStatement insert, Similarity similarity, boolean execute) throws SQLException {
+        insert.setString(1, similarity.getDukey());
+        insert.setString(2, similarity.getAudiothekId());
+        insert.setFloat(3, similarity.getScore());
+        insert.setString(4, similarity.getAudiothekLink());
+        insert.setString(5, similarity.getValidationDateTime().toString());
         insert.setBoolean(6, false);
         if(execute) {
             insert.executeUpdate();
@@ -192,13 +241,13 @@ public class HsdbDao {
                     String xml = resultSet.getString(2);
                     String publisher = resultSet.getString(3);
 
-                    VollinfoBean bean = beanFromXmlString(xml);
+                    VollinfoDTO bean = dtoFromXmlString(xml);
 
                     if( LOG.isDebugEnabled() ){
                         LOG.debug(bean.toString());
                     }
 
-                    GenericObject radioPlay = genericObjectFromBean(
+                    GenericObject radioPlay = genericObjectFromDTO(
                             id,
                             bean
                     );
@@ -216,17 +265,17 @@ public class HsdbDao {
     }
 
     /**
-     * Parsed VollinfoBean zu GenericObject
+     * Parsed VollinfoDTO zu GenericObject
      * @param id String, DUKEY
-     * @param bean VollinfoBean
+     * @param dto VollinfoDTO
      * @return GenericObject
      */
-    GenericObject genericObjectFromBean(String id, VollinfoBean bean){
+    GenericObject genericObjectFromDTO(String id, VollinfoDTO dto){
         GenericModel genericModel = new GenericModel(RadioPlayType.class);
         GenericObject radioPlay = new GenericObject(genericModel,id);
 
         try {
-            String title = bean.getTitle().replaceAll("\\s+", " ").trim();
+            String title = dto.getTitle().replaceAll("\\s+", " ").trim();
             Set<String> programSet = new HashSet<>();
 
             //Extrahiere Programmtitel aus Titel & bereinige normalen Titel
@@ -234,7 +283,9 @@ public class HsdbDao {
                 //Sendungs-/Programmtitel
                 int idx = title.indexOf("]");
                 if(idx >=0) {
-                    programSet.add(title.substring(1,idx));
+                    String programSetTitle = title.substring(1,idx).replaceAll("\\s+", " ").trim();
+                    if(programSetTitle.length() > 0)
+                        programSet.add(programSetTitle);
                 }
 
                 //normaler Titel
@@ -242,12 +293,14 @@ public class HsdbDao {
             }
 
             //RTI als Programmtitel übernehmen
-            String rti = bean.getShowTitle();
+            String rti = dto.getShowTitle();
             if(rti != null) {
-                programSet.add(rti);
+                rti = rti.replaceAll("\\s+", " ").trim();
+                if(rti.length() > 0)
+                    programSet.add(rti.trim());
             }
 
-            String titleWithoutSeasonOrEpisode = DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title);
+            //String titleWithoutSeasonOrEpisode = DATA_EXTRACTOR.getTitleWithoutEpisodeOrSeason(title);
             Set<String> titles = new HashSet<>();
             titles.add(title);
             //titles.add(titleWithoutSeasonOrEpisode);
@@ -274,27 +327,29 @@ public class HsdbDao {
             //radioPlay.addDescriptionProperty(RadioPlayType.SHOW_TITLE, bean.getShowTitle());
             //radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
 
-            Float duration = bean.getDurationInSeconds();
+            Float duration = dto.getDurationInSeconds();
             if(duration>0.0f)   //Dauer nur hinzufügen, sofern Angabe existiert
-                radioPlay.addDescriptionProperty(RadioPlayType.DURATION, String.valueOf(bean.getDurationInSeconds()));
+                radioPlay.addDescriptionProperty(RadioPlayType.DURATION, String.valueOf(dto.getDurationInSeconds()));
             try {
-                radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(bean.getPublicationDt()));
+                radioPlay.addDescriptionProperty(RadioPlayType.PUBLICATION_DT, DATA_HARMONIZER.date(dto.getPublicationDt()));
             } catch (DataHarmonizerException e) {
                 if(LOG.isDebugEnabled()){
                     LOG.debug(e.getMessage(), e);
                 }
             }
             //radioPlay.addDescriptionProperty(RadioPlayType.BIO, bean.getBio());
-            radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, bean.getDescription());
+            if(null != dto.getDescription()) {
+                radioPlay.addDescriptionProperty(RadioPlayType.DESCRIPTION, dto.getDescription());
+            }
             //radioPlay.addDescriptionProperty(RadioPlayType.LONG_TITLE, bean.getLongTitle());
-            radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, null == bean.getProductionCompany() ? "" : bean.getProductionCompany());
-            radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, null == bean.getAbrfa() ? "" : bean.getAbrfa());
-            radioPlay.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, bean.getInvolvedNames());
-            radioPlay.addDescriptionProperty(RadioPlayType.PERSON_ROLE, bean.getActorRoles());
+            radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, null == dto.getProductionCompany() ? "" : dto.getProductionCompany());
+            radioPlay.addDescriptionProperty(RadioPlayType.PUBLISHER, null == dto.getAbrfa() ? "" : dto.getAbrfa());
+            radioPlay.addDescriptionProperty(RadioPlayType.PERSON_INVOLVED, dto.getInvolvedNames());
+            radioPlay.addDescriptionProperty(RadioPlayType.PERSON_ROLE, dto.getActorRoles());
 
         } catch (IllegalArgumentException exception){
             LOG.error(exception.getMessage(), exception);
-            LOG.info(bean.toString());
+            LOG.info(dto.toString());
         }
         return radioPlay;
     }
@@ -305,17 +360,17 @@ public class HsdbDao {
      * @return VollinfoBean
      * @throws JsonProcessingException
      */
-    VollinfoBean beanFromXmlString(String xml) throws JsonProcessingException {
+    VollinfoDTO dtoFromXmlString(String xml) throws JsonProcessingException {
 
-        return XML_MAPPER.readValue(xml, VollinfoBean.class);
+        return XML_MAPPER.readValue(xml, VollinfoDTO.class);
 
     }
 
     /**
-     * Java-Bean für VOLLINFO-XML-Daten in hs_du-Tabelle
+     * DTO für VOLLINFO-XML-Daten in hs_du-Tabelle
      */
     @JsonIgnoreProperties(ignoreUnknown = true)
-    static class VollinfoBean implements Serializable {
+    static class VollinfoDTO implements Serializable {
 
         @JsonProperty("KAT")
         private String category = "";
@@ -336,7 +391,7 @@ public class HsdbDao {
         @JsonProperty("INH")
         private String description = "";
         @JsonProperty("SPR")
-        private List<ActorBean> actors = new ArrayList<>();
+        private List<ActorDTO> actors = new ArrayList<>();
         @JsonProperty("REG")
         private String director = "";
         @JsonProperty("ESD")
@@ -348,7 +403,7 @@ public class HsdbDao {
         @JsonProperty("ABRFA")
         private String abrfa = "";
 
-        public VollinfoBean(){}
+        public VollinfoDTO(){}
 
         public String getCategory() {
             return category;
@@ -422,11 +477,11 @@ public class HsdbDao {
             this.description = description;
         }
 
-        public List<ActorBean> getActors() {
+        public List<ActorDTO> getActors() {
             return actors;
         }
 
-        public void setActors(List<ActorBean> actors) {
+        public void setActors(List<ActorDTO> actors) {
             this.actors = actors;
         }
 
@@ -500,11 +555,11 @@ public class HsdbDao {
         }
 
         public List<String> getActorNames() {
-            return getActors().stream().map(ActorBean::getName).filter(name -> !"".equals(name)).collect(Collectors.toList());
+            return getActors().stream().map(ActorDTO::getName).filter(name -> !"".equals(name)).collect(Collectors.toList());
         }
 
         public List<String> getActorRoles() {
-            return getActors().stream().map(ActorBean::getRolle).filter(name -> !"".equals(name)).collect(Collectors.toList());
+            return getActors().stream().map(ActorDTO::getRolle).filter(name -> !"".equals(name)).collect(Collectors.toList());
         }
 
         public List<String> getInvolvedNames() {
@@ -534,7 +589,7 @@ public class HsdbDao {
 
         @Override
         public String toString() {
-            return "VollinfoBean{" +
+            return "VollinfoDTO{" +
                     "category='" + category + '\'' +
                     ", author='" + author + '\'' +
                     ", translator='" + translator + '\'' +
@@ -552,20 +607,21 @@ public class HsdbDao {
                     ", abrfa='" + abrfa + '\'' +
                     '}';
         }
+
     }
 
     /**
      *
      */
     @JsonIgnoreProperties(ignoreUnknown = true)
-    static class ActorBean implements Serializable{
+    static class ActorDTO implements Serializable{
         @JacksonXmlProperty(isAttribute = true)
         private String rolle = "";
         @JsonProperty("NAM")
         @JacksonXmlText
         private String name = "";
 
-        public ActorBean(){}
+        public ActorDTO(){}
 
         public String getRolle() {
             return rolle;
@@ -585,7 +641,7 @@ public class HsdbDao {
 
         @Override
         public String toString() {
-            return "Actor{" +
+            return "ActorDTO{" +
                     "rolle='" + rolle + '\'' +
                     ", name='" + name + '\'' +
                     '}';
