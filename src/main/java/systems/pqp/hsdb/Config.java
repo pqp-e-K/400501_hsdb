@@ -19,6 +19,7 @@ public class Config extends Properties {
     public static final String HSDB_MAPPING_TABLE = "hsdb.mapping.table";
     public static final String THRESHOLD = "check.threshold";
     public static final String NUM_THREADS = "check.threads";
+    public static final String AUDIOTHEK_GRAPHQL_URL = "check.audiothek.graphql.url";
     public static final String AUDIOTHEK_EXCLUDES = "check.audiothek.excludes";
     public static final String AUDIOTHEK_EXCLUDE_UNPUBLISHED = "check.audiothek.exclude.unpublished";
 

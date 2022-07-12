@@ -23,7 +23,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
@@ -37,7 +36,7 @@ public class AudiothekDaoV2 {
     private static final Config CONFIG = Config.Config();
     private static final Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
 
-    static final String GRAPH_QL_URL = "https://api.ardaudiothek.de/graphql";
+    static final String GRAPH_QL_URL = CONFIG.getProperty(Config.AUDIOTHEK_GRAPHQL_URL,"https://api.ardaudiothek.de/graphql");
     static final String HEADER_ACCEPT_CONTENT_TYPE = "application/json";
     static final String[] AUDIOTHEK_EXCLUDES = CONFIG.getProperty(Config.AUDIOTHEK_EXCLUDES,"").split(",");
 
