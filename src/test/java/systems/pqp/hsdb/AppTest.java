@@ -14,7 +14,8 @@ public class AppTest {
 
     @Test
     public void validateLinks() throws ImportException, InterruptedException {
-        App.validateLinks();
+        String[] args = new String[]{"-validate"};
+        App.validateLinks(App.createCLI(args));
     }
 
     @Test //großer integrations-test -- dauert derzeit bei 10 threads ca. 4h

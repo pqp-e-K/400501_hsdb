@@ -52,18 +52,10 @@ public class App {
                         "Wenn nicht gesetzt, werden Default-Properties im Classpath verwendet.")
                 .type(String.class)
                 .build();
-        /*Option useLocalApiDump = Option.builder("d").longOpt("use-dump")
-                .required(false)
-                .hasArg(true)
-                .optionalArg(true)
-                .desc("Einen lokalen Audiothek-Dump anstatt eines REST-Calls gegen die Api verwenden")
-                .type(String.class)
-                .build();*/
         cliOptions.addOption(help);
         cliOptions.addOption(similarityCheck);
         cliOptions.addOption(validateLinks);
         cliOptions.addOption(configFilePath);
-        //cliOptions.addOption(useLocalApiDump);
 
         CommandLineParser parser = new DefaultParser();
 
@@ -85,6 +77,7 @@ public class App {
     private static void printHelp(){
         HelpFormatter helpFormatter = new HelpFormatter();
         helpFormatter.printHelp("HSPDB - ARD Audiothek Abgleich by pqp e.K. 2022", cliOptions);
+        System.exit(0);
     }
 
 
@@ -114,11 +107,6 @@ public class App {
         Config.Config(cli.getOptionValue("c"));
         Map<String, GenericObject> audiothekObjects = new AudiothekDaoV2().getRadioPlays();
         if( cli.hasOption("d") ){
-            /*Gson gson = new Gson();
-            FileReader reader = new FileReader(cli.getOptionValue("l"));
-            Map dumpFile = gson.fromJson(reader, Map.class);
-            audiothekObjects = AudiothekDaoV2.genericObjectsFromJson(dumpFile);
-            LOGGER.info("ARD Audiothek-Daten aus lokaler Datei geladen."); TODO neu mit einzel files*/
             LOGGER.info("Derzeit nicht implementiert. Daten werden aus GraphQL geladen.");
         } else {
             audiothekObjects = new AudiothekDaoV2().getRadioPlays();
@@ -135,7 +123,8 @@ public class App {
     /**
      *
      */
-    public static void validateLinks() throws ImportException, InterruptedException {
+    public static void validateLinks(CommandLine cli) throws ImportException, InterruptedException {
+        Config.Config(cli.getOptionValue("c"));
         LOGGER.info("Validiere Links in HSDB...");
         List<String> episodes = new AudiothekDaoV2().getUnpublishedRadioPlayIds();
         HsdbDao hsdbDao = new HsdbDao();
@@ -165,7 +154,7 @@ public class App {
 
         if(cli.hasOption("validate")){
             try {
-                validateLinks();
+                validateLinks(cli);
             } catch (ImportException e) {
                 LOGGER.info(e.getMessage(), e);
                 System.exit(1);

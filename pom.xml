@@ -6,7 +6,7 @@
 
     <groupId>systems.pqp.hsdb</groupId>
     <artifactId>audiothek-matching</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,7 +20,6 @@
         <guava.version>30.1.1-jre</guava.version>
         <log4j.version>2.17.1</log4j.version>
         <jupiter.version>5.8.2</jupiter.version>
-        <!--<normdb.version>21.11-7.13.0.6.1.0-SNAPSHOT</normdb.version>-->
         <normdb.version>22.13-7.16.0.6.4.0-SNAPSHOT</normdb.version>
         <mariadb.client.version>2.7.4</mariadb.client.version>
         <maven.assembly.plugin.version>3.3.0</maven.assembly.plugin.version>
@@ -126,7 +125,7 @@
                             <goal>single</goal>
                         </goals>
                         <configuration>
-                            <finalName>hspdb-audiothek-matching-${version}</finalName>
+                            <finalName>hspdb-audiothek-matching-${project.version}</finalName>
                             <appendAssemblyId>false</appendAssemblyId>
                             <descriptors>
                                 <descriptor>${project.basedir}/src/main/resources/assembly.xml</descriptor>

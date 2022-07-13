@@ -17,13 +17,19 @@ import systems.pqp.hsdb.dao.graphql.GraphQLNode;
 import systems.pqp.hsdb.dao.graphql.GraphQLPublisherGrouping;
 import systems.pqp.hsdb.types.RadioPlayType;
 
+import javax.net.ssl.*;
 import java.io.*;
+import java.net.Socket;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
@@ -37,7 +43,7 @@ public class AudiothekDaoV2 {
     private static final Config CONFIG = Config.Config();
     private static final Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
 
-    static final String GRAPH_QL_URL = "https://api.ardaudiothek.de/graphql";
+    static final String GRAPH_QL_URL = CONFIG.getProperty(Config.AUDIOTHEK_GRAPHQL_URL,"https://api.ardaudiothek.de/graphql");
     static final String HEADER_ACCEPT_CONTENT_TYPE = "application/json";
     static final String[] AUDIOTHEK_EXCLUDES = CONFIG.getProperty(Config.AUDIOTHEK_EXCLUDES,"").split(",");
 
@@ -181,7 +187,7 @@ public class AudiothekDaoV2 {
         try {
             InputStream inputStream = loader.getResourceAsStream("graphqlrequest_shows.json");
             body = HttpRequest.BodyPublishers.ofString(new String(inputStream.readAllBytes(), StandardCharsets.UTF_8));
-            HttpClient httpClient  = HttpClient.newHttpClient();
+            HttpClient httpClient  = buildClient();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(GRAPH_QL_URL))
                     .header("Content-Type",HEADER_ACCEPT_CONTENT_TYPE)
@@ -218,7 +224,7 @@ public class AudiothekDaoV2 {
             } else {
                 throw new ImportException("Fehler beim Lesen der GraphQL " + response.statusCode());
             }
-        } catch (IOException exception){
+        } catch (IOException | NoSuchAlgorithmException | KeyManagementException exception){
             throw new ImportException(exception.getMessage(), exception);
         }
     }
@@ -238,7 +244,7 @@ public class AudiothekDaoV2 {
         try {
             InputStream inputStream = loader.getResourceAsStream("graphqlrequest_publisher.json");
             body = HttpRequest.BodyPublishers.ofString(new String(inputStream.readAllBytes(), StandardCharsets.UTF_8));
-            HttpClient httpClient  = HttpClient.newHttpClient();
+            HttpClient httpClient  = buildClient();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(GRAPH_QL_URL))
                     .header("Content-Type",HEADER_ACCEPT_CONTENT_TYPE)
@@ -262,7 +268,7 @@ public class AudiothekDaoV2 {
             } else {
                 throw new ImportException("Fehler beim Lesen der GraphQL! " + response.statusCode());
             }
-        } catch (IOException exception){
+        } catch (IOException | NoSuchAlgorithmException | KeyManagementException exception){
             throw new ImportException(exception.getMessage(), exception);
         }
     }
@@ -281,5 +287,44 @@ public class AudiothekDaoV2 {
             }
         }
     }
+
+    private HttpClient buildClient() throws NoSuchAlgorithmException, KeyManagementException {
+        HttpClient httpClient = null;
+        HttpClient.Builder builder = HttpClient.newBuilder();
+        if(
+                CONFIG.containsKey(Config.AUDIOTHEK_GRAPHQL_IGNORE_SSL) &&
+                Boolean.parseBoolean(CONFIG.getProperty(Config.AUDIOTHEK_GRAPHQL_IGNORE_SSL,Boolean.TRUE.toString()))
+        ){
+            System.setProperty("jdk.internal.httpclient.disableHostnameVerification", Boolean.TRUE.toString());
+            SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustAllCerts, new SecureRandom());
+            builder.sslContext(sslContext).sslParameters(new SSLParameters());
+            httpClient = builder.build();
+        } else {
+            httpClient = HttpClient.newHttpClient();
+        }
+
+        return httpClient;
+    }
+
+    /**
+     * ATTENTION! NOT SAFE FOR PRODUKTION ENVIRONMENTS!
+     * TrustManager akzeptiert alle Zertifikate
+     * wird HttpClient übergeben, wenn bypass-ssl=true
+     */
+    private static TrustManager[] trustAllCerts = new TrustManager[]{
+            new X509ExtendedTrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return new java.security.cert.X509Certificate[0];
+                }
+                public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException { }
+                public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException { }
+                public void checkServerTrusted(X509Certificate[] chain, String authType, SSLEngine engine) throws CertificateException { }
+                public void checkServerTrusted(X509Certificate[] chain, String authType, Socket socket) throws CertificateException { }
+                public void checkClientTrusted(X509Certificate[] chain, String authType, SSLEngine engine) throws CertificateException { }
+                public void checkClientTrusted(X509Certificate[] chain, String authType, Socket socket) throws CertificateException { }
+            }
+    };
+
 
 }
