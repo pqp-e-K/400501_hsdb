@@ -16,6 +16,7 @@ import systems.pqp.hsdb.types.RadioPlayType;
 import java.io.Serializable;
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -163,13 +164,13 @@ public class HsdbDao {
      * @return id String
      * @throws SQLException
      */
-    public String validateOne(PreparedStatement validate, String id, boolean execute) throws SQLException {
+    public int validateOne(PreparedStatement validate, String id, boolean execute) throws SQLException {
         validate.setBoolean(1, true);
         validate.setString(2, id);
         if(execute){
             validate.executeUpdate();
         }
-        return id;
+        return validate.getUpdateCount();
     }
 
     /**
@@ -182,17 +183,18 @@ public class HsdbDao {
                 PreparedStatement validate = connection.prepareStatement(VALIDATE_STMT);
         ){
             connection.setAutoCommit(false);
+            AtomicInteger updated = new AtomicInteger();
             ids.forEach(
                     id -> {
                         try {
-                            validateOne(validate, id, true);
+                            updated.addAndGet(validateOne(validate, id, true));
                         } catch (SQLException e) {
                             LOG.error("Validate fehlgeschlagen für {}", id, e);
                         }
                     }
             );
             connection.commit();
-            LOG.info("Datenbank aktualisiert.");
+            LOG.info("Datenbank aktualisiert. {} Daten aktualisiert.", updated.get());
         } catch (SQLException throwables) {
             LOG.error(throwables.getMessage(), throwables);
         }
