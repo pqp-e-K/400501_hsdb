@@ -31,14 +31,26 @@ public class AudiothekDaoV2Test {
     }
 
     @Test
-    public void testBadGraphQLUrl() throws ImportException, InterruptedException {
-
+    public void testBadGraphQLUrl() {
         systems.pqp.hsdb.ImportException thrown = Assertions.assertThrows(systems.pqp.hsdb.ImportException.class, () -> {
             Config config = Config.Config();
             config.setProperty(Config.AUDIOTHEK_GRAPHQL_URL,"https://bad-url.com");
             AudiothekDaoV2 dao = new AudiothekDaoV2();
             Object result = dao.getRadioPlayShowsFromGraphQL();
         });
+    }
 
+    @Test
+    public void testUnsecureSSL() throws ImportException, InterruptedException {
+        systems.pqp.hsdb.ImportException thrown = Assertions.assertThrows(systems.pqp.hsdb.ImportException.class, () -> {
+            Config config = Config.Config();
+            config.setProperty(Config.AUDIOTHEK_GRAPHQL_IGNORE_SSL,"true");
+            config.setProperty(Config.AUDIOTHEK_GRAPHQL_URL,"https://96.16.152.225/graphql");
+            AudiothekDaoV2 dao = new AudiothekDaoV2();
+            dao.getRadioPlayShowsFromGraphQL();
+        });
+        // Fehler 400 bedeutet, dass das ssl ausgehebelt wurde
+        //
+        Assertions.assertEquals("Fehler beim Lesen der GraphQL 400", thrown.getMessage());
     }
 }

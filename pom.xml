@@ -125,7 +125,7 @@
                             <goal>single</goal>
                         </goals>
                         <configuration>
-                            <finalName>hspdb-audiothek-matching-${version}</finalName>
+                            <finalName>hspdb-audiothek-matching-${project.version}</finalName>
                             <appendAssemblyId>false</appendAssemblyId>
                             <descriptors>
                                 <descriptor>${project.basedir}/src/main/resources/assembly.xml</descriptor>
